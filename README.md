@@ -1,5 +1,5 @@
 # ReStart
-A trading web-application for game accounts, as a university project developed using Play Framework.
+A trading web-application for game accounts, as a university project developed with Play Framework.
 
 ## Setup
 Pull and load the project into your IDE as a SBT project. This might take a while as SBT will pull all of its necessary dependencies for this application.
