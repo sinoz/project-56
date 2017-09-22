@@ -62,15 +62,15 @@
 		color: white;
 	}
 }
-.live-camera{
+.live-camera {
 	margin-bottom: 30px;
-	.live-camera-cover{
+	.live-camera-cover {
 		position: relative;
 		margin-bottom: 20px;
 		cursor: pointer;
 
-		&:after{
-			content:" ";
+		&:after {
+			content: " ";
 			width: 45px;
 			height: 45px;
 			@include cover;
@@ -78,7 +78,7 @@
 			background: url(images/play-button.png);
 		}
 
-		img{
+		img {
 			display: block;
 			width: 100%;
 			height: auto;
@@ -86,6 +86,7 @@
 			border-radius: 5px;
 		}
 	}
+}
 
 	.location{
 		margin-bottom: 5px;

@@ -1372,8 +1372,7 @@ form textarea {
       right: 0;
       top: 0;
       bottom: 0;
-      margin: auto;
-      background: url(../images/play-button.png); }
+      margin: auto; }
     .live-camera .live-camera-cover img {
       display: block;
       width: 100%;
