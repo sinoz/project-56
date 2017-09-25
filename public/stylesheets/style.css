@@ -1114,7 +1114,7 @@ form textarea {
  * Header Styles
  */
 .site-header {
-  padding: 50px 0; }
+  padding: 15px 0; }
   .site-header .branding {
     float: left; }
     .site-header .branding .logo, .site-header .branding .logo-type {
@@ -1123,6 +1123,7 @@ form textarea {
     .site-header .branding .logo {
       margin-right: 10px; }
     .site-header .branding .site-title {
+      padding-left: 7px;
       margin-bottom: 5px;
       font-size: 16px;
       font-size: 1.1428571429em;
@@ -1154,6 +1155,7 @@ form textarea {
       border-color: #009ad8;
       color: #009ad8; }
   .main-navigation .menu {
+    padding-top: 50px;
     list-style: none;
     display: inline-block;
     *zoom: 1; }
@@ -1208,7 +1210,8 @@ form textarea {
 .hero {
   background-size: cover;
   padding: 70px 0;
-  min-height: 350px; }
+  padding-bottom: 20px;
+  min-height: 250px; }
 
 .find-location {
   position: relative;
@@ -1305,7 +1308,8 @@ form textarea {
         font-size: 1.1428571429em; }
 
 .fullwidth-block {
-  padding: 70px 0; }
+  padding: 0px 0;
+  padding-bottom: 70px;}
   .fullwidth-block .section-title {
     font-size: 36px;
     font-size: 2.5714285714em;
