@@ -13,29 +13,112 @@ import java.util.List;
 public class User extends Model {
 
     @Id
-    public String id;
+    private String id;
 
+    // username displayed in the webshop / can be used for log in
     @Constraints.Required
-    public String username;
+    private String username;
 
+    // password used to log in
     @Constraints.Required
-    public String password;
+    private String password;
 
 //    TODO: optional
 //    @Constraints.Required
-//    public String password_salt;
+//    private String password_salt;
 
+    // mail used to log in
     @Constraints.Required
-    public String mail;
+    private String mail;
 
+    // link to the image as profile picture for the user
     @Constraints.Required
-    public URL profile_picture;
+    private URL profilePicture;
 
-    public List<String> inventory;
-    public List<String> favorites;
-    public List<String> order_history;
+    // list with product ids, used for searching for product (these products are owned by this user)
+    private List<String> inventory;
 
+    // list with product ids, used for searching for product (if a product is found that is disabled or not visible in the webshop it should be removed from this list)
+    private List<String> favorites;
+
+    // list with order ids, used for searching for order
+    private List<String> orderHistory;
+
+    // date of when the user first joined, it is only set once
     @Constraints.Required
     @Formats.DateTime(pattern = "dd/MM/yyyy")
-    public Date member_since;
+    private Date memberSince;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public URL getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(URL profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public List<String> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(List<String> inventory) {
+        this.inventory = inventory;
+    }
+
+    public List<String> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<String> favorites) {
+        this.favorites = favorites;
+    }
+
+    public List<String> getOrderHistory() {
+        return orderHistory;
+    }
+
+    public void setOrderHistory(List<String> orderHistory) {
+        this.orderHistory = orderHistory;
+    }
+
+    public Date getMemberSince() {
+        return memberSince;
+    }
+
+    public void setMemberSince(Date memberSince) {
+        this.memberSince = memberSince;
+    }
 }

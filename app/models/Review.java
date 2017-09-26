@@ -8,20 +8,73 @@ import play.data.validation.*;
 public class Review extends Model {
 
     @Id
-    public String id;
+    private String id;
 
+    // user for whom the review is meant, review is displayed on this user's account
     @Constraints.Required
-    public String username_receiver_id;
+    private String userReceiverId;
 
+    // user who wrote the review
     @Constraints.Required
-    public String username_sender_id;
+    private String userSenderId;
 
+    // title of the review
     @Constraints.Required
-    public String title;
+    private String title;
 
-    public String description;
+    // description of the review
+    private String description;
 
+    // user rating (0-5)
     @Constraints.Required
-    public int rating;
+    private int rating;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserReceiverId() {
+        return userReceiverId;
+    }
+
+    public void setUserReceiverId(String userReceiverId) {
+        this.userReceiverId = userReceiverId;
+    }
+
+    public String getUserSenderId() {
+        return userSenderId;
+    }
+
+    public void setUserSenderId(String userSenderId) {
+        this.userSenderId = userSenderId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }
