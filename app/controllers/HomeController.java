@@ -10,6 +10,7 @@ import javax.inject.Inject;
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
+ * @author I.A
  */
 public final class HomeController extends Controller {
     /**

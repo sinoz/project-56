@@ -1,72 +1,73 @@
 package models;
 
-import javax.persistence.*;
-import io.ebean.*;
-import play.data.validation.*;
+import io.ebean.Model;
+import play.data.validation.Constraints;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.net.URL;
 
-/*
-@author: Maurice van Veen
+/**
+ * A category of types of games.
+ *
+ * @author Maurice van Veen
  */
-
-@Entity
+@Entity(name = "game_category")
 public final class GameCategory extends Model {
+	/** The primary key of the category. */
+	@Id
+	private String id;
 
-    @Id
-    private String id;
+	/** The name of the game */
+	@Constraints.Required
+	private String name;
 
-    // name of the game
-    @Constraints.Required
-    private String name;
+	/** The link to the image for this game */
+	private URL image;
 
-    // link to the image for this game
-    private URL image;
+	/** General information about the game. */
+	private String description;
 
-    // general information about the game
-    private String description;
+	/** Specific information about the game (ranks, stats, etc.) */
+	private String specifications;
 
-    // specific information about the game (ranks, stats, etc.)
-    private String specifications;
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public URL getImage() {
+		return image;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setImage(URL image) {
+		this.image = image;
+	}
 
-    public URL getImage() {
-        return image;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setImage(URL image) {
-        this.image = image;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getSpecifications() {
+		return specifications;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getSpecifications() {
-        return specifications;
-    }
-
-    public void setSpecifications(String specifications) {
-        this.specifications = specifications;
-    }
+	public void setSpecifications(String specifications) {
+		this.specifications = specifications;
+	}
 }

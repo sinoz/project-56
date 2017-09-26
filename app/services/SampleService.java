@@ -2,7 +2,8 @@ package services;
 
 import javax.inject.Singleton;
 
-/** A sample service to demonstrate the basic usage of Guice.
+/**
+ * A sample service to demonstrate the basic usage of Guice.
  * @author I.A
  */
 @Singleton
