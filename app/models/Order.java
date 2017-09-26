@@ -11,7 +11,7 @@ import javax.persistence.Id;
  *
  * @author Maurice van Veen
  */
-@Entity
+@Entity(name = "order")
 public final class Order extends Model {
 	/** The primary key of an order. */
 	@Id
