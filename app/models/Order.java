@@ -4,8 +4,12 @@ import javax.persistence.*;
 import io.ebean.*;
 import play.data.validation.*;
 
+/*
+@author: Maurice van Veen
+ */
+
 @Entity
-public class Order extends Model {
+public final class Order extends Model {
 
     @Id
     private String id;

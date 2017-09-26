@@ -9,8 +9,12 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+/*
+@author: Maurice van Veen
+ */
+
 @Entity
-public class User extends Model {
+public final class User extends Model {
 
     @Id
     private String id;

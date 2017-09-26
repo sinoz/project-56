@@ -7,8 +7,12 @@ import play.data.validation.*;
 
 import java.util.Date;
 
+/*
+@author: Maurice van Veen
+ */
+
 @Entity
-public class Product extends Model {
+public final class Product extends Model {
 
     @Id
     private String id;

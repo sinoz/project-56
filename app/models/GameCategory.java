@@ -6,8 +6,12 @@ import play.data.validation.*;
 
 import java.net.URL;
 
+/*
+@author: Maurice van Veen
+ */
+
 @Entity
-public class GameCategory extends Model {
+public final class GameCategory extends Model {
 
     @Id
     private String id;
