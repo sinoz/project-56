@@ -35,6 +35,10 @@ public class User extends Model {
     @Constraints.Required
     private URL profilePicture;
 
+    // mail used for payout after a user bought a product with this seller
+    @Constraints.Required
+    private String paymentMail;
+
     // list with product ids, used for searching for product (these products are owned by this user)
     private List<String> inventory;
 
@@ -88,6 +92,14 @@ public class User extends Model {
 
     public void setProfilePicture(URL profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getPaymentMail() {
+        return paymentMail;
+    }
+
+    public void setPaymentMail(String paymentMail) {
+        this.paymentMail = paymentMail;
     }
 
     public List<String> getInventory() {
