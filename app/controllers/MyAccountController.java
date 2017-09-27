@@ -3,10 +3,10 @@ package controllers;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import views.html.faq.index;
+import views.html.myaccount.index;
 
 /**
- * A {@link Controller} for the FAQ page.
+ * A {@link Controller} for the MyAccount page.
  * @author Melle Nout
  * @author I.A
  */
