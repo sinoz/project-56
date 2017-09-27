@@ -38,7 +38,7 @@
 
             <div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
                 <div class="container">
-                    <form action="/search" class="find-location">
+                    <form action="/search=" class="find-location">
                         <input type="text" placeholder="Find your game...">
                         <input type="submit" value="Find">
                     </form>
@@ -52,29 +52,34 @@
                         <div class="row">
                             <div class="col-md-3 col-sm-6">
                                 <div class="live-camera">
-                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/CSGO-Cover.jpg")" alt=""></figure>
-                                    <h3 class="location">Counter-Strike: Global Offensive</h3>
-                                    <small class="date"></small>
+                                    <a href="/search=Counter-Strike">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/CSGO-Cover.jpg")" alt=""></figure>
+                                        <h3 class="location">Counter-Strike: Global Offensive</h3>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6">
                                 <div class="live-camera">
-                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Overwatch-Cover.jpg")" alt=""></figure>
-                                    <h3 class="location">Overwatch</h3>
-                                    <small class="date"></small>
+                                    <a href="/search=Overwatch">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Overwatch-Cover.jpg")" alt=""></figure>
+                                        <h3 class="location">Overwatch</h3>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6">
                                 <div class="live-camera">
-                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/WoW-Cover.jpg")" alt=""></figure>
-                                    <h3 class="location">World of Warcraft</h3>
-                                    <small class="date"></small>
+                                    <a href="/search=World_of_Warcraft">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/WoW-Cover.jpg")" alt=""></figure>
+                                        <h3 class="location">World of Warcraft</h3>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6">
                                 <div class="live-camera">
-                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/LoL-Cover.jpg")" alt=""></figure>
-                                    <h3 class="location">League of Legends</h3>
+                                    <a href="/search=League_of_Legends">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/LoL-Cover.jpg")" alt=""></figure>
+                                        <h3 class="location">League of Legends</h3>
+                                    </a>
                                 </div>
                             </div>
                         </div>
