@@ -11,6 +11,8 @@ import java.time.Clock;
  * the root package. You can create modules in other locations by
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.
+ *
+ * Test
  */
 public final class Module extends AbstractModule {
     @Override
