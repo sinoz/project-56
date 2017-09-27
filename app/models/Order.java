@@ -1,26 +1,96 @@
 package models;
 
-import javax.persistence.*;
-import io.ebean.*;
-import play.data.validation.*;
+import io.ebean.Model;
+import play.data.validation.Constraints;
 
-@Entity
-public class Order extends Model {
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-    @Id
-    public String id;
+/**
+ * An account order.
+ *
+ * @author Maurice van Veen
+ */
+@Entity(name = "order")
+public final class Order extends Model {
+	/** The primary key of an order. */
+	@Id
+	private String id;
 
-    @Constraints.Required
-    public String user_id;
+	/** id of the user, can be used for searching for user. */
+	@Constraints.Required
+	private String userId;
 
-    @Constraints.Required
-    public String product_id;
+	/** The id of the product, can be used for searching for product */
+	@Constraints.Required
+	private String productId;
 
-    @Constraints.Required
-    public float price;
+	/** price of the order (total price) */
+	@Constraints.Required
+	private float price;
 
-    public String coupon_code;
+	/** A coupon code used for this order */
+	private String couponCode;
 
-    @Constraints.Required
-    public int status;
+	/**
+	 * The status of this order (0-5)
+	 * 0:  added
+	 * 1:  processing
+	 * 2:  changing email
+	 * 3:  changing password
+	 * 4:  initializing inventory
+	 * 5:  done
+	 * TODO: use an Enum for this instead of a hardcoded int value
+	 */
+	@Constraints.Required
+	private int status;
+
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public String getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }

@@ -1,53 +1,179 @@
 package models;
 
-import javax.persistence.*;
-import io.ebean.*;
+import io.ebean.Model;
 import play.data.format.Formats;
-import play.data.validation.*;
+import play.data.validation.Constraints;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
-@Entity
-public class Product extends Model {
+/**
+ * A product.
+ *
+ * @author: Maurice van Veen
+ */
+@Entity(name = "product")
+public final class Product extends Model {
+	@Id
+	private String id;
 
-    @Id
-    public String id;
+	/** id of the seller/user, can be used for searching for seller/user */
+	@Constraints.Required
+	private String userId;
 
-    @Constraints.Required
-    public String user_id;
+	/** id of the game, can be used for searching for game category */
+	@Constraints.Required
+	private String gameId;
 
-    @Constraints.Required
-    public String game_id;
+	/** if the product is displayed/visible in webshop */
+	@Constraints.Required
+	private boolean visible;
 
-    // if the product is displayed/visible in webshop
-    @Constraints.Required
-    public boolean visible;
+	/** if the product is disabled from webshop & inventory (is used for order history etc.) */
+	@Constraints.Required
+	private boolean disabled;
 
-    // if the product is disabled from webshop & inventory (but is used for order history etc.)
-    @Constraints.Required
-    public boolean disabled;
+	/** title of the product */
+	@Constraints.Required
+	private String title;
 
-    @Constraints.Required
-    public String title;
-    public String description;
+	/** description of the product */
+	private String description;
 
-    @Constraints.Required
-    @Formats.DateTime(pattern = "dd/MM/yyyy")
-    public Date added_since;
+	/** date the product was added to the user's inventory */
+	@Constraints.Required
+	@Formats.DateTime(pattern = "dd/MM/yyyy")
+	private Date addedSince;
 
-    @Constraints.Required
-    public boolean can_buy;
-    public float buy_price;
+	/** indicates if the product can be bought in the webshop */
+	@Constraints.Required
+	private boolean canBuy;
 
-    @Constraints.Required
-    public boolean can_trade;
+	/** indicates the price of the product if it can be bought */
+	private float buyPrice;
 
-    @Constraints.Required
-    public String mail_last;
+	/** indicates if the product can be traded in the webshop */
+	@Constraints.Required
+	private boolean canTrade;
 
-    @Constraints.Required
-    public String mail_current;
+	/** last know mail-address (used for refunding to seller / can't change mail for refund) */
+	@Constraints.Required
+	private String mailLast;
 
-    @Constraints.Required
-    public String password_current;
+	/** mail-address used for logging in currently */
+	@Constraints.Required
+	private String mailCurrent;
+
+	/** password used for logging in currently */
+	@Constraints.Required
+	private String passwordCurrent;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getAddedSince() {
+		return addedSince;
+	}
+
+	public void setAddedSince(Date addedSince) {
+		this.addedSince = addedSince;
+	}
+
+	public boolean isCanBuy() {
+		return canBuy;
+	}
+
+	public void setCanBuy(boolean canBuy) {
+		this.canBuy = canBuy;
+	}
+
+	public float getBuyPrice() {
+		return buyPrice;
+	}
+
+	public void setBuyPrice(float buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+
+	public boolean isCanTrade() {
+		return canTrade;
+	}
+
+	public void setCanTrade(boolean canTrade) {
+		this.canTrade = canTrade;
+	}
+
+	public String getMailLast() {
+		return mailLast;
+	}
+
+	public void setMailLast(String mailLast) {
+		this.mailLast = mailLast;
+	}
+
+	public String getMailCurrent() {
+		return mailCurrent;
+	}
+
+	public void setMailCurrent(String mailCurrent) {
+		this.mailCurrent = mailCurrent;
+	}
+
+	public String getPasswordCurrent() {
+		return passwordCurrent;
+	}
+
+	public void setPasswordCurrent(String passwordCurrent) {
+		this.passwordCurrent = passwordCurrent;
+	}
 }
