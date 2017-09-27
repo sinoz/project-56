@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * TODO: document
+ * A user.
+ *
  * @author Maurice van Veen
  */
 @Entity(name = "user")
@@ -19,11 +20,11 @@ public final class User extends Model {
 	@Id
 	private String id;
 
-	// username displayed in the webshop / can be used for log in
+	/** username displayed in the webshop / can be used for log in */
 	@Constraints.Required
 	private String username;
 
-	// password used to log in
+	/** password used to log in */
 	@Constraints.Required
 	private String password;
 
@@ -31,28 +32,28 @@ public final class User extends Model {
 	//    @Constraints.Required
 	//    private String password_salt;
 
-	// mail used to log in
+	/** mail used to log in */
 	@Constraints.Required
 	private String mail;
 
-	// link to the image as profile picture for the user
+	/** link to the image as profile picture for the user */
 	@Constraints.Required
 	private URL profilePicture;
 
-	// mail used for payout after a user bought a product with this seller
+	/** mail used for payout after a user bought a product with this seller */
 	@Constraints.Required
 	private String paymentMail;
 
-	// list with product ids, used for searching for product (these products are owned by this user)
+	/** list with product ids, used for searching for product (these products are owned by this user) */
 	private List<String> inventory;
 
-	// list with product ids, used for searching for product (if a product is found that is disabled or not visible in the webshop it should be removed from this list)
+	/** list with product ids, used for searching for product (if a product is found that is disabled or not visible in the webshop it should be removed from this list) */
 	private List<String> favorites;
 
-	// list with order ids, used for searching for order
+	/** list with order ids, used for searching for order */
 	private List<String> orderHistory;
 
-	// date of when the user first joined, it is only set once
+	/** date of when the user first joined, it is only set once */
 	@Constraints.Required
 	@Formats.DateTime(pattern = "dd/MM/yyyy")
 	private Date memberSince;

@@ -11,7 +11,7 @@ import javax.persistence.Id;
  *
  * @author Maurice van Veen
  */
-@Entity
+@Entity(name = "order")
 public final class Order extends Model {
 	/** The primary key of an order. */
 	@Id
@@ -84,5 +84,13 @@ public final class Order extends Model {
 
 	public void setCouponCode(String couponCode) {
 		this.couponCode = couponCode;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }

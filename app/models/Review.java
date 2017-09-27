@@ -7,7 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * TODO: document
+ * Review written by a user for a user.
+ *
  * @author Maurice van Veen
  */
 @Entity(name = "review")
@@ -15,22 +16,22 @@ public final class Review extends Model {
 	@Id
 	private String id;
 
-	// user for whom the review is meant, review is displayed on this user's account
+	/** user for whom the review is meant, review is displayed on this user's account */
 	@Constraints.Required
 	private String userReceiverId;
 
-	// user who wrote the review
+	/** user who wrote the review */
 	@Constraints.Required
 	private String userSenderId;
 
-	// title of the review
+	/** title of the review */
 	@Constraints.Required
 	private String title;
 
-	// description of the review
+	/** description of the review */
 	private String description;
 
-	// user rating (0-5)
+	/** user rating (0-5) */
 	@Constraints.Required
 	private int rating;
 
