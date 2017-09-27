@@ -85,4 +85,12 @@ public final class Order extends Model {
 	public void setCouponCode(String couponCode) {
 		this.couponCode = couponCode;
 	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }
