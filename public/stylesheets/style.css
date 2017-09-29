@@ -244,7 +244,7 @@ p {
 form input, form textarea, form select {
   outline: none;
   border: none;
-  padding: 10px;
+  padding: 20px;
   border-radius: 30px; }
 form select {
   -webkit-appearance: none;
@@ -650,7 +650,7 @@ form textarea {
     width: 41.6666666667%; }
 
   .col-md-6 {
-    width: 50%; }
+    width: 40%; }
 
   .col-md-7 {
     width: 58.3333333333%; }
@@ -1677,3 +1677,73 @@ form textarea {
     .site-footer .social-links a:hover {
       background: #009ad8;
       color: white; }
+
+/*
+ * Contact us styles
+ */
+
+section#contact1 {
+  background-color: #1e202b;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+section {
+  padding: 40px 0px;
+}
+section#contact1 .section-heading {
+  color: white;
+}
+section#contact1 .form-group {
+  margin-bottom: 25px;
+}
+
+section#contact1 .form-group input,
+
+section#contact1 .form-group input.form-control {
+  height: auto;
+}
+section#contact1 .form-group textarea.form-control {
+  height: 222px;
+    width: 125%;
+}
+
+section#contact1 ::-webkit-input-placeholder {
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eeeeee;
+
+}
+section#contact1 :-moz-placeholder {
+  /* Firefox 18- */
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eeeeee;
+}
+section#contact1 ::-moz-placeholder {
+  /* Firefox 19+ */
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eeeeee;
+}
+section#contact1 :-ms-input-placeholder {
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eeeeee;
+}
+
+section#contact .text-danger {
+    color: #e74c3c;
+}
+.about_our_company{
+  text-align: left;
+    padding-left: 2%;
+    padding-bottom: 1%;
+}
+.about_our_company h1{
+  font-size: 25px;
+}
+
