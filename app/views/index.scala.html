@@ -3,153 +3,153 @@
 * message to display.
 *@
 @(message: String)
-@*
-* Call the `main` template with two arguments. The first
-* argument is a `String` with the title of the page, the second
-* argument is an `Html` object containing the body of the page. test
-*@
-@main("ReStart") {
-    <body>
-        <div class="site-content">
-            <div class="site-header">
-                <div class="container">
-                    <a href="/" class="branding">
-                        <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
-                        <div class="logo-type">
+    @*
+    * Call the `main` template with two arguments. The first
+    * argument is a `String` with the title of the page, the second
+    * argument is an `Html` object containing the body of the page. test
+    *@
+    @main("ReStart") {
+        <body>
+            <div class="site-content">
+                <div class="site-header">
+                    <div class="container">
+                        <a href="/" class="branding">
+                            <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
+                            <div class="logo-type">
+                            </div>
+                            <div><h1 class="site-title">Make Your Game Life Great Again</h1></div>
+                        </a>
+
+                            <!-- Default snippet for navigation -->
+                        <div class="main-navigation">
+                            <button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
+                            <ul class="menu">
+                                <li class="menu-item current-menu-item"><a href="/">Home</a></li>
+                                <li class="menu-item"><a href="/faq">FAQ</a></li>
+                                <li class="menu-item"><a href="/contact">Contact</a></li>
+                                <li class="menu-item"><a href="/myaccount">My Account</a></li>
+                            </ul> <!-- .menu -->
+                        </div> <!-- .main-navigation -->
+
+                        <div class="mobile-navigation"></div>
+
+                    </div>
+                </div> <!-- .site-header -->
+
+                <div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
+                    <div class="container">
+                        <form action="/search" class="find-location">
+                            <input type="text" id="searchinput" name="input" placeholder="Find your game..." list="games">
+                            <input type="submit" value="Find">
+                            <datalist id="games"></datalist>
+                        </form>
+                    </div>
+                </div>
+
+                <main class="main-content">
+                    <div class="fullwidth-block">
+                        <div class="container">
+                            <h2 class="section-title">Games</h2>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=Counter-Strike">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/CSGO-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">Counter-Strike: Global Offensive</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=Overwatch">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Overwatch-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">Overwatch</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=World_of_Warcraft">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/WoW-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">World of Warcraft</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=League_of_Legends">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/LoL-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">League of Legends</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=Minecraft">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Minecraft-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">Minecraft</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=PLAYERUNKOWN'S_BATTLEGROUNDS">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/PUBG.jpg")" alt=""></figure>
+                                            <h3 class="location">PLAYERUNKNOW'S BATTLEGROUNDS</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=Destiny_2">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Destiny-2-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">Destiny 2</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="live-camera">
+                                        <a href="/search=Hearthstone">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Hearthstone-Cover.jpg")" alt=""></figure>
+                                            <h3 class="location">Hearthstone</h3>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div><h1 class="site-title">Make Your Game Life Great Again</h1></div>
-                    </a>
+                    </div>
+                </main>
 
-                        <!-- Default snippet for navigation -->
-                    <div class="main-navigation">
-                        <button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-                        <ul class="menu">
-                            <li class="menu-item current-menu-item"><a href="/">Home</a></li>
-                            <li class="menu-item"><a href="/faq">FAQ</a></li>
-                            <li class="menu-item"><a href="/contact">Contact</a></li>
-                            <li class="menu-item"><a href="/myaccount">My Account</a></li>
-                        </ul> <!-- .menu -->
-                    </div> <!-- .main-navigation -->
+                <footer class="site-footer">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="contact">
+                                    <h4>Restart Company</h4>
+                                    @*TODO: add email*@
+                                    <a href="mailto:example.com">Mail: example.com</a>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-md-offset-1">
+                                <div class="social-links">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-google-plus"></i></a>
+                                    <a href="#"><i class="fa fa-pinterest"></i></a>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="mobile-navigation"></div>
-
-                </div>
-            </div> <!-- .site-header -->
-
-            <div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
-                <div class="container">
-                    <form action="/search" class="find-location">
-                        <input type="text" id="searchinput" name="input" placeholder="Find your game..." list="games">
-                        <input type="submit" value="Find">
-                        <datalist id="games"></datalist>
-                    </form>
-                </div>
+                        <p class="colophon">Copyright 2017 ReStart. All rights reserved</p>
+                    </div>
+                </footer> <!-- .site-footer -->
             </div>
 
-            <main class="main-content">
-                <div class="fullwidth-block">
-                    <div class="container">
-                        <h2 class="section-title">Games</h2>
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=Counter-Strike">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/CSGO-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">Counter-Strike: Global Offensive</h3>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=Overwatch">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Overwatch-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">Overwatch</h3>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=World_of_Warcraft">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/WoW-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">World of Warcraft</h3>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=League_of_Legends">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/LoL-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">League of Legends</h3>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=Minecraft">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Minecraft-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">Minecraft</h3>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=PLAYERUNKOWN'S_BATTLEGROUNDS">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/PUBG.jpg")" alt=""></figure>
-                                        <h3 class="location">PLAYERUNKNOW'S BATTLEGROUNDS</h3>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=Destiny_2">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Destiny-2-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">Destiny 2</h3>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6">
-                                <div class="live-camera">
-                                    <a href="/search=Hearthstone">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Hearthstone-Cover.jpg")" alt=""></figure>
-                                        <h3 class="location">Hearthstone</h3>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            <footer class="site-footer">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="contact">
-                                <h4>Restart Company</h4>
-                                @*TODO: add email*@
-                                <a href="mailto:example.com">Mail: example.com</a>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-md-offset-1">
-                            <div class="social-links">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-google-plus"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p class="colophon">Copyright 2017 ReStart. All rights reserved</p>
-                </div>
-            </footer> <!-- .site-footer -->
-        </div>
-
-        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
-        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
-        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
-        <script src="@routes.Assets.versioned("javascripts/searchbar.js")"></script>
-    </body>
-}
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/searchbar.js")"></script>
+        </body>
+    }
