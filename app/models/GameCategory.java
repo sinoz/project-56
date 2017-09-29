@@ -29,9 +29,8 @@ public final class GameCategory extends Model {
 	private String description;
 
 	/** Specific information about the game (ranks, stats, etc.) */
-//  TODO: this may be unnecessary
-//	private String specifications;
-
+	//  TODO: this may be unnecessary
+	//	private String specifications;
 	public String getId() {
 		return id;
 	}
@@ -64,11 +63,11 @@ public final class GameCategory extends Model {
 		this.description = description;
 	}
 
-//	public String getSpecifications() {
-//		return specifications;
-//	}
-//
-//	public void setSpecifications(String specifications) {
-//		this.specifications = specifications;
-//	}
+	//	public String getSpecifications() {
+	//		return specifications;
+	//	}
+	//
+	//	public void setSpecifications(String specifications) {
+	//		this.specifications = specifications;
+	//	}
 }

@@ -10,8 +10,6 @@ import java.util.Date;
 
 /**
  * A product.
- *
- * @author: Maurice van Veen
  */
 @Entity(name = "product")
 public final class Product extends Model {

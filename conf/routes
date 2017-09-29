@@ -11,3 +11,5 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /faq                        controllers.FAQController.index
 
 GET     /contact                    controllers.ContactController.index
+
+GET     /myaccount                  controllers.MyAccountController.index
