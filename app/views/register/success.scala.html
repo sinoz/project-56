@@ -1,5 +1,11 @@
-@()
+@(givenName: String)
+
+@import components._
 
 @main("You have been registered") {
-    <p>Well fuck</p>
+    @header("Register")
+
+    <p>Well fuck you mr. @givenName</p>
+
+    @footer()
 }

@@ -20,7 +20,7 @@ public final class RegistrationController extends Controller {
 		return ok(index.render());
 	}
 
-	public static class User {
+	public static class UserForm {
 		private String name;
 
 		public String getName() {
@@ -33,12 +33,12 @@ public final class RegistrationController extends Controller {
 	}
 
 	public Result submit() {
-		Form<User> userForm = formFactory.form(User.class);
+		Form<UserForm> userForm = formFactory.form(UserForm.class);
 
-		User user = userForm.bindFromRequest().get();
+		UserForm user = userForm.bindFromRequest().get();
 
 		System.out.println("Hello World: " + user.getName());
 
-		return ok(success.render());
+		return ok(success.render(user.getName()));
 	}
 }

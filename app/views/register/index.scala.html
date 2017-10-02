@@ -7,7 +7,7 @@
             <div class="site-content">
                 @header("Register")
 
-                @helper.form(action = routes.RegistrationController.submit()) {
+                @helper.form(action = helper.CSRF(routes.RegistrationController.submit())) {
                     <div class="form-group">
                         <label for="name" class="cols-sm-2 control-label">Your Name</label>
                         <div class="cols-sm-10">
