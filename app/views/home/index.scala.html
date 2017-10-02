@@ -1,3 +1,5 @@
+@import components._
+
 @*
 * This template takes a single argument, a String containing a
 * message to display.
@@ -11,40 +13,9 @@
     @main("ReStart") {
         <body>
             <div class="site-content">
-                <div class="site-header">
-                    <div class="container">
-                        <a href="/" class="branding">
-                            <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
-                            <div class="logo-type">
-                            </div>
-                            <div><h1 class="site-title">Make Your Game Life Great Again</h1></div>
-                        </a>
+                @header("Home")
 
-                            <!-- Default snippet for navigation -->
-                        <div class="main-navigation">
-                            <button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-                            <ul class="menu">
-                                <li class="menu-item current-menu-item"><a href="/">Home</a></li>
-                                <li class="menu-item"><a href="/faq">FAQ</a></li>
-                                <li class="menu-item"><a href="/contact">Contact</a></li>
-                                <li class="menu-item"><a href="/myaccount">My Account</a></li>
-                            </ul> <!-- .menu -->
-                        </div> <!-- .main-navigation -->
-
-                        <div class="mobile-navigation"></div>
-
-                    </div>
-                </div> <!-- .site-header -->
-
-                <div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
-                    <div class="container">
-                        <form action="/search" class="find-location">
-                            <input type="text" id="searchinput" name="input" placeholder="Find your game..." list="games">
-                            <input type="submit" value="Find">
-                            <datalist id="games"></datalist>
-                        </form>
-                    </div>
-                </div>
+                @search()
 
                 <main class="main-content">
                     <div class="fullwidth-block">
@@ -190,28 +161,7 @@
                     </div>
                 </main>
 
-                <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="contact">
-                                    <h4>Restart Company</h4>
-                                    <a href="mailto:contact&#64;ReStart.com">contact&#64;ReStart.com</a>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-md-offset-1">
-                                <div class="social-links">
-                                    <a href="#"><i class="fa fa-facebook"></i></a>
-                                    <a href="#"><i class="fa fa-twitter"></i></a>
-                                    <a href="#"><i class="fa fa-google-plus"></i></a>
-                                    <a href="#"><i class="fa fa-pinterest"></i></a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <p class="colophon">Copyright 2017 ReStart. All rights reserved</p>
-                    </div>
-                </footer> <!-- .site-footer -->
+                @footer()
             </div>
 
             <!-- Required for the banner -->

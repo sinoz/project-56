@@ -1,77 +1,58 @@
 @()
 
+    @import components._
+
     @main("ReStart") {
         <body>
             <div class="site-content">
-                <div class="site-header">
-                    <div class="container">
-                        <a href="/" class="branding">
-                            <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
-                            <div class="logo-type">
-                            </div>
-                            <div><h1 class="site-title">Make Your Game Life Great Again</h1></div>
-                        </a>
+                @header("FAQ")
 
-                            <!-- Default snippet for navigation -->
-                        <div class="main-navigation">
-                            <button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-                            <ul class="menu">
-                                <li class="menu-item"><a href="/">Home</a></li>
-                                <li class="menu-item current-menu-item"><a href="/faq">FAQ</a></li>
-                                <li class="menu-item"><a href="/contact">Contact</a></li>
-                                <li class="menu-item"><a href="/myaccount">My Account</a></li>
-                            </ul> <!-- .menu -->
-                        </div> <!-- .main-navigation -->
-
-                        <div class="mobile-navigation"></div>
-
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                                    Collapsible Group 1</a>
+                            </h4>
+                        </div>
+                        <div id="collapse1" class="panel-collapse collapse in">
+                            <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                commodo consequat.</div>
+                        </div>
                     </div>
-                </div> <!-- .site-header -->
-            </div>
-
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                                Collapsible Group 1</a>
-                        </h4>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                                    Collapsible Group 2</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" class="panel-collapse collapse">
+                            <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                commodo consequat.</div>
+                        </div>
                     </div>
-                    <div id="collapse1" class="panel-collapse collapse in">
-                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.</div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                                Collapsible Group 2</a>
-                        </h4>
-                    </div>
-                    <div id="collapse2" class="panel-collapse collapse">
-                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.</div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                                Collapsible Group 3</a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" class="panel-collapse collapse">
-                        <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.</div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                                    Collapsible Group 3</a>
+                            </h4>
+                        </div>
+                        <div id="collapse3" class="panel-collapse collapse">
+                            <div class="panel-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                                commodo consequat.</div>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            @footer()
         </body>
     }

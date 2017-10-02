@@ -10,6 +10,9 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 GET     /faq                        controllers.FAQController.index
 
+GET     /register                   controllers.RegistrationController.index
+POST    /register                   controllers.RegistrationController.submit
+
 GET     /contact                    controllers.ContactController.index
 
 GET     /myaccount                  controllers.MyAccountController.index
