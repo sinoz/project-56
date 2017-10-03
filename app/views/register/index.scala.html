@@ -1,27 +1,87 @@
-@()
-
-@import components._
+@(form: play.data.Form[forms.RegistrationForm])
+    @import components._
 
     @main("Registration Form") {
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/registration.css")">
+
         <body>
             <div class="site-content">
                 @header("Register")
 
-                @helper.form(action = routes.RegistrationController.submit()) {
-                    <div class="form-group">
-                        <label for="name" class="cols-sm-2 control-label">Your Name</label>
-                        <div class="cols-sm-10">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
-                                <input type="text" class="form-control" name="name" id="name"  placeholder="Enter your Name"/>
-                            </div>
+                @banner()
+
+                <main class="main-content">
+                    <div class="fullwidth-block">
+                        <div class="container">
+                            <h1>Registering Your ReStart</h1>
+
+                            @helper.form(action = helper.CSRF(routes.RegistrationController.register()), 'style -> "width:400px; margin: 0 auto;") {
+                                <div class="required-field-block">
+                                    <input type="text" name="name" placeholder="Name" class="form-control">
+                                    <div class="required-icon">
+                                        <div class="text">*</div>
+                                    </div>
+
+                                    @for(error <- form("name").errors) {
+                                        <p>@error.format(messages())</p>
+                                    }
+                                </div>
+
+                                <div class="required-field-block">
+                                    <input type="text" name="email" placeholder="Email" class="form-control">
+                                    <div class="required-icon">
+                                        <div class="text">*</div>
+                                    </div>
+
+                                    @for(error <- form("email").errors) {
+                                        <p>@error.format(messages())</p>
+                                    }
+                                </div>
+
+                                <div class="required-field-block">
+                                    <input type="password" name="password" placeholder="Password" class="form-control">
+                                    <div class="required-icon">
+                                        <div class="text">*</div>
+                                    </div>
+
+                                    @for(error <- form("password").errors) {
+                                        <p>@error.format(messages())</p>
+                                    }
+                                </div>
+
+                                <div class="required-field-block">
+                                    <input type="password" name="repeatPassword" placeholder="RepeatPassword" class="form-control">
+                                    <div class="required-icon">
+                                        <div class="text">*</div>
+                                    </div>
+
+                                    @for(error <- form("repeatPassword").errors) {
+                                        <p>@error.format(messages())</p>
+                                    }
+                                </div>
+
+                                <button class="btn btn-primary">Send</button>
+
+                                @if(form.hasGlobalErrors) {
+                                    <p class="error">
+                                        @for(error <- form.globalErrors) {
+                                            @error.format(messages())
+                                        }
+                                    </p>
+                                }
+                            }
                         </div>
                     </div>
-
-                    <button type="submit">DO EET</button>
-                }
+                </main>
 
                 @footer()
+
+                    <!-- Required for the banner -->
+                <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+                <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+                <script src="@routes.Assets.versioned("javascripts/registration.js")"></script>
+                <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
             </div>
         </body>
     }

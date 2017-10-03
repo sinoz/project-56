@@ -11,7 +11,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /faq                        controllers.FAQController.index
 
 GET     /register                   controllers.RegistrationController.index
-POST    /register                   controllers.RegistrationController.submit
+POST    /register                   controllers.RegistrationController.register
 
 GET     /contact                    controllers.ContactController.index
 

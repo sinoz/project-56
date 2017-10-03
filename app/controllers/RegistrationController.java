@@ -1,5 +1,6 @@
 package controllers;
 
+import forms.RegistrationForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -8,37 +9,35 @@ import views.html.register.*;
 
 import javax.inject.Inject;
 
+/** A {@link Controller} used for account registration.
+ * @author I.A
+ */
 public final class RegistrationController extends Controller {
-	private final FormFactory formFactory;
+	/**
+	 * A {@link FormFactory} to produce registration forms.
+	 */
+	@Inject private FormFactory formFactory;
 
-	@Inject
-	public RegistrationController(FormFactory formFactory) {
-		this.formFactory = formFactory;
-	}
-
+	/**
+	 * Returns an OK result including the {@link views.html.register.index} view.
+	 */
 	public Result index() {
-		return ok(index.render());
+		return ok(index.render(formFactory.form(RegistrationForm.class)));
 	}
 
-	public static class User {
-		private String name;
+	/**
+	 * Attempts to register a user. Returns either a {@link Controller#badRequest()} indicating
+	 * a failure in registering the user or a {@link Controller#ok()} result, indicating a successful
+	 * registration.
+	 */
+	public Result register() {
+		Form<RegistrationForm> formBinding = formFactory.form(RegistrationForm.class).bindFromRequest();
+		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+			return badRequest(index.render(formBinding));
+		} else {
+			formBinding.get(); // TODO
 
-		public String getName() {
-			return name;
+			return ok(success.render());
 		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-	}
-
-	public Result submit() {
-		Form<User> userForm = formFactory.form(User.class);
-
-		User user = userForm.bindFromRequest().get();
-
-		System.out.println("Hello World: " + user.getName());
-
-		return ok(success.render());
 	}
 }
