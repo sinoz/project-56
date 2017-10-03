@@ -23,6 +23,7 @@ libraryDependencies ++= {
 
   dbDeps ++ defaults ++ testDeps
 }
+libraryDependencies += javaJdbc
 
 // Make verbose tests
 testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))
