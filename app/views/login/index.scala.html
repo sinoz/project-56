@@ -1,0 +1,73 @@
+@()
+
+    @import components._
+
+    @main("ReStart") {
+        <body>
+            <div class="site-content">
+                @header("Login")
+
+                @banner()
+
+                <div id="login-overlay" class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="well">
+                                        <form id="loginForm" method="POST" action="/login/" novalidate="novalidate">
+                                            <div class="form-group">
+                                                <label for="username" class="control-label">Username</label>
+                                                <input type="text" class="form-control" id="username" name="username" value="" required="" title="Please enter you username" placeholder="examplemail">
+                                                <span class="help-block"></span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password" class="control-label">Password</label>
+                                                <input type="password" class="form-control" id="password" name="password" value="" required="" title="Please enter your password">
+                                                <span class="help-block"></span>
+                                            </div>
+                                            <div id="loginErrorMsg" class="alert alert-error hide">Wrong username og password</div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="remember" id="remember"> Remember login
+                                                </label>
+                                            </div>
+                                            <br>
+                                            <button type="submit" class="btn btn-success btn-block">Login</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="well">
+                                        <form id="loginForm" method="POST" action="/register/" novalidate="novalidate">
+                                            <ul class="list-unstyled" style="line-height: 2">
+                                                <li><span class="fa fa-check text-success"></span> See all your orders</li>
+                                                <li><span class="fa fa-check text-success"></span> Sell accounts</li>
+                                                <li><span class="fa fa-check text-success"></span> Trade accounts</li>
+                                                <li><span class="fa fa-check text-success"></span> Save your favorites</li>
+                                            </ul>
+                                            <br>
+                                            <br>
+                                            <div class="form-group">
+                                                <label for="username" class="control-label">Mail</label>
+                                                <input type="text" class="form-control" id="mail" name="mail" value="" required="" title="Please enter you mail" placeholder="examplemail">
+                                                <span class="help-block"></span>
+                                            </div>
+                                            <p><a href="/new-customer/" class="btn btn-info btn-block">Register</a></p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @footer()
+            </div>
+
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </body>
+    }
