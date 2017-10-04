@@ -16,3 +16,5 @@ POST    /register                   controllers.RegistrationController.register
 GET     /contact                    controllers.ContactController.index
 
 GET     /myaccount                  controllers.MyAccountController.index
+
+GET     /login                      controllers.LoginController.index
