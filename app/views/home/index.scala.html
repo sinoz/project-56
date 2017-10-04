@@ -4,7 +4,8 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(message: String)
+@import java.util
+@(message: String, list: util.List[util.List[GameCategory]])
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -21,142 +22,20 @@
                     <div class="fullwidth-block">
                         <div class="container">
                             <h2 class="section-title">Games</h2>
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Counter-Strike">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/CSGO-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">Counter-Strike: Global Offensive</h3>
-                                        </a>
-                                    </div>
+                            @for(row <- list) {
+                                <div class="row">
+                                    @for(gameCategory <- row) {
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="live-camera">
+                                                <a href="/search?game=@gameCategory.getName.replace(" ", "_")")>
+                                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                                    <h3 class="location">@gameCategory.getName</h3>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Overwatch">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Overwatch-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">Overwatch</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=World_of_Warcraft">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/WoW-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">World of Warcraft</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=League_of_Legends">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/LoL-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">League of Legends</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Minecraft">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Minecraft-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">Minecraft</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=PLAYERUNKOWN'S_BATTLEGROUNDS">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/PUBG.jpg")" alt=""></figure>
-                                            <h3 class="location">PLAYERUNKNOW'S BATTLEGROUNDS</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Destiny_2">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Destiny-2-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">Destiny 2</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Hearthstone">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Hearthstone-Cover.jpg")" alt=""></figure>
-                                            <h3 class="location">Hearthstone</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Dota_2">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Dota_2-Cover.png")" alt=""></figure>
-                                            <h3 class="location">Dota 2</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Rocket_League">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Rocket_League-Cover.png")" alt=""></figure>
-                                            <h3 class="location">Rocket League</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=For_Honor">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/For_Honor-Cover.png")" alt=""></figure>
-                                            <h3 class="location">For Honor</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=CoD_WW2">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/CoD_WW2-Cover.png")" alt=""></figure>
-                                            <h3 class="location">Call of Duty: WWII</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Starcraft_2">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Starcraft_2-Cover.png")" alt=""></figure>
-                                            <h3 class="location">Starcraft II</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=RuneScape">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/RuneScape-Cover.png")" alt=""></figure>
-                                            <h3 class="location">RuneScape</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=Heroes_of_the_Storm">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/Heroes_of_the_Storm-Cover.png")" alt=""></figure>
-                                            <h3 class="location">Heroes of the Storm</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <a href="/search?game=GTA5">
-                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned("images/GTA5-Cover.png")" alt=""></figure>
-                                            <h3 class="location">Grand Theft Auto V</h3>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </main>

@@ -23,7 +23,7 @@ public final class GameCategory extends Model {
 	private String name;
 
 	/** The link to the image for this game */
-	private URL image;
+	private String image;
 
 	/** General information about the game. */
 	private String description;
@@ -47,11 +47,11 @@ public final class GameCategory extends Model {
 		this.name = name;
 	}
 
-	public URL getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(URL image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
