@@ -1,5 +1,4 @@
-@()
-
+@(form: play.data.Form[forms.LoginForm])
     @import components._
 
     @main("ReStart") {
@@ -14,48 +13,59 @@
 
                         <div class="modal-body">
                             <div class="row">
+
+                                <!-- Login form-->
                                 <div class="col-xs-6">
                                     <div class="well">
-                                        <form id="loginForm" method="POST" action="/login/" novalidate="novalidate">
+                                        @helper.form(action = helper.CSRF(routes.LoginController.login()), 'style -> "width:400px; margin: 0 auto;") {
                                             <div class="form-group">
                                                 <label for="username" class="control-label">Username</label>
-                                                <input type="text" class="form-control" id="username" name="username" value="" required="" title="Please enter you username" placeholder="examplemail">
-                                                <span class="help-block"></span>
+                                                <input type="text" class="form-control" id="username" name="username" required="" title="Please enter you username" placeholder="username">
+                                                @for(error <- form("username").errors) {
+                                                    <p>@error.format(messages())</p>
+                                                }
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="password" class="control-label">Password</label>
-                                                <input type="password" class="form-control" id="password" name="password" value="" required="" title="Please enter your password">
-                                                <span class="help-block"></span>
+                                                <input type="password" class="form-control" id="password" name="password" required="" title="Please enter your password">
+                                                @for(error <- form("password").errors) {
+                                                    <p>@error.format(messages())</p>
+                                                }
                                             </div>
-                                            <div id="loginErrorMsg" class="alert alert-error hide">Wrong username og password</div>
+
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" name="remember" id="remember"> Remember login
                                                 </label>
                                             </div>
-                                            <br>
-                                            <button type="submit" class="btn btn-success btn-block">Login</button>
-                                        </form>
+
+                                            <button class="btn btn-success btn-block">Login</button>
+
+                                            @if(form.hasGlobalErrors) {
+                                                <p class="error">
+                                                @for(error <- form.globalErrors) {
+                                                    @error.format(messages())
+                                                }
+                                                </p>
+                                            }
+                                        }
                                     </div>
                                 </div>
+
+                                <!-- Link to register page-->
                                 <div class="col-xs-6">
                                     <div class="well">
-                                        <form id="loginForm" method="POST" action="/register/" novalidate="novalidate">
-                                            <ul class="list-unstyled" style="line-height: 2">
-                                                <li><span class="fa fa-check text-success"></span> See all your orders</li>
-                                                <li><span class="fa fa-check text-success"></span> Sell accounts</li>
-                                                <li><span class="fa fa-check text-success"></span> Trade accounts</li>
-                                                <li><span class="fa fa-check text-success"></span> Save your favorites</li>
-                                            </ul>
-                                            <br>
-                                            <br>
-                                            <div class="form-group">
-                                                <label for="username" class="control-label">Mail</label>
-                                                <input type="text" class="form-control" id="mail" name="mail" value="" required="" title="Please enter you mail" placeholder="examplemail">
-                                                <span class="help-block"></span>
-                                            </div>
-                                            <p><a href="/new-customer/" class="btn btn-info btn-block">Register</a></p>
-                                        </form>
+                                        <p class="lead">Register</p>
+                                        <ul class="list-unstyled" style="line-height: 2">
+                                            <li><span class="fa fa-check text-success"></span> See all your orders</li>
+                                            <li><span class="fa fa-check text-success"></span> Sell accounts</li>
+                                            <li><span class="fa fa-check text-success"></span> Trade accounts</li>
+                                            <li><span class="fa fa-check text-success"></span> Save your favorites</li>
+                                        </ul>
+                                        <br>
+                                        <br>
+                                        <a href="/register" class="btn btn-primary btn-block">Register</a>
                                     </div>
                                 </div>
                             </div>

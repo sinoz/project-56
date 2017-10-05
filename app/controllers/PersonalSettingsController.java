@@ -3,18 +3,18 @@ package controllers;
 import database.JavaJdbcConnection;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.myaccount.index;
+import views.html.personalsettings.index;
 import javax.inject.Inject;
 
 /**
- * A {@link Controller} for the MyAccount page.
+ * A {@link Controller} for the PersonalSettings page.
  *
  * @author Melle Nout
  * @author I.A
  */
-public final class MyAccountController extends Controller {
-	@Inject
-	private JavaJdbcConnection connection;
+public final class PersonalSettingsController extends Controller {
+    @Inject
+    private JavaJdbcConnection connection;
 
     public Result index() {
         return ok(index.render(connection.getUser()));

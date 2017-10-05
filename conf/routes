@@ -20,5 +20,8 @@ GET     /contact                    controllers.ContactController.index
 GET     /myaccount                  controllers.MyAccountController.index
 
 GET     /login                      controllers.LoginController.index
+POST    /login                      controllers.LoginController.login
+
+GET     /myaccount/personalsettings controllers.PersonalSettingsController.index
 
 GET     /:token                     controllers.ErrorControler.index(token: String)

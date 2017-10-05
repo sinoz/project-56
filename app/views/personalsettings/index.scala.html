@@ -1,0 +1,132 @@
+@(user: User)
+@import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("PersonalSettings")
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet light profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture())" alt=""></figure>
+                                </a>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@user.getUsername</div>
+                            </div>
+                            <div class="profile-userbuttons">
+                                <button type="button" class=" btn btn-info btn-sm">Change profile picture</button>
+                            </div>
+                            <div class="profile-usermenu">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="/myaccount">
+                                            <i class="icon-home"></i> Order History </a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="/myaccount/personalsettings">
+                                            <i class="icon-settings"></i> Personal Settings </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-settings"></i> Favorites </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-info"></i> Inventory </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-info"></i> Reviews </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-info"></i> Log Out </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet light bordered">
+                            <h2>Personal settings</h2>
+                            <form class="form-horizontal">
+                                        <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Username:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="textinput" type="text" class="form-control input-md" value=@user.getUsername>
+                                        </div>
+                                    </div>
+
+                                        <!-- email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="textinput" type="text" class="form-control input-md" value=@user.getMail>
+                                        </div>
+                                    </div>
+
+                                        <!-- Password input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="passwordinput">new password</label>
+                                        <div class="col-md-4">
+                                            <input id="passwordinput" name="passwordinput" type="password" class="form-control input-md">
+
+                                        </div>
+                                    </div>
+
+                                        <!-- Password input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="passwordinput">repeat password</label>
+                                        <div class="col-md-4">
+                                            <input id="passwordinput" name="passwordinput" type="password" class="form-control input-md">
+
+                                        </div>
+                                    </div>
+
+                                        <!-- paymentmail input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="textinput" type="text" class="form-control input-md" value=@user.getPaymentMail>
+                                        </div>
+                                    </div>
+
+
+                                        <!-- delete account Button -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="singlebutton">Remove my account</label>
+                                        <div class="col-md-4">
+                                            <button id="singlebutton" name="singlebutton" class="btn btn-danger">remove</button>
+                                        </div>
+                                    </div>
+
+                                        <!-- Submit Button -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="singlebutton">Save Changes</label>
+                                        <div class="col-md-4">
+                                            <input type="submit" name="Submit" value="Save">
+                                        </div>
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
