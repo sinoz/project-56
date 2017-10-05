@@ -4,7 +4,7 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(token: String, session: play.mvc.Http.Session)
+@(token: String)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -13,16 +13,15 @@
     @main("ReStart") {
         <body>
             <div class="site-content">
-                @header("Home", session)
+                @header("Home")
 
-                @searchBar()
+                @banner();
 
                 <main class="main-content">
                     <div class="fullwidth-block">
                         <div class="container">
-                            <h2 class="section-title">@token</h2>
-
-
+                            @*<h2 class="section-title">404 Page Not Found</h2>*@
+                            <img src="@routes.Assets.versioned("images/404.png")" alt="" class="404">
                         </div>
                     </div>
                 </main>
