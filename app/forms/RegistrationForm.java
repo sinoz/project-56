@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * A blue print of a filled in ReStart account registration form.
+ *
  * @author I.A
  */
 @Constraints.Validate

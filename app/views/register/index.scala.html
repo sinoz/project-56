@@ -1,4 +1,4 @@
-@(form: play.data.Form[forms.RegistrationForm])
+@(form: play.data.Form[forms.RegistrationForm], session: play.mvc.Http.Session)
     @import components._
 
     @main("Registration Form") {
@@ -6,7 +6,7 @@
 
         <body>
             <div class="site-content">
-                @header("Register")
+                @header("Register", session)
 
                 @banner()
 

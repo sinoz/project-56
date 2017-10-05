@@ -1,9 +1,9 @@
-@()
+@(session: play.mvc.Http.Session)
 
 @import components._
 
 @main("You have been registered") {
-    @header("Register")
+    @header("Register", session)
 
     @footer()
 }

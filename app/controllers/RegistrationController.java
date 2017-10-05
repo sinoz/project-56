@@ -3,26 +3,39 @@ package controllers;
 import forms.RegistrationForm;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
+import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.register.*;
+import views.html.register.index;
+import views.html.register.success;
 
 import javax.inject.Inject;
+import java.sql.PreparedStatement;
 
-/** A {@link Controller} used for account registration.
+/**
+ * A {@link Controller} used for account registration.
+ *
  * @author I.A
  */
 public final class RegistrationController extends Controller {
 	/**
 	 * A {@link FormFactory} to produce registration forms.
 	 */
-	@Inject private FormFactory formFactory;
+	@Inject
+	private FormFactory formFactory;
+
+	/**
+	 * The required {@link Database} dependency to fetch database connections from.
+	 */
+	@Inject
+	private Database database;
 
 	/**
 	 * Returns an OK result including the {@link views.html.register.index} view.
 	 */
 	public Result index() {
-		return ok(index.render(formFactory.form(RegistrationForm.class)));
+		return ok(index.render(formFactory.form(RegistrationForm.class), session()));
 	}
 
 	/**
@@ -33,11 +46,48 @@ public final class RegistrationController extends Controller {
 	public Result register() {
 		Form<RegistrationForm> formBinding = formFactory.form(RegistrationForm.class).bindFromRequest();
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-			return badRequest(index.render(formBinding));
+			return badRequest(index.render(formBinding, session()));
 		} else {
-			formBinding.get(); // TODO
+			RegistrationForm form = formBinding.get();
 
-			return ok(success.render());
+			if (userExists(form.getName().toLowerCase())) {
+				formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
+
+				return badRequest(index.render(formBinding, session()));
+			} else {
+				if (registered(form)) {
+					return ok(success.render(session()));
+				} else {
+					return badRequest(index.render(formBinding.withGlobalError("Failed to register account. Please consult an administrator."), session()));
+				}
+			}
 		}
+	}
+
+	/**
+	 * Checks if a user with the given username exists in the database.
+	 */
+	private boolean userExists(String username) {
+		return database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
+
+			stmt.setString(1, username);
+
+			return stmt.executeQuery().next();
+		});
+	}
+
+	/**
+	 * Attempts to register a new user and returns whether it has successfully registered the user
+	 * using the given {@link RegistrationForm}.
+	 */
+	private boolean registered(RegistrationForm form) {
+		return database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail) VALUES(?, ?, ?)");
+			stmt.setString(1, form.name.toLowerCase());
+			stmt.setString(2, form.password);
+			stmt.setString(3, form.email);
+			return !stmt.execute();
+		});
 	}
 }

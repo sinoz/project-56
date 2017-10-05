@@ -1,8 +1,8 @@
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
-import services.auth.AuthenticationService;
 import services.Service;
 import services.ServiceConstants;
+import services.auth.AuthenticationService;
 import services.auth.PlayAuthenticationService;
 
 import java.time.Clock;

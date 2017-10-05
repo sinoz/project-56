@@ -12,6 +12,6 @@ import views.html.contact.index;
  */
 public final class ContactController extends Controller {
 	public Result index() {
-		return ok(index.render());
+		return ok(index.render(session()));
 	}
 }

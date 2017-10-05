@@ -1,11 +1,11 @@
-@()
+@(session: play.mvc.Http.Session)
 
     @import components._
 
     @main("ReStart") {
         <body>
             <div class="site-content">
-                @header("Contact")
+                @header("Contact", session)
 
                 @banner()
 

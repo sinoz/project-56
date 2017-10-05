@@ -5,7 +5,6 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.net.URL;
 
 /**
  * A category of types of games.

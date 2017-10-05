@@ -1,10 +1,7 @@
 package controllers;
 
-import database.JavaJdbcConnection;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.personalsettings.index;
-import javax.inject.Inject;
 
 /**
  * A {@link Controller} for the PersonalSettings page.
@@ -13,10 +10,12 @@ import javax.inject.Inject;
  * @author I.A
  */
 public final class PersonalSettingsController extends Controller {
-    @Inject
-    private JavaJdbcConnection connection;
-
-    public Result index() {
-        return ok(index.render(connection.getUser()));
-    }
+	public Result index() {
+		String loggedInAs = session().get("loggedInAs");
+		if (loggedInAs == null || loggedInAs.length() == 0) {
+			return redirect("/");
+		} else {
+			return ok(views.html.personalsettings.index.render(session()));
+		}
+	}
 }

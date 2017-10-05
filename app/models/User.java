@@ -6,7 +6,6 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
