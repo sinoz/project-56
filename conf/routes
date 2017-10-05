@@ -20,3 +20,5 @@ GET     /contact                    controllers.ContactController.index
 GET     /myaccount                  controllers.MyAccountController.index
 
 GET     /login                      controllers.LoginController.index
+
+GET     /myaccount/personalsettings           controllers.PersonalSettingsController.index

@@ -85,7 +85,7 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'default', -- password
     'salt', -- password salt
     'test@example.com', -- mail
-    'http://www.zsbd.org.bd/assets/images/default1.gif', -- profile picture
+    'images/default_profile_pic.png', -- profile picture
     'payment@example.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
