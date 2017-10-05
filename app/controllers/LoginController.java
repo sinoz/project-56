@@ -1,6 +1,7 @@
 package controllers;
 
 import forms.LoginForm;
+import models.User;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -37,9 +38,8 @@ public final class LoginController extends Controller {
             String password = form.getPassword();
             boolean remember = form.getRemember();
 
-            if(authService.authenticateUser(username, password)){
-                //TODO Login User
-            }
+            User authResult = authService.authenticateUser(username, password);
+            System.out.println(authResult);
 
             return ok(success.render());
         }

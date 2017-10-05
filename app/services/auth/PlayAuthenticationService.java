@@ -14,8 +14,8 @@ public final class PlayAuthenticationService implements AuthenticationService {
     @Inject
     private JavaJdbcConnection connection;
 
-    public boolean authenticateUser(String username, String password){
-        User result = connection.getUser(username, password);
-        return result != null;
+    public User authenticateUser(String username, String password){
+        connection = new JavaJdbcConnection();
+        return connection.getUser();
     }
 }
