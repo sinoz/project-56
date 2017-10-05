@@ -59,4 +59,21 @@ public final class JavaJdbcConnection {
         return user;
     }
 
+    public User getUser(String username, String password){
+        User user = new User();
+        db.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=" + username + " AND password=" + password);
+            ResultSet results = stmt.executeQuery();
+            while (results.next()) {
+                user.setId(results.getString("id"));
+                user.setUsername(results.getString("username"));
+                user.setPassword(results.getString("password"));
+                user.setMail(results.getString("mail"));
+                user.setProfilePicture(results.getString("profilepicture"));
+            }
+            return user;
+        });
+        return user;
+    }
+
 }
