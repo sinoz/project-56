@@ -1424,6 +1424,7 @@ ol ol {
   margin-bottom: 0;
 }
 .list-unstyled {
+  margin-bottom: 6px;
   padding-left: 0;
   list-style: none;
 }
