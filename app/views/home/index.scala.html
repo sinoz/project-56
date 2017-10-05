@@ -4,7 +4,8 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(list: List[List[GameCategory]])
+@import java.util
+@(list: util.List[util.List[GameCategory]])
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -26,9 +27,9 @@
                                     @for(gameCategory <- row) {
                                         <div class="col-md-3 col-sm-6">
                                             <div class="live-camera">
-                                                <a href="/search?game=@gameCategory.getName().replace(" ", "_")")>
+                                                <a href="/search/game=@gameCategory.getName.replace(" ", "+")")>
                                                     <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
-                                                    <h3 class="location">@gameCategory.getName()</h3>
+                                                    <h3 class="location">@gameCategory.getName</h3>
                                                 </a>
                                             </div>
                                         </div>

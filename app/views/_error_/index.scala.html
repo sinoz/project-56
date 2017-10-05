@@ -15,14 +15,13 @@
             <div class="site-content">
                 @header("Home")
 
-                @searchBar()
+                @banner();
 
                 <main class="main-content">
                     <div class="fullwidth-block">
                         <div class="container">
-                            <h2 class="section-title">@token</h2>
-
-
+                            @*<h2 class="section-title">404 Page Not Found</h2>*@
+                            <img src="@routes.Assets.versioned("images/404.png")" alt="" class="404">
                         </div>
                     </div>
                 </main>
