@@ -30,7 +30,7 @@ public final class LoginForm implements Constraints.Validatable<List<ValidationE
 		}
 
 		if (password.length() < 4) {
-			errors.add(new ValidationError("password", "Password must be at least 6 characters long"));
+			errors.add(new ValidationError("password", "Password must be at least 4 characters long"));
 		}
 
 		return errors;

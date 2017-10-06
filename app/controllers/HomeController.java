@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -51,7 +52,7 @@ public final class HomeController extends Controller {
 	 */
 	private ImmutableList<GameCategory> getGameCategories() {
 		return database.withConnection(connection -> {
-			ArrayList<GameCategory> gameCategories = new ArrayList<>();
+			List<GameCategory> gameCategories = new ArrayList<>();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories ORDER BY id ASC");
 			ResultSet results = stmt.executeQuery();

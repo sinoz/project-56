@@ -21,7 +21,6 @@ public final class RegistrationController extends Controller {
 	/**
 	 * A {@link FormFactory} to produce registration forms.
 	 */
-	@Inject
 	private FormFactory formFactory;
 
 	/**
@@ -33,7 +32,8 @@ public final class RegistrationController extends Controller {
 	 * Creates a new {@link RegistrationController}.
 	 */
 	@Inject
-	public RegistrationController(Database database) {
+	public RegistrationController(FormFactory formFactory, Database database) {
+		this.formFactory = formFactory;
 		this.database = database;
 	}
 

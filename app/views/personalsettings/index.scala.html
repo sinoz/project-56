@@ -1,4 +1,5 @@
-@(session: play.mvc.Http.Session)
+@import forms.PersonalSettingsForm
+@(form: play.data.Form[PersonalSettingsForm], session: play.mvc.Http.Session)
 @import components._
 
 @main("ReStart") {
@@ -55,66 +56,67 @@
                     <div class="col-md-8">
                         <div class="portlet light bordered">
                             <h2>Personal settings</h2>
-                            <form class="form-horizontal">
-                                        <!-- Text input-->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="textinput">Change Username:</label>
-                                        <div class="col-md-4">
-                                            <input id="textinput" name="textinput" type="text" class="form-control input-md" value=@session.get("loggedInAs")>
-                                        </div>
+
+                            @helper.form(action = helper.CSRF(routes.PersonalSettingsController.editSettings()), 'class -> "form-horizontal") {
+                                <!-- Text input-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="textinput">Change Username:</label>
+                                    <div class="col-md-4">
+                                        <input id="textinput" name="usernameToChangeTo" type="text" class="form-control input-md" value=@session.get("loggedInAs")>
                                     </div>
+                                </div>
 
-                                        <!-- email input-->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
-                                        <div class="col-md-4">
-                                            <input id="textinput" name="textinput" type="text" class="form-control input-md" value="">
-                                        </div>
+                                    <!-- email input-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                    <div class="col-md-4">
+                                        <input id="textinput" name="emailToChangeTo" type="text" class="form-control input-md" value="">
                                     </div>
+                                </div>
 
-                                        <!-- Password input-->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="passwordinput">new password</label>
-                                        <div class="col-md-4">
-                                            <input id="passwordinput" name="passwordinput" type="password" class="form-control input-md">
+                                    <!-- Password input-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="passwordinput">new password</label>
+                                    <div class="col-md-4">
+                                        <input id="passwordinput" name="passwordToChangeTo" type="password" class="form-control input-md">
 
-                                        </div>
                                     </div>
+                                </div>
 
-                                        <!-- Password input-->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="passwordinput">repeat password</label>
-                                        <div class="col-md-4">
-                                            <input id="passwordinput" name="passwordinput" type="password" class="form-control input-md">
+                                    <!-- Password input-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="passwordinput">repeat password</label>
+                                    <div class="col-md-4">
+                                        <input id="passwordinput" name="passwordToChangeToRepeated" type="password" class="form-control input-md">
 
-                                        </div>
                                     </div>
+                                </div>
 
-                                        <!-- paymentmail input-->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
-                                        <div class="col-md-4">
-                                            <input id="textinput" name="textinput" type="text" class="form-control input-md" value="")>
-                                        </div>
+                                    <!-- paymentmail input-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                    <div class="col-md-4">
+                                        <input id="textinput" name="paymentEmailToChangeTo" type="text" class="form-control input-md" value="")>
                                     </div>
+                                </div>
 
 
-                                        <!-- delete account Button -->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="singlebutton">Remove my account</label>
-                                        <div class="col-md-4">
-                                            <button id="singlebutton" name="singlebutton" class="btn btn-danger">remove</button>
-                                        </div>
+                                    <!-- delete account Button -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="singlebutton">Remove my account</label>
+                                    <div class="col-md-4">
+                                        <button id="singlebutton" name="singlebutton" class="btn btn-danger">remove</button>
                                     </div>
+                                </div>
 
-                                        <!-- Submit Button -->
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="singlebutton">Save Changes</label>
-                                        <div class="col-md-4">
-                                            <input type="submit" name="Submit" value="Save">
-                                        </div>
+                                    <!-- Submit Button -->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="singlebutton">Save Changes</label>
+                                    <div class="col-md-4">
+                                        <input type="submit" name="Submit" value="Save">
                                     </div>
-                            </form>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

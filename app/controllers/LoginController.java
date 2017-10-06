@@ -26,7 +26,6 @@ public final class LoginController extends Controller {
 	/**
 	 * A {@link FormFactory} to produce login forms.
 	 */
-	@Inject
 	private FormFactory formFactory;
 
 	/**
@@ -38,7 +37,8 @@ public final class LoginController extends Controller {
 	 * Creates a new {@link LoginController}.
 	 */
 	@Inject
-	public LoginController(Database database) {
+	public LoginController(FormFactory formFactory, Database database) {
+		this.formFactory = formFactory;
 		this.database = database;
 	}
 
