@@ -29,8 +29,15 @@ public final class HomeController extends Controller {
 	/**
 	 * The required {@link Database} dependency to fetch database connections.
 	 */
-	@Inject
 	private Database database;
+
+	/**
+	 * Creates a new {@link HomeController}.
+	 */
+	@Inject
+	public HomeController(Database database) {
+		this.database = database;
+	}
 
 	/**
 	 * Returns a {@link Result} combined with the home view.

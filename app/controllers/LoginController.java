@@ -30,10 +30,17 @@ public final class LoginController extends Controller {
 	private FormFactory formFactory;
 
 	/**
-	 * The required {@link Database} dependency to fetch database connections from.
+	 * The required {@link Database} dependency to fetch database connections.
+	 */
+	private Database database;
+
+	/**
+	 * Creates a new {@link LoginController}.
 	 */
 	@Inject
-	private Database database;
+	public LoginController(Database database) {
+		this.database = database;
+	}
 
 	/**
 	 * Returns a {@link Result} combined with the default login page.
