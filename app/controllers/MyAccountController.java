@@ -2,6 +2,7 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.myaccount.index;
 
 /**
  * A {@link Controller} for the MyAccount page.
@@ -15,7 +16,7 @@ public final class MyAccountController extends Controller {
 		if (loggedInAs == null || loggedInAs.length() == 0) {
 			return redirect("/");
 		} else {
-			return ok(views.html.myaccount.index.render(session()));
+			return ok(index.render(session()));
 		}
 	}
 }

@@ -13,6 +13,6 @@ import views.html._error_.index;
 public final class ErrorControler extends Controller {
 
 	public Result index(String token) {
-		return ok(index.render(token));
+		return ok(index.render(token, session()));
 	}
 }

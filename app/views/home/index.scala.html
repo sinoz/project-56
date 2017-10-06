@@ -1,5 +1,3 @@
-@import components._
-
 @*
 * This template takes a single argument, a String containing a
 * message to display.
@@ -10,6 +8,8 @@
     * argument is a `String` with the title of the page, the second
     * argument is an `Html` object containing the body of the page. test
     *@
+    @import components._
+
     @main("ReStart") {
         <body>
             <div class="site-content">
@@ -26,7 +26,7 @@
                                     @for(gameCategory <- row) {
                                         <div class="col-md-3 col-sm-6">
                                             <div class="live-camera">
-                                                <a href="/search?game=@gameCategory.getName().replace(" ", "_")")>
+                                                <a href="/search/game=@gameCategory.getName().replace(" ", "_")")>
                                                     <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
                                                     <h3 class="location">@gameCategory.getName()</h3>
                                                 </a>
