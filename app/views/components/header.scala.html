@@ -1,0 +1,41 @@
+@(activeMenuItem: String, session: play.mvc.Http.Session)
+
+<div class="site-header">
+    <div class="container">
+        <a href="/" class="branding">
+            <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
+            <div class="logo-type">
+            </div>
+            <div><h1 class="site-title">Make Your Game Life Great Again</h1></div>
+        </a>
+
+            <!-- Default snippet for navigation -->
+        <div class="main-navigation">
+            <button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
+            <ul class="menu">
+                @if(activeMenuItem.equals("Home")) {
+                    <li class="menu-item current-menu-item"><a href="/">Home</a></li>
+                } else {
+                    <li class="menu-item"><a href="/">Home</a></li>
+                }
+
+                @if(activeMenuItem.equals("FAQ")) {
+                    <li class="menu-item current-menu-item"><a href="/faq">FAQ</a></li>
+                } else {
+                    <li class="menu-item"><a href="/faq">FAQ</a></li>
+                }
+
+                <li class="menu-item"><a href="/contact">Contact</a></li>
+
+                @if(!session.containsKey("loggedInAs")) {
+                    <li class="menu-item"><a href="/login">Login</a></li>
+                } else {
+                    <li class="menu-item"><a href="/myaccount">My Account</a></li>
+                }
+            </ul> <!-- .menu -->
+        </div> <!-- .main-navigation -->
+
+        <div class="mobile-navigation"></div>
+
+    </div>
+</div> <!-- .site-header -->

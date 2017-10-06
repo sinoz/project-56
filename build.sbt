@@ -9,7 +9,8 @@ scalaVersion := "2.12.2"
 libraryDependencies ++= {
   val dbDeps = Seq(
     "org.postgresql" % "postgresql" % "42.1.4",
-    "com.h2database" % "h2" % "1.4.194"
+    "com.h2database" % "h2" % "1.4.194",
+    "com.github.davidmoten" % "rxjava-jdbc" % "0.7.11"
   )
 
   val defaults = Seq(
@@ -23,6 +24,7 @@ libraryDependencies ++= {
 
   dbDeps ++ defaults ++ testDeps
 }
+libraryDependencies += javaJdbc
 
 // Make verbose tests
 testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-v"))

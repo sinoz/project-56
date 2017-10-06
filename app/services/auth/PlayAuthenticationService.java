@@ -6,5 +6,5 @@ package services.auth;
  * @author I.A
  */
 public final class PlayAuthenticationService implements AuthenticationService {
-	// TODO
+    // TODO
 }

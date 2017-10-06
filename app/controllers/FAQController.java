@@ -12,6 +12,6 @@ import views.html.faq.index;
  */
 public final class FAQController extends Controller {
 	public Result index() {
-		return ok(index.render());
+		return ok(index.render(session()));
 	}
 }

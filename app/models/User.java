@@ -6,7 +6,6 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public final class User extends Model {
 
 	/** link to the image as profile picture for the user */
 	@Constraints.Required
-	private URL profilePicture;
+	private String profilePicture;
 
 	/** mail used for payout after a user bought a product with this seller */
 	@Constraints.Required
@@ -91,11 +90,11 @@ public final class User extends Model {
 		this.mail = mail;
 	}
 
-	public URL getProfilePicture() {
+	public String getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(URL profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 

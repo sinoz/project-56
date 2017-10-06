@@ -12,6 +12,11 @@ import views.html.myaccount.index;
  */
 public final class MyAccountController extends Controller {
 	public Result index() {
-		return ok(index.render());
+		String loggedInAs = session().get("loggedInAs");
+		if (loggedInAs == null || loggedInAs.length() == 0) {
+			return redirect("/");
+		} else {
+			return ok(index.render(session()));
+		}
 	}
 }
