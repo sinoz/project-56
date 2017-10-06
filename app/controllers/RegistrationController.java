@@ -8,7 +8,6 @@ import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.register.index;
-import views.html.register.success;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
@@ -56,7 +55,7 @@ public final class RegistrationController extends Controller {
 				return badRequest(index.render(formBinding, session()));
 			} else {
 				if (registered(form)) {
-					return ok(success.render(session()));
+					return redirect("/login");
 				} else {
 					return badRequest(index.render(formBinding.withGlobalError("Failed to register account. Please consult an administrator."), session()));
 				}
