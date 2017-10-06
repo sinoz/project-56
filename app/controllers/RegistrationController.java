@@ -82,10 +82,11 @@ public final class RegistrationController extends Controller {
 	 */
 	private boolean registered(RegistrationForm form) {
 		return database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail) VALUES(?, ?, ?)");
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail, profilepicture) VALUES (?, ?, ?, ?)");
 			stmt.setString(1, form.name.toLowerCase());
 			stmt.setString(2, form.password);
 			stmt.setString(3, form.email);
+			stmt.setString(4, "images/default_profile_pic.png");
 			return !stmt.execute();
 		});
 	}
