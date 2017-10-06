@@ -23,6 +23,8 @@ GET     /login                      controllers.LoginController.index
 POST    /login                      controllers.LoginController.login
 
 GET     /myaccount/personalsettings controllers.PersonalSettingsController.index
+POST    /myaccount/personalsettings controllers.PersonalSettingsController.editSettings
+
 GET     /logout                     controllers.LogoutController.index
 
-GET     /:token                     controllers.ErrorControler.index(token: String)
+GET     /:token                     controllers.ErrorController.index(token: String)

@@ -21,14 +21,21 @@ public final class RegistrationController extends Controller {
 	/**
 	 * A {@link FormFactory} to produce registration forms.
 	 */
-	@Inject
 	private FormFactory formFactory;
 
 	/**
-	 * The required {@link Database} dependency to fetch database connections from.
+	 * The required {@link Database} dependency to fetch database connections.
+	 */
+	private Database database;
+
+	/**
+	 * Creates a new {@link RegistrationController}.
 	 */
 	@Inject
-	private Database database;
+	public RegistrationController(FormFactory formFactory, Database database) {
+		this.formFactory = formFactory;
+		this.database = database;
+	}
 
 	/**
 	 * Returns an OK result including the {@link views.html.register.index} view.
