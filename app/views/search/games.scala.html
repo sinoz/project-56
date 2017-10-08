@@ -1,4 +1,4 @@
-@(session: play.mvc.Http.Session)
+@(formInput: String, session: play.mvc.Http.Session)
     @import components._
 
     @main("ReStart"){
@@ -10,7 +10,11 @@
 
                 <main class="main_content">
                     <div class="fullwidth-block">
-
+                        <div class="container">
+                            <div class="find-location">
+                                @formInput
+                            </div>
+                        </div>
                     </div>
                 </main>
 

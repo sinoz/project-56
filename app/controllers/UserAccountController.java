@@ -5,6 +5,7 @@ import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.useraccount.index;
+import views.html.useraccount.empty;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
@@ -30,9 +31,14 @@ public final class UserAccountController extends Controller {
     /**
      * Returns a {@link Result} combined with a user account page.
      */
-    public Result index(String token){
+    public Result index(String username){
+        Optional<User> user = getUser(username);
 
-        return ok(index.render(new User(), session()));
+        if(user.isPresent()){
+            return ok(index.render(user.get(), session()));
+        } else {
+            return ok(empty.render(session()));
+        }
     }
 
     /**

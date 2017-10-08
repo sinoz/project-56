@@ -39,7 +39,8 @@ public class SearchController extends Controller {
             SearchForm form = formBinding.get();
             //TODO get search results
 
-            return ok(views.html.search.games.render(session()));
+            String formInput = form.getInput();
+            return ok(views.html.search.games.render(formInput, session()));
         }
     }
 
