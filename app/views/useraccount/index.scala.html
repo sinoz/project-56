@@ -1,0 +1,24 @@
+@(user: User, session: play.mvc.Http.Session)
+    @import components._
+
+    @main("Restart"){
+        <body>
+            <div class="site-content">
+                @header("", session)
+
+                <main class="main-content">
+                    <div class="fullwidth-block">
+                        @user.getUsername
+                    </div>
+                </main>
+
+                @footer()
+            </div>
+
+            <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </body>
+    }
