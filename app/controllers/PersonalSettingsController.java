@@ -10,11 +10,12 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.ResultSet;
 
 /**
  * A {@link Controller} for the PersonalSettings page.
  *
+ * @author Joris Stander
  * @author Melle Nout
  * @author I.A
  */
@@ -53,20 +54,24 @@ public final class PersonalSettingsController extends Controller {
 			return badRequest(views.html.personalsettings.index.render(formBinding, session()));
 		} else {
 			PersonalSettingsForm form = formBinding.get();
-
 			String loggedInAs = session().get("loggedInAs");
-			if (updateSettings(loggedInAs, form)) {
-				session().put("loggedInAs", form.usernameToChangeTo);
-				session().put("usedMail", form.emailToChangeTo);
-				session().put("usedPaymentMail", form.paymentMailToChangeTo);
+			if (passwordcheck(loggedInAs,form.password)) {
+                if (updateSettings(loggedInAs, form)) {
+                    session().put("loggedInAs", form.usernameToChangeTo);
+                    session().put("usedMail", form.emailToChangeTo);
+                    session().put("usedPaymentMail", form.paymentMailToChangeTo);
 
+                    return redirect("/myaccount");
+                } else {
+                    formBinding = formBinding.withGlobalError("An error has occurred while attrempting to update your settings. Please consult an administrator.");
 
-				return redirect("/myaccount");
-			} else {
-				formBinding = formBinding.withGlobalError("An error has occurred while attrempting to update your settings. Please consult an administrator.");
+                    return badRequest(views.html.personalsettings.index.render(formBinding, session()));
+                }
+            } else {
+                formBinding = formBinding.withGlobalError("An error has occurred while attrempting to update your settings. Please consult an administrator.");
 
-				return badRequest(views.html.personalsettings.index.render(formBinding, session()));
-			}
+                return badRequest(views.html.personalsettings.index.render(formBinding, session()));
+            }
 		}
 	}
 
@@ -79,5 +84,22 @@ public final class PersonalSettingsController extends Controller {
 			stmt.setString(4, loggedInAs);
 			return !stmt.execute();
 		});
+	}
+
+	public boolean passwordcheck(String loggedInAs, String password){
+		return db.withConnection(connection -> {
+		    String Passworddatabase = "";
+			PreparedStatement stmt = connection.prepareStatement("SELECT password FROM users WHERE username=?");
+			stmt.setString(1, loggedInAs);
+			ResultSet rs = stmt.executeQuery();
+            while (rs.next()){
+                Passworddatabase = rs.getString("password");
+            }
+            if (password.equals(Passworddatabase)) {
+                return true;
+            }
+            else{return false;
+            }
+        });
 	}
 }

@@ -21,6 +21,9 @@ public final class PersonalSettingsForm implements Constraints.Validatable<List<
 
     public String paymentMailToChangeTo;
 
+    @Constraints.Required
+    public String password;
+
     @Override
 	public List<ValidationError> validate() {
 		List<ValidationError> errors = new ArrayList<>();
