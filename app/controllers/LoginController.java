@@ -65,7 +65,11 @@ public final class LoginController extends Controller {
 				session().clear();
 
 				session().put("loggedInAs", user.get().getUsername());
-				session().put("profilePictureURL", Optional.ofNullable(user.get().getProfilePicture()).orElse(""));
+				session().put("profilePictureURL", Optional.ofNullable(user.get().getProfilePicture()).orElse("images/default_profile_pic.png"));
+				System.out.println(user.get().getPaymentMail());
+				session().put("usedMail", user.get().getMail());
+				session().put("usedPaymentMail", user.get().getPaymentMail());
+
 
 				return redirect("/");
 			} else {
@@ -96,6 +100,7 @@ public final class LoginController extends Controller {
 				u.setUsername(results.getString("username"));
 				u.setPassword(results.getString("password"));
 				u.setMail(results.getString("mail"));
+				u.setPaymentMail(results.getString("paymentmail"));
 				u.setProfilePicture(results.getString("profilepicture"));
 
 				user = Optional.of(u);

@@ -55,9 +55,11 @@ public final class PersonalSettingsController extends Controller {
 			PersonalSettingsForm form = formBinding.get();
 
 			String loggedInAs = session().get("loggedInAs");
-
 			if (updateSettings(loggedInAs, form)) {
 				session().put("loggedInAs", form.usernameToChangeTo);
+				session().put("usedMail", form.emailToChangeTo);
+				session().put("usedPaymentMail", form.paymentMailToChangeTo);
+
 
 				return redirect("/myaccount");
 			} else {
@@ -70,9 +72,11 @@ public final class PersonalSettingsController extends Controller {
 
 	public boolean updateSettings(String loggedInAs, PersonalSettingsForm form) {
 		return db.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username = ? WHERE username = ?");
+			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username = ?, mail = ?, paymentmail = ? WHERE username = ?");
 			stmt.setString(1, form.usernameToChangeTo);
-			stmt.setString(2, loggedInAs);
+			stmt.setString(2, form.emailToChangeTo);
+			stmt.setString(3, form.paymentMailToChangeTo);
+			stmt.setString(4, loggedInAs);
 			return !stmt.execute();
 		});
 	}
