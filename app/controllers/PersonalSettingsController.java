@@ -11,6 +11,8 @@ import play.mvc.Result;
 import services.AccountService;
 
 import javax.inject.Inject;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -20,6 +22,7 @@ import static java.util.concurrent.CompletableFuture.runAsync;
 /**
  * A {@link Controller} for the PersonalSettings page.
  *
+ * @author Joris Stander
  * @author Melle Nout
  * @author I.A
  */

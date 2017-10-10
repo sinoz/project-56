@@ -194,6 +194,36 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
   ),
   (
     1, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'CSGO: Medium Player', -- title,
+    'This is a Medium Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    25.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    2, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'CSGO: Worst Player', -- title,
+    'This is a Worst Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    -10.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    1, -- userid
     2, -- gameid
     TRUE, -- visible
     FALSE, -- disabled

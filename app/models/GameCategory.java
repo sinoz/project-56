@@ -15,7 +15,7 @@ import javax.persistence.Id;
 public final class GameCategory extends Model {
 	/** The primary key of the category. */
 	@Id
-	private String id;
+	private int id;
 
 	/** The name of the game */
 	@Constraints.Required
@@ -30,11 +30,11 @@ public final class GameCategory extends Model {
 	/** Specific information about the game (ranks, stats, etc.) */
 	//  TODO: this may be unnecessary
 	//	private String specifications;
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

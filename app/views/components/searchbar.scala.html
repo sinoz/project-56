@@ -1,0 +1,18 @@
+@()
+
+@form = {SearchController.getSearchForm()}
+
+<div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
+    <div class="container">
+        <div class="find-location">
+            @helper.form(action = helper.CSRF(routes.ProductsController.searchGames()), 'style -> "width:400px; margin: 0 auto;") {
+                <input type="text" id="searchinput" name="input" placeholder="Find your game..." list="games">
+                <input type="submit" value="Find">
+                <datalist id="games"></datalist>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- script for search suggestions -->
+<script src="@routes.Assets.versioned("javascripts/searchbar.js")"></script>
