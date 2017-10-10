@@ -14,15 +14,15 @@ import java.util.Date;
 @Entity(name = "product")
 public final class Product extends Model {
 	@Id
-	private String id;
+	private int id;
 
 	/** id of the seller/user, can be used for searching for seller/user */
 	@Constraints.Required
-	private String userId;
+	private int userId;
 
 	/** id of the game, can be used for searching for game category */
 	@Constraints.Required
-	private String gameId;
+	private int gameId;
 
 	/** if the product is displayed/visible in webshop */
 	@Constraints.Required
@@ -67,27 +67,30 @@ public final class Product extends Model {
 	@Constraints.Required
 	private String passwordCurrent;
 
-	public String getId() {
+	/** creates user */
+	private User user;
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
-	public String getGameId() {
+	public int getGameId() {
 		return gameId;
 	}
 
-	public void setGameId(String gameId) {
+	public void setGameId(int gameId) {
 		this.gameId = gameId;
 	}
 
@@ -177,5 +180,13 @@ public final class Product extends Model {
 
 	public void setPasswordCurrent(String passwordCurrent) {
 		this.passwordCurrent = passwordCurrent;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
