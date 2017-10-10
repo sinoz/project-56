@@ -106,6 +106,35 @@ public class ProductsController extends Controller {
     }
 
     /**
+     * Attempts to find a {@link User} that matches the given username and password combination.
+     */
+    private Optional<User> fetchUser(int id) {
+        return database.withConnection(connection -> {
+            Optional<User> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
+            stmt.setInt(1, id);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                User u = new User();
+
+                u.setId(results.getString("id"));
+                u.setUsername(results.getString("username"));
+                u.setPassword(results.getString("password"));
+                u.setMail(results.getString("mail"));
+                u.setPaymentMail(results.getString("paymentmail"));
+                u.setProfilePicture(results.getString("profilepicture"));
+
+                user = Optional.of(u);
+            }
+
+            return user;
+        });
+    }
+
+    /**
      * Attempts to find a {@link Product} that matches the given game category.
      */
     private List<Product> fetchProducts(GameCategory gameCategory) {
@@ -120,9 +149,9 @@ public class ProductsController extends Controller {
             while (results.next()) {
                 Product product = new Product();
 
-                product.setId(results.getString("id"));
-                product.setUserId(results.getString("userid"));
-                product.setGameId(results.getString("gameid"));
+                product.setId(results.getInt("id"));
+                product.setUserId(results.getInt("userid"));
+                product.setGameId(results.getInt("gameid"));
                 product.setVisible(results.getBoolean("visible"));
                 product.setDisabled(results.getBoolean("disabled"));
                 product.setTitle(results.getString("title"));
@@ -135,6 +164,8 @@ public class ProductsController extends Controller {
                 product.setMailCurrent(results.getString("mailcurrent"));
                 product.setPasswordCurrent(results.getString("passwordcurrent"));
 
+                Optional<User> user = fetchUser(product.getUserId());
+                user.ifPresent(product::setUser);
                 list.add(product);
             }
 
