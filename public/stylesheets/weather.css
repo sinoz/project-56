@@ -267,11 +267,13 @@ form textarea {
 
 .awesomebutton, form input[type="submit"], form button, form input[type="reset"] {
   border: solid;
+  width: 90px;
   border-color: #009ad8;
   background: #009ad8;
   padding: 10px 19px;
   border-radius: 5px;
-  color: white;  }
+  color: white;
+  text-align: center;}
 
 div.transbox {
   margin: 0px;
