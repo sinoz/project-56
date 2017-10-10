@@ -1,0 +1,55 @@
+@import components._
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@(token: String, session: play.mvc.Http.Session)
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Home", session)
+
+            @searchbar()
+
+            @*<main class="main-content">*@
+                @*<div class="fullwidth-block">*@
+                    @*<div class="container">*@
+                        @*<h2 class="section-title">@token</h2>*@
+
+
+                    @*</div>*@
+                @*</div>*@
+            @*</main>*@
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet light profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="/image/CSGO-Cover.jpg" alt=""></figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet light bordered">
+                            <h2>Personal settings</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @footer()
+        </div>
+
+            <!-- Required for the banner -->
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}
