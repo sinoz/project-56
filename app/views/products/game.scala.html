@@ -39,7 +39,7 @@
                                         @for(product <- row) {
                                             <div class="col-md-2 col-sm-2">
                                                 <div class="live-camera">
-                                                    <a href="/products/game=@product.getTitle.replace(" ", "_")">
+                                                    <a href="/products/selected/@product.getId">
                                                         <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage)" alt="">
                                                             <div class="transbox"><p>€@product.getBuyPrice</p></div>
                                                         </figure>
@@ -47,7 +47,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-3 image">
-                                                <a href="/products/game=@product.getTitle.replace(" ", "_")"> <h3 class="location">@product.getTitle</h3></a>
+                                                <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
                                                 <a href="/404"><button class="awesomebutton">Buy</button></a>
                                                 <a href="/404"><button class="awesomebutton">Trade</button></a>
                                                 <p>
