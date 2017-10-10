@@ -6,6 +6,7 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -144,6 +145,10 @@ public final class Product extends Model {
 
 	public double getBuyPrice() {
 		return buyPrice;
+	}
+
+	public String getBuyPriceText() {
+		return "€ " + new DecimalFormat("#.00").format(buyPrice);
 	}
 
 	public void setBuyPrice(double buyPrice) {
