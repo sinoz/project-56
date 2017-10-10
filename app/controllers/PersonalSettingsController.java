@@ -1,16 +1,21 @@
 package controllers;
 
+import concurrent.DbExecContext;
 import forms.PersonalSettingsForm;
 import play.data.Form;
 import play.data.FormFactory;
-import play.db.Database;
+import play.libs.concurrent.HttpExecution;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
-import play.mvc.Http;
 import play.mvc.Result;
+import services.AccountService;
 
 import javax.inject.Inject;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
+
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.concurrent.CompletableFuture.runAsync;
 
 /**
  * A {@link Controller} for the PersonalSettings page.
@@ -25,17 +30,29 @@ public final class PersonalSettingsController extends Controller {
 	private final FormFactory formFactory;
 
 	/**
-	 * The required {@link Database} dependency to obtain database connections from the pool.
+	 * TODO
 	 */
-	private final Database db;
+	private final AccountService accounts;
+
+	/**
+	 * TODO
+	 */
+	private final DbExecContext dbEc;
+
+	/**
+	 * TODO
+	 */
+	private final HttpExecutionContext httpEc;
 
 	/**
 	 * Creates a new {@link PersonalSettingsController}.
 	 */
 	@Inject
-	public PersonalSettingsController(FormFactory formFactory, Database db) {
+	public PersonalSettingsController(FormFactory formFactory, AccountService accounts, DbExecContext dbEc, HttpExecutionContext httpEc) {
 		this.formFactory = formFactory;
-		this.db = db;
+		this.accounts = accounts;
+		this.dbEc = dbEc;
+		this.httpEc = httpEc;
 	}
 
 	public Result index() {
@@ -47,33 +64,24 @@ public final class PersonalSettingsController extends Controller {
 		}
 	}
 
-	public Result editSettings() {
+	public CompletionStage<Result> editSettings() {
 		Form<PersonalSettingsForm> formBinding = formFactory.form(PersonalSettingsForm.class).bindFromRequest();
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-			return badRequest(views.html.personalsettings.index.render(formBinding, session()));
+			return completedFuture(badRequest(views.html.personalsettings.index.render(formBinding, session())));
 		} else {
 			PersonalSettingsForm form = formBinding.get();
 
+			Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
 			String loggedInAs = session().get("loggedInAs");
 
-			if (updateSettings(loggedInAs, form)) {
-				session().put("loggedInAs", form.usernameToChangeTo);
-
-				return redirect("/myaccount");
-			} else {
-				formBinding = formBinding.withGlobalError("An error has occurred while attrempting to update your settings. Please consult an administrator.");
-
-				return badRequest(views.html.personalsettings.index.render(formBinding, session()));
-			}
+			// runs the account update operation on the database pool of threads and then switches
+			// to the internal HTTP pool of threads to safely update the session and returning the view
+			return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor)
+						.thenApplyAsync(i -> {
+							session().put("loggedInAs", form.usernameToChangeTo);
+							return redirect("/myaccount");
+							}, httpEc.current());
 		}
-	}
-
-	public boolean updateSettings(String loggedInAs, PersonalSettingsForm form) {
-		return db.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username = ? WHERE username = ?");
-			stmt.setString(1, form.usernameToChangeTo);
-			stmt.setString(2, loggedInAs);
-			return !stmt.execute();
-		});
 	}
 }
