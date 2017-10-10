@@ -70,7 +70,10 @@ public class ProductsController extends Controller {
             if (gameCategory.isPresent()) {
                 List<Product> products = fetchProducts(gameCategory.get());
 
-                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session()));
+                if (products.size() > 0)
+                    return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session()));
+                else
+                    return ok(views.html.products.gameError.render(gameCategory.get(), session()));
             } else {
                 return redirect("/404");
             }
