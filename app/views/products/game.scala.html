@@ -1,12 +1,13 @@
-@
-import components._
 @*
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@
-import java.util
+@import java.util
+
+@import components._
+
 @(gameCategory: GameCategory, list: util.List[util.List[Product]], session: play.mvc.Http.Session)
+
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
