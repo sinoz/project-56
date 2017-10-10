@@ -14,6 +14,7 @@ import javax.inject.Inject;
  * A {@link Controller} that handles searches.
  *
  * @author: Joris Stander
+ * @author: D.Bakhuis
  *
  */
 public class SelectedProductController extends Controller {
