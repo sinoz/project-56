@@ -49,7 +49,7 @@ public final class Product extends Model {
 	private boolean canBuy;
 
 	/** indicates the price of the product if it can be bought */
-	private float buyPrice;
+	private double buyPrice;
 
 	/** indicates if the product can be traded in the webshop */
 	@Constraints.Required
@@ -103,6 +103,10 @@ public final class Product extends Model {
 		return disabled;
 	}
 
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
+
 	public String getTitle() {
 		return title;
 	}
@@ -135,11 +139,11 @@ public final class Product extends Model {
 		this.canBuy = canBuy;
 	}
 
-	public float getBuyPrice() {
+	public double getBuyPrice() {
 		return buyPrice;
 	}
 
-	public void setBuyPrice(float buyPrice) {
+	public void setBuyPrice(double buyPrice) {
 		this.buyPrice = buyPrice;
 	}
 
