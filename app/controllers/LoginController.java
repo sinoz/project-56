@@ -66,9 +66,8 @@ public final class LoginController extends Controller {
 
 				session().put("loggedInAs", user.get().getUsername());
 				session().put("profilePictureURL", Optional.ofNullable(user.get().getProfilePicture()).orElse("images/default_profile_pic.png"));
-				System.out.println(user.get().getPaymentMail());
 				session().put("usedMail", user.get().getMail());
-				session().put("usedPaymentMail", user.get().getPaymentMail());
+				session().put("usedPaymentMail", Optional.ofNullable(user.get().getPaymentMail()).orElse(""));
 
 
 				return redirect("/");
