@@ -5,35 +5,46 @@
 * message to display.
 *@
 @(token: String, session: play.mvc.Http.Session)
-    @*
-    * Call the `main` template with two arguments. The first
-    * argument is a `String` with the title of the page, the second
-    * argument is an `Html` object containing the body of the page. test
-    *@
-    @main("ReStart") {
-        <body>
-            <div class="site-content">
-                @header("Home", session)
 
-                @searchbar()
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Home", session)
 
-                <main class="main-content">
-                    <div class="fullwidth-block">
-                        <div class="container">
-                            <h2 class="section-title">@token</h2>
+            @searchbar()
 
+            <main class="main-content">
+                <div class="fullwidth-block">
+                    <div class="container">
+                        @*<h2 class="section-title">@token</h2>*@
 
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6">
+                                <div class="live-camera">
+                                    <a href="@token.replace("_", " ")">
+                                        @*<figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>*@
+                                        <h3 class="location">@token.replace("_", " ")</h3>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </main>
 
-                @footer()
-            </div>
+                    </div>
+                </div>
+            </main>
+
+            @footer()
+        </div>
 
             <!-- Required for the banner -->
-            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
 
-            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
-            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
-        </body>
-    }
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}
