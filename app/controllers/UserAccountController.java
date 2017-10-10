@@ -10,6 +10,7 @@ import views.html.useraccount.empty;
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,7 +35,8 @@ public final class UserAccountController extends Controller {
     public Result index(String username){
         Optional<User> user = getUser(username);
 
-        if(user.isPresent()){
+
+        if(user.isPresent()) {
             return ok(index.render(user.get(), session()));
         } else {
             return ok(empty.render(session()));
@@ -59,6 +61,9 @@ public final class UserAccountController extends Controller {
                 u.setId(results.getString("id"));
                 u.setUsername(results.getString("username"));
                 u.setProfilePicture(results.getString("profilepicture"));
+                u.setInventory(((List<String>) results.getObject("inventory")));
+                u.setFavorites((List<String>) results.getObject("favorites"));
+                u.setMemberSince(results.getDate("membersince"));
 
                 user = Optional.of(u);
             }

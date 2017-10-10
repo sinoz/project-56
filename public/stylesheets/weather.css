@@ -1796,6 +1796,13 @@ section#contact .text-danger {
   margin-bottom: 7px
 }
 
+.profile-usertitle-membersince{
+  color: #000000;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 7px
+}
+
 .profile-userbuttons {
   text-align: center;
   margin-top: 10px
