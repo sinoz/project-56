@@ -5,6 +5,7 @@ import forms.RegistrationForm;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 /**
  * TODO
@@ -44,10 +45,12 @@ public final class AccountService {
 	 */
 	public void registered(RegistrationForm form) {
 		database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail) VALUES(?, ?, ?)");
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?)");
 			stmt.setString(1, form.name.toLowerCase());
 			stmt.setString(2, form.password);
 			stmt.setString(3, form.email);
+			stmt.setString(4, "images/default_profile_pic.png");
+			stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 			stmt.execute();
 		});
 	}

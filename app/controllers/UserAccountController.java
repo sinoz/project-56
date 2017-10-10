@@ -1,5 +1,7 @@
 package controllers;
 
+import models.Product;
+import models.Review;
 import models.User;
 import play.db.Database;
 import play.mvc.Controller;
@@ -10,6 +12,7 @@ import views.html.useraccount.empty;
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +37,14 @@ public final class UserAccountController extends Controller {
 	 */
 	public Result index(String username) {
 		Optional<User> user = getUser(username);
+		Optional<List<Product>> inventory;
+		Optional<List<Review>> reviews;
 
-		if (user.isPresent()) {
-			return ok(index.render(user.get(), session()));
-		} else {
-			return ok(empty.render(session()));
-		}
+		if (!user.isPresent()) return ok(empty.render(session()));
+		inventory = getUserProducts(user.get().getId());
+		reviews = getUserReviews(user.get().getId());
+
+		return ok(index.render(user.get(), inventory, reviews, session()));
 	}
 
 	/**
@@ -61,13 +66,89 @@ public final class UserAccountController extends Controller {
                 u.setUsername(results.getString("username"));
                 u.setProfilePicture(results.getString("profilepicture"));
                 u.setInventory(((List<String>) results.getObject("inventory")));
-                u.setFavorites((List<String>) results.getObject("favorites"));
                 u.setMemberSince(results.getDate("membersince"));
 
 				user = Optional.of(u);
 			}
 
 			return user;
+		});
+	}
+
+	/**
+	 * Attempts to get the {@link Product}s that belong to the given userId.
+	 */
+	private Optional<List<Product>> getUserProducts(String userId) {
+		return database.withConnection(connection -> {
+			Optional<List<Product>> products = Optional.empty();
+			List<Product> list = new ArrayList<>();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE");
+			stmt.setInt(1, Integer.parseInt(userId));
+
+			ResultSet results = stmt.executeQuery();
+
+			boolean empty = true;
+			while (results.next()) {
+				empty = false;
+				Product p = new Product();
+
+				p.setId(results.getInt("id"));
+				p.setUserId(results.getInt("userid"));
+				p.setGameId(results.getInt("gameid"));
+				p.setTitle(results.getString("title"));
+				p.setDescription(results.getString("description"));
+				p.setAddedSince(results.getDate("addedsince"));
+				p.setCanBuy(results.getBoolean("canbuy"));
+				p.setBuyPrice(results.getDouble("buyprice"));
+				p.setCanTrade(results.getBoolean("cantrade"));
+
+				list.add(p);
+			}
+
+			if(empty) {
+				return products;
+			} else {
+				products = Optional.of(list);
+				return products;
+			}
+		});
+	}
+
+	/**
+	 * Attempts to get the {@link Review}s that belong to the given userId.
+	 */
+	private Optional<List<Review>> getUserReviews(String userId){
+		return database.withConnection(connection -> {
+			Optional<List<Review>> reviews = Optional.empty();
+			List<Review> list = new ArrayList<>();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
+			stmt.setInt(1, Integer.parseInt(userId));
+
+			ResultSet results = stmt.executeQuery();
+
+			boolean empty = true;
+			while(results.next()){
+				empty = false;
+				Review r = new Review();
+
+				r.setId(results.getString("id"));
+				r.setUserReceiverId(results.getInt("userreceiverid"));
+				r.setUserSenderId(results.getInt("usersenderid"));
+				r.setTitle(results.getString("title"));
+				r.setDescription(results.getString("description"));
+				r.setRating(results.getInt("rating"));
+
+				list.add(r);
+			}
+
+			if(empty) {
+				return reviews;
+			} else {
+				reviews = Optional.of(list);
+				return reviews;
+			}
 		});
 	}
 }

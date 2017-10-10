@@ -18,11 +18,11 @@ public final class Review extends Model {
 
 	/** user for whom the review is meant, review is displayed on this user's account */
 	@Constraints.Required
-	private String userReceiverId;
+	private int userReceiverId;
 
 	/** user who wrote the review */
 	@Constraints.Required
-	private String userSenderId;
+	private int userSenderId;
 
 	/** title of the review */
 	@Constraints.Required
@@ -43,19 +43,19 @@ public final class Review extends Model {
 		this.id = id;
 	}
 
-	public String getUserReceiverId() {
+	public int getUserReceiverId() {
 		return userReceiverId;
 	}
 
-	public void setUserReceiverId(String userReceiverId) {
+	public void setUserReceiverId(int userReceiverId) {
 		this.userReceiverId = userReceiverId;
 	}
 
-	public String getUserSenderId() {
+	public int getUserSenderId() {
 		return userSenderId;
 	}
 
-	public void setUserSenderId(String userSenderId) {
+	public void setUserSenderId(int userSenderId) {
 		this.userSenderId = userSenderId;
 	}
 

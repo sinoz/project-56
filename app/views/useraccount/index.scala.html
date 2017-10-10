@@ -1,4 +1,4 @@
-@(user: User, session: play.mvc.Http.Session)
+@(user: User, inventory: Optional[List[Product]], reviews: Optional[List[Review]], session: play.mvc.Http.Session)
     @import components._
 
     @main("Restart") {
@@ -29,7 +29,21 @@
 
                         <div class="col-md-8">
                             <div class="portlet light bordered">
+                                <h2>Selling and Trading</h2>
+                                @if(inventory.isPresent){
+                                    @{var inventoryList = inventory.get()}
+                                    @*TODO Show Products in inventory*@
+                                } else {
+                                    <h3>This user does not have any games for sale right now</h3>
+                                }
 
+                                <h2>Reviews</h2>
+                                @if(reviews.isPresent){
+                                    @{var reviewList = reviews.get()}
+                                    @*TODO Show Reviews for this user*@
+                                } else {
+                                    <h3>There are no reviews for this user yet</h3>
+                                }
                             </div>
                         </div>
                     </div>
