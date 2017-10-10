@@ -1,12 +1,9 @@
 package controllers;
 
-import forms.SearchForm;
-import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.selectedproduct.index;
 
 import javax.inject.Inject;
 
