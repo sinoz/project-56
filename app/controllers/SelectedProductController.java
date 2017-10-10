@@ -78,6 +78,8 @@ public class SelectedProductController extends Controller {
                 product.setMailCurrent(results.getString("mailcurrent"));
                 product.setPasswordCurrent(results.getString("passwordcurrent"));
 
+                Optional<User> user = fetchUser(product.getUserId());
+                user.ifPresent(product::setUser);
                 returned = Optional.of(product);
 
             }
@@ -111,5 +113,36 @@ public class SelectedProductController extends Controller {
             return gameCategory;
         });
     }
+
+    /**
+     * Attempts to find a {@link User} that matches the given username and password combination.
+     */
+    private Optional<User> fetchUser(int id) {
+        return database.withConnection(connection -> {
+            Optional<User> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
+            stmt.setInt(1, id);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                User u = new User();
+
+                u.setId(results.getString("id"));
+                u.setUsername(results.getString("username"));
+                u.setPassword(results.getString("password"));
+                u.setMail(results.getString("mail"));
+                u.setPaymentMail(results.getString("paymentmail"));
+                u.setProfilePicture(results.getString("profilepicture"));
+                u.setMemberSince(results.getDate("membersince"));
+
+                user = Optional.of(u);
+            }
+
+            return user;
+        });
+    }
+
 
 }
