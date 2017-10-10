@@ -6,6 +6,7 @@ import views.html._error_.index;
 
 /**
  * A {@link Controller} to present the error page.
+ *
  * @author Maurice van Veen
  */
 public final class ErrorController extends Controller {

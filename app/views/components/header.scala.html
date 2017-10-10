@@ -25,15 +25,17 @@
                     <li class="menu-item"><a href="/faq">FAQ</a></li>
                 }
 
-                <li class="menu-item"><a href="/contact">Contact</a></li>
+            <li class="menu-item"><a href="/contact">Contact</a></li>
 
                 @if(!session.containsKey("loggedInAs")) {
                     <li class="menu-item"><a href="/login">Login</a></li>
                 } else {
                     <li class="menu-item"><a href="/myaccount">My Account</a></li>
                 }
-            </ul> <!-- .menu -->
-        </div> <!-- .main-navigation -->
+            </ul>
+                <!-- .menu -->
+        </div>
+            <!-- .main-navigation -->
 
         <div class="mobile-navigation"></div>
 

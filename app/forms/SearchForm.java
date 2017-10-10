@@ -13,15 +13,15 @@ import java.util.List;
  */
 @Constraints.Validate
 public final class SearchForm implements Constraints.Validatable<List<ValidationError>> {
-    public String input;
+	public String input;
 
-    @Override
-    public List<ValidationError> validate() {
-        List<ValidationError> errors = new ArrayList<>();
-        return errors;
-    }
+	@Override
+	public List<ValidationError> validate() {
+		List<ValidationError> errors = new ArrayList<>();
+		return errors;
+	}
 
-    public String getInput(){
-        return input;
-    }
+	public String getInput() {
+		return input;
+	}
 }

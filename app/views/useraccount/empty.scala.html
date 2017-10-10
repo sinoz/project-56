@@ -1,28 +1,28 @@
 @(session: play.mvc.Http.Session)
     @import components._
 
-    @main("Restart"){
-        <body>
-            <div class="site-content">
-                @header("", session)
+@main("Restart") {
+    <body>
+        <div class="site-content">
+            @header("", session)
 
-                <main class="main-content">
-                    <div class="fullwidth-block">
-                        <div class="container">
-                            <div class="find-location">
-                                Sorry, this user does not seem to exist
-                            </div>
+            <main class="main-content">
+                <div class="fullwidth-block">
+                    <div class="container">
+                        <div class="find-location">
+                            Sorry, this user does not seem to exist
                         </div>
                     </div>
-                </main>
+                </div>
+            </main>
 
-                @footer()
-            </div>
+            @footer()
+        </div>
 
             <!-- Required for the banner -->
-            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
 
-            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
-            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
-        </body>
-    }
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}

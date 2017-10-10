@@ -3,31 +3,31 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET         /                                  controllers.HomeController.index
 
-GET     /products/:token            controllers.ProductsController.index(token: String)
-POST    /products/search            controllers.ProductsController.searchGames
+GET         /products/:token                   controllers.ProductsController.index(token: String)
+POST        /products/search                   controllers.ProductsController.searchGames
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /faq                        controllers.FAQController.index
+GET         /faq                               controllers.FAQController.index
 
-GET     /register                   controllers.RegistrationController.index
-POST    /register                   controllers.RegistrationController.register
+GET         /register                          controllers.RegistrationController.index
+POST        /register                          controllers.RegistrationController.register
 
-GET     /contact                    controllers.ContactController.index
+GET         /contact                           controllers.ContactController.index
 
-GET     /myaccount                  controllers.MyAccountController.index
+GET         /myaccount                         controllers.MyAccountController.index
 
-GET     /login                      controllers.LoginController.index
-POST    /login                      controllers.LoginController.login
+GET         /login                             controllers.LoginController.index
+POST        /login                             controllers.LoginController.login
 
-GET     /myaccount/personalsettings controllers.PersonalSettingsController.index
-POST    /myaccount/personalsettings controllers.PersonalSettingsController.editSettings
+GET         /myaccount/personalsettings        controllers.PersonalSettingsController.index
+POST        /myaccount/personalsettings        controllers.PersonalSettingsController.editSettings
 
-GET     /logout                     controllers.LogoutController.index
+GET         /logout                            controllers.LogoutController.index
 
-GET     /user/:username             controllers.UserAccountController.index(username: String)
+GET         /user/:username                    controllers.UserAccountController.index(username: String)
 
-GET     /:token                     controllers.ErrorController.index(token: String)
+GET         /:token                            controllers.ErrorController.index(token: String)

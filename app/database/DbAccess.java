@@ -6,8 +6,10 @@ import com.github.davidmoten.rx.jdbc.QuerySelect;
 import javax.inject.Inject;
 import java.util.function.Function;
 
-/** A wrapper in between {@link play.db.Database} and {@link com.github.davidmoten.rx.jdbc.Database}
+/**
+ * A wrapper in between {@link play.db.Database} and {@link com.github.davidmoten.rx.jdbc.Database}
  * to connect the two and allow easy injection.
+ *
  * @author I.A
  */
 public final class DbAccess {

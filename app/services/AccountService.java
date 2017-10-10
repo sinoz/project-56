@@ -7,7 +7,9 @@ import forms.RegistrationForm;
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 
-/** TODO
+/**
+ * TODO
+ *
  * @author I.A
  */
 public final class AccountService {

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 /**
  * A {@link CustomExecutionContext} to define a custom configured thread pool
  * specifically for blocking database access.
+ *
  * @author Sino
  */
 public final class DbExecContext extends CustomExecutionContext {

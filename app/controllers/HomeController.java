@@ -27,21 +27,18 @@ public final class HomeController extends Controller {
 	 * The amount of columns of game categories to present per row in the view.
 	 */
 	private static final int COLS_PER_ROW = 4;
-
-	/**
-	 * The {@link ProductService} to obtain product data from.
-	 */
-	private ProductService products;
-
 	/**
 	 * The execution context used to asynchronously perform database operations.
 	 */
 	private final DbExecContext dbEc;
-
 	/**
 	 * TODO
 	 */
 	private final HttpExecutionContext httpEc;
+	/**
+	 * The {@link ProductService} to obtain product data from.
+	 */
+	private ProductService products;
 
 	/**
 	 * Creates a new {@link HomeController}.
@@ -59,7 +56,6 @@ public final class HomeController extends Controller {
 	public CompletionStage<Result> index() {
 		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-		return supplyAsync(() -> products.getGameCategories(), dbExecutor)
-				.thenApplyAsync(i -> ok(index.render(Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+		return supplyAsync(() -> products.getGameCategories(), dbExecutor).thenApplyAsync(i -> ok(index.render(Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
 	}
 }

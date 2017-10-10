@@ -10,6 +10,7 @@ import java.util.Optional;
 
 /**
  * A service to authenticate users attempting to login.
+ *
  * @author I.A
  */
 public final class AuthenticationService {

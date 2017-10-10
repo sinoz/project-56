@@ -11,8 +11,6 @@ import play.mvc.Result;
 import services.AccountService;
 
 import javax.inject.Inject;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -80,11 +78,10 @@ public final class PersonalSettingsController extends Controller {
 
 			// runs the account update operation on the database pool of threads and then switches
 			// to the internal HTTP pool of threads to safely update the session and returning the view
-			return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor)
-						.thenApplyAsync(i -> {
-							session().put("loggedInAs", form.usernameToChangeTo);
-							return redirect("/myaccount");
-							}, httpEc.current());
+			return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor).thenApplyAsync(i -> {
+				session().put("loggedInAs", form.usernameToChangeTo);
+				return redirect("/myaccount");
+			}, httpEc.current());
 		}
 	}
 }
