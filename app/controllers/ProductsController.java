@@ -1,6 +1,10 @@
 package controllers;
 
+import com.google.common.collect.Lists;
 import forms.SearchForm;
+import models.GameCategory;
+import models.Product;
+import models.User;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
@@ -9,6 +13,11 @@ import play.mvc.Result;
 import views.html.products.index;
 
 import javax.inject.Inject;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A {@link Controller} that handles searches.
@@ -54,6 +63,82 @@ public class ProductsController extends Controller {
     public Result index(String token) {
         System.out.println("TOKEN: " + token);
         // TODO: connection stuff
+        if (token.startsWith("game=")) {
+            token = token.replaceFirst("game=", "").replace("_", " ");
+            // database stuff
+            Optional<GameCategory> gameCategory = fetchGameCategory(token);
+            if (gameCategory.isPresent()) {
+                List<Product> products = fetchProducts(gameCategory.get());
+
+                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session()));
+            } else {
+                return redirect("/404");
+            }
+        }
         return ok(index.render(token, session()));
+    }
+
+    /**
+     * Attempts to find a {@link GameCategory} that matches the given game name.
+     */
+    private Optional<GameCategory> fetchGameCategory(String gameName) {
+        return database.withConnection(connection -> {
+            Optional<GameCategory> gameCategory = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE name=?");
+            stmt.setString(1, gameName);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                GameCategory gc = new GameCategory();
+
+                gc.setId(results.getInt("id"));
+                gc.setName(results.getString("name"));
+                gc.setImage(results.getString("image"));
+                gc.setDescription(results.getString("description"));
+
+                gameCategory = Optional.of(gc);
+            }
+
+            return gameCategory;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link Product} that matches the given game category.
+     */
+    private List<Product> fetchProducts(GameCategory gameCategory) {
+        return database.withConnection(connection -> {
+            List<Product> list = new ArrayList<>();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE gameid=?;");
+            stmt.setInt(1, gameCategory.getId());
+
+            ResultSet results = stmt.executeQuery();
+
+            while (results.next()) {
+                Product product = new Product();
+
+                product.setId(results.getString("id"));
+                product.setUserId(results.getString("userid"));
+                product.setGameId(results.getString("gameid"));
+                product.setVisible(results.getBoolean("visible"));
+                product.setDisabled(results.getBoolean("disabled"));
+                product.setTitle(results.getString("title"));
+                product.setDescription(results.getString("description"));
+                product.setAddedSince(results.getDate("addedsince"));
+                product.setCanBuy(results.getBoolean("canbuy"));
+                product.setBuyPrice(results.getDouble("buyprice"));
+                product.setCanTrade(results.getBoolean("cantrade"));
+                product.setMailLast(results.getString("maillast"));
+                product.setMailCurrent(results.getString("mailcurrent"));
+                product.setPasswordCurrent(results.getString("passwordcurrent"));
+
+                list.add(product);
+            }
+
+            return list;
+        });
     }
 }

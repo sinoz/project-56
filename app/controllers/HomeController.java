@@ -60,7 +60,7 @@ public final class HomeController extends Controller {
 			while (results.next()) {
 				GameCategory gameCategory = new GameCategory();
 
-				gameCategory.setId(results.getString("id"));
+				gameCategory.setId(results.getInt("id"));
 				gameCategory.setName(results.getString("name"));
 				gameCategory.setImage(results.getString("image"));
 				gameCategory.setDescription(results.getString("description"));
