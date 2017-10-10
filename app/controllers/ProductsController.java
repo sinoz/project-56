@@ -69,7 +69,6 @@ public class ProductsController extends Controller {
             Optional<GameCategory> gameCategory = fetchGameCategory(token);
             if (gameCategory.isPresent()) {
                 List<Product> products = fetchProducts(gameCategory.get());
-
                 if (products.size() > 0)
                     return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session()));
                 else
