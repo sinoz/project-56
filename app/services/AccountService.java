@@ -1,6 +1,5 @@
 package services;
 
-import database.DbAccess;
 import forms.PersonalSettingsForm;
 import forms.RegistrationForm;
 
@@ -16,19 +15,13 @@ public final class AccountService {
 	/**
 	 * TODO
 	 */
-	private final DbAccess access;
-
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
 	 * Creates a new {@link AccountService}.
 	 */
 	@Inject
-	public AccountService(DbAccess access, play.db.Database database) {
-		this.access = access;
+	public AccountService(play.db.Database database) {
 		this.database = database;
 	}
 

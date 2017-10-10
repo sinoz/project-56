@@ -76,6 +76,8 @@ public final class PersonalSettingsController extends Controller {
 
 			String loggedInAs = session().get("loggedInAs");
 
+			// TODO add password check back in
+
 			// runs the account update operation on the database pool of threads and then switches
 			// to the internal HTTP pool of threads to safely update the session and returning the view
 			return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor).thenApplyAsync(i -> {

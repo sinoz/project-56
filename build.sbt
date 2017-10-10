@@ -9,8 +9,7 @@ scalaVersion := "2.12.2"
 libraryDependencies ++= {
   val dbDeps = Seq(
     "org.postgresql" % "postgresql" % "42.1.4",
-    "com.h2database" % "h2" % "1.4.194",
-    "com.github.davidmoten" % "rxjava-jdbc" % "0.7.11"
+    "com.h2database" % "h2" % "1.4.194"
   )
 
   val defaults = Seq(

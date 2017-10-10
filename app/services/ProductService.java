@@ -1,7 +1,6 @@
 package services;
 
 import com.google.common.collect.ImmutableList;
-import database.DbAccess;
 import models.GameCategory;
 
 import javax.inject.Inject;
@@ -19,19 +18,13 @@ public final class ProductService {
 	/**
 	 * TODO
 	 */
-	private final DbAccess access;
-
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
 	 * Creates a new {@link ProductService}.
 	 */
 	@Inject
-	public ProductService(DbAccess access, play.db.Database database) {
-		this.access = access;
+	public ProductService(play.db.Database database) {
 		this.database = database;
 	}
 

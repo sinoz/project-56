@@ -1,6 +1,5 @@
 package services;
 
-import database.DbAccess;
 import models.User;
 
 import javax.inject.Inject;
@@ -17,19 +16,13 @@ public final class AuthenticationService {
 	/**
 	 * TODO
 	 */
-	private final DbAccess access;
-
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
 	 * Creates a new {@link AuthenticationService}.
 	 */
 	@Inject
-	public AuthenticationService(DbAccess access, play.db.Database database) {
-		this.access = access;
+	public AuthenticationService(play.db.Database database) {
 		this.database = database;
 	}
 
