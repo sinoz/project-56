@@ -72,7 +72,7 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'admin', -- password
     'salt', -- password salt
     'contact@ReStart.com', -- mail
-    'http://www.yurisrunhouston.com/uploads/3/9/1/9/3919285/_457014621.png', -- profile picture
+    'images/dankadmin.gif', -- profile picture
     'payment@ReStart.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
