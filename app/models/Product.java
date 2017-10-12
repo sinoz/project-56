@@ -71,6 +71,9 @@ public final class Product extends Model {
 	/** creates user */
 	private User user;
 
+	/** creates game category */
+	private GameCategory gameCategory;
+
 	public int getId() {
 		return id;
 	}
@@ -193,5 +196,13 @@ public final class Product extends Model {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public GameCategory getGameCategory() {
+		return gameCategory;
+	}
+
+	public void setGameCategory(GameCategory gameCategory) {
+		this.gameCategory = gameCategory;
 	}
 }

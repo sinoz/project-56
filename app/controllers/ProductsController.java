@@ -120,8 +120,10 @@ public class ProductsController extends Controller {
                 int cnt = 0;
                 for (Product product : products) {
                     if (product.getGameId() == gameCategory.getId()) {
-                        score += productScores.get(product);
-                        cnt++;
+                        if (productScores.get(product) > 0) {
+                            score += productScores.get(product);
+                            cnt++;
+                        }
                     }
                 }
                 score = (int) (score * 10 / (double) cnt);
@@ -217,7 +219,10 @@ public class ProductsController extends Controller {
             else
                 return ok(views.html.products.products.render(Lists.partition(products, 2), session()));
         else
-            return ok(views.html.selectedproduct.index.render(token, session()));
+            if (selectedGameCategory != null)
+                return ok(views.html.products.gameError.render(selectedGameCategory, session()));
+            else
+                return ok(views.html.selectedproduct.index.render(token, session()));
     }
 
     private HashMap<Product, Integer> processProductScores(String token, List<Product> products) {
@@ -257,6 +262,33 @@ public class ProductsController extends Controller {
 
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE name=?");
             stmt.setString(1, gameName);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                GameCategory gc = new GameCategory();
+
+                gc.setId(results.getInt("id"));
+                gc.setName(results.getString("name"));
+                gc.setImage(results.getString("image"));
+                gc.setDescription(results.getString("description"));
+
+                gameCategory = Optional.of(gc);
+            }
+
+            return gameCategory;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link GameCategory} that matches the given game id.
+     */
+    private Optional<GameCategory> fetchGameCategory(int id) {
+        return database.withConnection(connection -> {
+            Optional<GameCategory> gameCategory = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
+            stmt.setInt(1, id);
 
             ResultSet results = stmt.executeQuery();
 
@@ -362,6 +394,9 @@ public class ProductsController extends Controller {
 
                 Optional<User> user = fetchUser(product.getUserId());
                 user.ifPresent(product::setUser);
+
+                product.setGameCategory(gameCategory);
+
                 list.add(product);
             }
 
@@ -400,6 +435,10 @@ public class ProductsController extends Controller {
 
                 Optional<User> user = fetchUser(product.getUserId());
                 user.ifPresent(product::setUser);
+
+                Optional<GameCategory> gameCategory = fetchGameCategory(product.getGameId());
+                gameCategory.ifPresent(product::setGameCategory);
+
                 list.add(product);
             }
 
