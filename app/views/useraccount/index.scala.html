@@ -2,7 +2,7 @@
     @import components._
 
     @main("Restart") {
-        <body>
+    <body xmlns="http://www.w3.org/1999/html">
             <div class="site-content">
                 @header("", session)
 
@@ -30,8 +30,8 @@
 
                             <div class="col-md-9">
                                 <div class="container-fluid">
-                                    <h2>Selling and Trading</h2>
-                                    @if(inventory.isPresent()){
+                                    <h1>Selling and Trading</h1>
+                                    @if(inventory.isPresent){
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                             @for(row <- inventory.get()) {
@@ -66,14 +66,28 @@
                                         <h3>This user does not have any games for sale right now</h3>
                                     }
 
-                                    <h2>Reviews</h2>
+                                    <h1>Reviews</h1>
                                     @if(reviews.isPresent){
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                             @for(row <- reviews.get()) {
                                                 <div class="row">
                                                 @for(review <- row) {
-
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <div class="live-camera">
+                                                            <a href="/user/@review.getSender.getUsername">
+                                                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" alt="">
+                                                                    <div class="transbox"><p>@review.getSender.getUsername</p></div>
+                                                                </figure>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 col-sm-3 image">
+                                                        <h3>@review.getTitle</h3>
+                                                        @*TODO Show Rating*@
+                                                        @review.getDescription
+                                                        <br><br><br>
+                                                    </div>
                                                 }
                                                 </div>
                                             }

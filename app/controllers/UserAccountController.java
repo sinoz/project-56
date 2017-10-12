@@ -1,5 +1,6 @@
 package controllers;
 
+import concurrent.DbExecContext;
 import models.*;
 import play.db.Database;
 import play.mvc.Controller;
@@ -8,7 +9,6 @@ import views.html.useraccount.index;
 import views.html.useraccount.empty;
 
 import javax.inject.Inject;
-import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public final class UserAccountController extends Controller {
 	 * Returns a {@link Result} combined with a user account page.
 	 */
 	public Result index(String username) {
-		Optional<ViewableUser> user = getUser(username);
+		Optional<ViewableUser> user = getViewableUser(username);
 		Optional<List<List<Product>>> inventory;
         Optional<List<GameCategory>> gameCategories;
 		Optional<List<List<Review>>> reviews;
@@ -80,7 +80,7 @@ public final class UserAccountController extends Controller {
 	/**
 	 * Attempts to find a {@link ViewableUser} that matches the given username.
 	 */
-	private Optional<ViewableUser> getUser(String userName) {
+	private Optional<ViewableUser> getViewableUser(String userName) {
 		return database.withConnection(connection -> {
 			Optional<ViewableUser> viewableUser = Optional.empty();
 
@@ -100,6 +100,32 @@ public final class UserAccountController extends Controller {
 			}
 
 			return viewableUser;
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link User} that matches the given id.
+	 */
+	private Optional<User> getUser(int id) {
+		return database.withConnection(connection -> {
+			Optional<User> user = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
+			stmt.setInt(1, id);
+
+			ResultSet results = stmt.executeQuery();
+
+			if (results.next()) {
+				User u = new User();
+
+				u.setId(results.getString("id"));
+				u.setUsername(results.getString("username"));
+				u.setProfilePicture(results.getString("profilepicture"));
+
+				user = Optional.of(u);
+			}
+
+			return user;
 		});
 	}
 
@@ -212,6 +238,8 @@ public final class UserAccountController extends Controller {
 				r.setTitle(results.getString("title"));
 				r.setDescription(results.getString("description"));
 				r.setRating(results.getInt("rating"));
+				int senderid = results.getInt("usersenderid");
+				r.setSender(getUser(senderid).get());
 
 				row.add(r);
 				l++;
