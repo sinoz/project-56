@@ -1,18 +1,17 @@
 package controllers;
 
-import models.Product;
-import models.Review;
-import models.User;
+import models.*;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.useraccount.index;
 import views.html.useraccount.empty;
+import views.html.useraccount.index;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,36 +36,91 @@ public final class UserAccountController extends Controller {
 	 * Returns a {@link Result} combined with a user account page.
 	 */
 	public Result index(String username) {
-		Optional<User> user = getUser(username);
+		Optional<ViewableUser> user = getViewableUser(username);
+		List<List<Product>> inventory;
+//        Optional<List<GameCategory>> gameCategories;
+		List<List<Review>> reviews;
 
+		/** If the user does not exist render "User Not Found" page */
 		if (!user.isPresent()) return ok(empty.render(session()));
 
-		List<Product> inventory = getUserProducts(user.get().getId());
-		List<Review> reviews = getUserReviews(user.get().getId());
+		/** Otherwise get inventory, gameCategories, and reviews for this user */
+		inventory = getUserProducts(user.get().getId());
+        reviews = getUserReviews(user.get().getId());
 
+//        List<Integer> gameIds = new ArrayList<>();
+//		if(inventory.isPresent()){
+//		    for(List list : inventory.get()){
+//		        for(Object p : list){
+//                    gameIds.add(((Product) p).getGameId());
+//                }
+//            }
+//		    gameCategories = getGameCategories(gameIds);
+//		} else {
+//		    gameCategories = Optional.empty();
+//        }
+
+        /** And render user account page */
 		return ok(index.render(user.get(), inventory, reviews, session()));
 	}
 
 	/**
-	 * Attempts to find a {@link User} that matches the given username.
+	 * Finds the game image that belongs to the given product.
+	 * */
+	public static String findImage(Product product, List<GameCategory> gameCats){
+		int id = product.getGameId();
+		for(GameCategory cat : gameCats){
+			if(cat.getId() == id){
+				return cat.getImage();
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * Attempts to find a {@link ViewableUser} that matches the given username.
 	 */
-	private Optional<User> getUser(String username) {
+	private Optional<ViewableUser> getViewableUser(String userName) {
+		return database.withConnection(connection -> {
+			Optional<ViewableUser> viewableUser = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
+			stmt.setString(1, userName);
+
+			ResultSet results = stmt.executeQuery();
+
+			if (results.next()) {
+				int id = results.getInt("id");
+                String username = results.getString("username");
+                String profilepicture = results.getString("profilepicture");
+                List<String> inventory = ((List<String>) results.getObject("inventory"));
+                Date membersince = results.getDate("membersince");
+
+				viewableUser = Optional.of(new ViewableUser(id, username, profilepicture, inventory, membersince));
+			}
+
+			return viewableUser;
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link User} that matches the given id.
+	 */
+	private Optional<User> getUser(int id) {
 		return database.withConnection(connection -> {
 			Optional<User> user = Optional.empty();
 
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-			stmt.setString(1, username);
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
+			stmt.setInt(1, id);
 
 			ResultSet results = stmt.executeQuery();
 
 			if (results.next()) {
 				User u = new User();
 
-                u.setId(results.getString("id"));
-                u.setUsername(results.getString("username"));
-                u.setProfilePicture(results.getString("profilepicture"));
-                u.setInventory(((List<String>) results.getObject("inventory")));
-                u.setMemberSince(results.getDate("membersince"));
+				u.setId(results.getString("id"));
+				u.setUsername(results.getString("username"));
+				u.setProfilePicture(results.getString("profilepicture"));
 
 				user = Optional.of(u);
 			}
@@ -78,29 +132,46 @@ public final class UserAccountController extends Controller {
 	/**
 	 * Attempts to get the {@link Product}s that belong to the given userId.
 	 */
-	private List<Product> getUserProducts(String userId) {
+	private List<List<Product>> getUserProducts(int userId) {
 		return database.withConnection(connection -> {
-			List<Product> list = new ArrayList<>();
+			Optional<User> user = getUser(userId);
+			List<List<Product>> list = new ArrayList<>();
 
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE AND disabled=FALSE");
-			stmt.setInt(1, Integer.parseInt(userId));
+			if (user.isPresent()) {
+				PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE AND disabled=FALSE");
+				stmt.setInt(1, userId);
 
-			ResultSet results = stmt.executeQuery();
+				ResultSet results = stmt.executeQuery();
 
-			while (results.next()) {
-				Product p = new Product();
+				List<Product> row = new ArrayList<>();
+				int l = 0;
+				while (results.next()) {
+					Product p = new Product();
 
-				p.setId(results.getInt("id"));
-				p.setUserId(results.getInt("userid"));
-				p.setGameId(results.getInt("gameid"));
-				p.setTitle(results.getString("title"));
-				p.setDescription(results.getString("description"));
-				p.setAddedSince(results.getDate("addedsince"));
-				p.setCanBuy(results.getBoolean("canbuy"));
-				p.setBuyPrice(results.getDouble("buyprice"));
-				p.setCanTrade(results.getBoolean("cantrade"));
+					p.setId(results.getInt("id"));
+					p.setUserId(results.getInt("userid"));
+					p.setGameId(results.getInt("gameid"));
+					p.setTitle(results.getString("title"));
+					p.setDescription(results.getString("description"));
+					p.setAddedSince(results.getDate("addedsince"));
+					p.setCanBuy(results.getBoolean("canbuy"));
+					p.setBuyPrice(results.getDouble("buyprice"));
+					p.setCanTrade(results.getBoolean("cantrade"));
 
-				list.add(p);
+					p.setUser(user.get());
+
+					Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
+					gameCategory.ifPresent(p::setGameCategory);
+
+					row.add(p);
+					l++;
+					if (l > 1) {
+						list.add(row);
+						row = new ArrayList<>();
+						l = 0;
+					}
+				}
+				if (l > 0) list.add(row);
 			}
 
 			return list;
@@ -108,17 +179,80 @@ public final class UserAccountController extends Controller {
 	}
 
 	/**
-	 * Attempts to get the {@link Review}s that belong to the given userId.
+	 * Attempts to find a {@link GameCategory} that matches the given game id.
 	 */
-	private List<Review> getUserReviews(String userId){
+	private Optional<GameCategory> fetchGameCategory(int id) {
 		return database.withConnection(connection -> {
-			List<Review> list = new ArrayList<>();
+			Optional<GameCategory> gameCategory = Optional.empty();
 
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
-			stmt.setInt(1, Integer.parseInt(userId));
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
+			stmt.setInt(1, id);
 
 			ResultSet results = stmt.executeQuery();
 
+			if (results.next()) {
+				GameCategory gc = new GameCategory();
+
+				gc.setId(results.getInt("id"));
+				gc.setName(results.getString("name"));
+				gc.setImage(results.getString("image"));
+				gc.setDescription(results.getString("description"));
+
+				gameCategory = Optional.of(gc);
+			}
+
+			return gameCategory;
+		});
+	}
+
+    /**
+     * Attempts to get the {@link GameCategory}s that belong to the given Products.
+     */
+	private Optional<List<GameCategory>> getGameCategories(List<Integer> gameIds){
+	    return database.withConnection(connection -> {
+	        Optional<List<GameCategory>> gameCategories = Optional.empty();
+	        List<GameCategory> list = new ArrayList<>();
+
+	        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories");
+
+	        ResultSet results = stmt.executeQuery();
+
+	        boolean empty = true;
+	        while(results.next()){
+	            if(gameIds.contains(results.getInt("id"))){
+					empty = false;
+					GameCategory g = new GameCategory();
+
+					g.setId(results.getInt("id"));
+					g.setImage(results.getString("image"));
+
+					list.add(g);
+				}
+            }
+
+            if(empty) {
+                return gameCategories;
+            } else {
+                gameCategories = Optional.of(list);
+                return gameCategories;
+            }
+        });
+    }
+
+	/**
+	 * Attempts to get the {@link Review}s that belong to the given userId.
+	 */
+	private List<List<Review>> getUserReviews(int userId){
+		return database.withConnection(connection -> {
+			List<List<Review>> list = new ArrayList<>();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
+			stmt.setInt(1, userId);
+
+			ResultSet results = stmt.executeQuery();
+
+			List<Review> row = new ArrayList<>();
+			int l = 0;
 			while(results.next()){
 				Review r = new Review();
 
@@ -128,12 +262,18 @@ public final class UserAccountController extends Controller {
 				r.setTitle(results.getString("title"));
 				r.setDescription(results.getString("description"));
 				r.setRating(results.getInt("rating"));
+				int senderid = results.getInt("usersenderid");
+				r.setSender(getUser(senderid).get());
 
-				Optional<User> sender = fetchUser(r.getUserSenderId());
-				sender.ifPresent(r::setSender);
-
-				list.add(r);
+				row.add(r);
+				l++;
+				if(l > 1) {
+					list.add(row);
+					row = new ArrayList<>();
+					l = 0;
+				}
 			}
+            if(l > 0) list.add(row);
 
 			return list;
 		});
