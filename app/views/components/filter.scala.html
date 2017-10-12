@@ -1,0 +1,15 @@
+@()
+
+<link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/filter.css")">
+<div class="form">
+    <form>
+        <div class="range1">
+            <label for="range" class="label">Price Range</label>
+            <input type="range" name="range" min="0" max="150" step="1" value="0" class="slider">
+            <output for="range" class="output"></output>
+        </div>
+    </form>
+
+</div>
+
+<script src="@routes.Assets.versioned("javascripts/filter.js")"></script>
