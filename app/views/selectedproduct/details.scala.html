@@ -4,7 +4,7 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(gameCategory: GameCategory, product: Product, session: play.mvc.Http.Session)
+@(gameCategory: GameCategory, product: Product, reviews: List[Review], session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -58,7 +58,33 @@
 
                                         </div>
                                         <div class="tab-pane fade" id="service-three">
-
+                                            <!-- reviews-->
+                                            @for(review <- reviews) {
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-sm-3">
+                                                            <img src="/assets/images/default_profile_pic.png" class="img-rounded">
+                                                            <div class="review-block-name"><a href="#">@review.getSender.getUsername</a></div>
+                                                        </div>
+                                                        <div class="col-sm-9">
+                                                            <div class="review-block-rate">
+                                                                @for(star_full <- 1 to review.getRating){
+                                                                <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                                                                }
+                                                                @for(star_empty <- 1 to (5 - review.getRating)){
+                                                                    <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                                                                }
+                                                                <br>
+                                                            </div>
+                                                            <br>
+                                                            <div class="review-block-title"><h4>@review.getTitle</h4></div>
+                                                            <div class="review-block-description">@review.getDescription</div>
+                                                            <hr>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

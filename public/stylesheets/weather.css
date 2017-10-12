@@ -320,6 +320,7 @@ div.transbox p {
   margin-left: auto;
   padding-left: 15px;
   padding-right: 15px;
+  padding-top: 15px;
   *zoom: 1; }
   .container-fluid:after {
     content: " ";
@@ -350,10 +351,12 @@ div.transbox p {
   float: left; }
 
 .col-xs-1 {
-  width: 8.3333333333%; }
+  width: 8.3333333333%;
+  padding: 0px;}
 
 .col-xs-2 {
-  width: 16.6666666667%; }
+  width: 16.6666666667%;
+}
 
 .col-xs-3 {
   width: 25%; }

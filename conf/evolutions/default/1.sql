@@ -433,4 +433,29 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   );
 
+INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES
+  (
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'Great Seller', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '5' --  rating
+  ),
+
+  (
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'got extra dank memes', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '4' --  rating
+  ),
+
+  (
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'dankest Seller', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '3' --  rating
+  );
+
 --- !Downs
