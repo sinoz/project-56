@@ -47,6 +47,7 @@ public final class AuthenticationService {
 				u.setPassword(results.getString("password"));
 				u.setMail(results.getString("mail"));
 				u.setProfilePicture(results.getString("profilepicture"));
+				u.setMemberSince(results.getDate("membersince"));
 
 				user = Optional.of(u);
 			}

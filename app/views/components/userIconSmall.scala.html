@@ -1,0 +1,10 @@
+@(user: User)
+
+<a href="/user/@user.getUsername">
+    <p>
+        <div class="profile-userpic-small">
+            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
+        </div>
+        @user.getUsername
+    </p>
+</a>

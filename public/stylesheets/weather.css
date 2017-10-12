@@ -1808,6 +1808,16 @@ section#contact .text-danger {
   display: block;
 }
 
+.profile-userpic-small img {
+  float: none;
+  width: 25%;
+  height: 25%;
+  -webkit-border-radius: 50%!important;
+  -moz-border-radius: 50%!important;
+  border-radius: 50%!important;
+  display: block;
+}
+
 .profile-usertitle {
   text-align: center;
   margin-top: 20px
@@ -1830,6 +1840,28 @@ section#contact .text-danger {
 
 .profile-usertitle-membersince{
   color: #000000;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 7px
+}
+
+.profile-usertitle-name-white {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 7px
+}
+
+.profile-usertitle-job-white {
+  text-transform: uppercase;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 7px
+}
+
+.profile-usertitle-membersince-white {
+  color: #ffffff;
   font-size: 15px;
   font-weight: 600;
   margin-bottom: 7px

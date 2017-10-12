@@ -20,6 +20,7 @@ import java.util.Optional;
  * A {@link Controller} for showing user accounts.
  *
  * @author Johan van der Hoeven
+ * @author: Maurice van Veen
  */
 public final class UserAccountController extends Controller {
 	/**
@@ -37,12 +38,11 @@ public final class UserAccountController extends Controller {
 	 */
 	public Result index(String username) {
 		Optional<User> user = getUser(username);
-		Optional<List<Product>> inventory;
-		Optional<List<Review>> reviews;
 
 		if (!user.isPresent()) return ok(empty.render(session()));
-		inventory = getUserProducts(user.get().getId());
-		reviews = getUserReviews(user.get().getId());
+
+		List<Product> inventory = getUserProducts(user.get().getId());
+		List<Review> reviews = getUserReviews(user.get().getId());
 
 		return ok(index.render(user.get(), inventory, reviews, session()));
 	}
@@ -78,19 +78,16 @@ public final class UserAccountController extends Controller {
 	/**
 	 * Attempts to get the {@link Product}s that belong to the given userId.
 	 */
-	private Optional<List<Product>> getUserProducts(String userId) {
+	private List<Product> getUserProducts(String userId) {
 		return database.withConnection(connection -> {
-			Optional<List<Product>> products = Optional.empty();
 			List<Product> list = new ArrayList<>();
 
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE");
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE AND disabled=FALSE");
 			stmt.setInt(1, Integer.parseInt(userId));
 
 			ResultSet results = stmt.executeQuery();
 
-			boolean empty = true;
 			while (results.next()) {
-				empty = false;
 				Product p = new Product();
 
 				p.setId(results.getInt("id"));
@@ -106,21 +103,15 @@ public final class UserAccountController extends Controller {
 				list.add(p);
 			}
 
-			if(empty) {
-				return products;
-			} else {
-				products = Optional.of(list);
-				return products;
-			}
+			return list;
 		});
 	}
 
 	/**
 	 * Attempts to get the {@link Review}s that belong to the given userId.
 	 */
-	private Optional<List<Review>> getUserReviews(String userId){
+	private List<Review> getUserReviews(String userId){
 		return database.withConnection(connection -> {
-			Optional<List<Review>> reviews = Optional.empty();
 			List<Review> list = new ArrayList<>();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
@@ -128,9 +119,7 @@ public final class UserAccountController extends Controller {
 
 			ResultSet results = stmt.executeQuery();
 
-			boolean empty = true;
 			while(results.next()){
-				empty = false;
 				Review r = new Review();
 
 				r.setId(results.getString("id"));
@@ -140,15 +129,43 @@ public final class UserAccountController extends Controller {
 				r.setDescription(results.getString("description"));
 				r.setRating(results.getInt("rating"));
 
+				Optional<User> sender = fetchUser(r.getUserSenderId());
+				sender.ifPresent(r::setSender);
+
 				list.add(r);
 			}
 
-			if(empty) {
-				return reviews;
-			} else {
-				reviews = Optional.of(list);
-				return reviews;
+			return list;
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link User} that matches the given username and password combination.
+	 */
+	private Optional<User> fetchUser(int id) {
+		return database.withConnection(connection -> {
+			Optional<User> user = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
+			stmt.setInt(1, id);
+
+			ResultSet results = stmt.executeQuery();
+
+			if (results.next()) {
+				User u = new User();
+
+				u.setId(results.getString("id"));
+				u.setUsername(results.getString("username"));
+				u.setPassword(results.getString("password"));
+				u.setMail(results.getString("mail"));
+				u.setPaymentMail(results.getString("paymentmail"));
+				u.setProfilePicture(results.getString("profilepicture"));
+				u.setMemberSince(results.getDate("membersince"));
+
+				user = Optional.of(u);
 			}
+
+			return user;
 		});
 	}
 }

@@ -59,10 +59,8 @@ public class ProductsController extends Controller {
     }
 
     public Result index(String token) {
-        // TODO: connection stuff
         if (token.startsWith("game=")) {
             token = token.replaceFirst("game=", "").replace("_", " ");
-            // database stuff
             Optional<GameCategory> gameCategory = fetchGameCategory(token);
             if (gameCategory.isPresent()) {
                 List<Product> products = fetchProducts(gameCategory.get());
@@ -354,6 +352,7 @@ public class ProductsController extends Controller {
                 u.setMail(results.getString("mail"));
                 u.setPaymentMail(results.getString("paymentmail"));
                 u.setProfilePicture(results.getString("profilepicture"));
+                u.setMemberSince(results.getDate("membersince"));
 
                 user = Optional.of(u);
             }
@@ -369,7 +368,7 @@ public class ProductsController extends Controller {
         return database.withConnection(connection -> {
             List<Product> list = new ArrayList<>();
 
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE gameid=?;");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE gameid=? AND visible=TRUE AND disabled=FALSE;");
             stmt.setInt(1, gameCategory.getId());
 
             ResultSet results = stmt.executeQuery();
@@ -411,7 +410,7 @@ public class ProductsController extends Controller {
         return database.withConnection(connection -> {
             List<Product> list = new ArrayList<>();
 
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts;");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE visible=TRUE AND disabled=FALSE;");
 
             ResultSet results = stmt.executeQuery();
 

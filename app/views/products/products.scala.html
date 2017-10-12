@@ -27,7 +27,7 @@
                                 <div class="col-md-3 col-sm-6">
 
                                     <!-- filters -->
-
+                                    @filter()
                                 </div>
                                 <div class="col-md-9 col-sm-9">
                                     @for(row <- list) {
@@ -46,11 +46,9 @@
                                                 <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
                                                 <a href="/404"><button class="awesomebutton">Buy</button></a>
                                                 <a href="/404"><button class="awesomebutton">Trade</button></a>
-                                                <p>
-                                                    <br><strong>Rank: </strong>
-                                                    <br>
-                                                    <br>@product.getUser.getUsername
-                                                </p>
+
+                                                <br>
+                                                @userIconSmall(product.getUser)
                                             </div>
                                         }
                                         </div>

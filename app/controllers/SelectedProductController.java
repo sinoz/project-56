@@ -21,6 +21,7 @@ import java.util.Optional;
  *
  * @author: Joris Stander
  * @author: D.Bakhuis
+ * @author: Maurice van Veen
  *
  */
 public class SelectedProductController extends Controller {
@@ -59,7 +60,7 @@ public class SelectedProductController extends Controller {
         return database.withConnection(connection -> {
             Optional<Product> returned = Optional.empty();
 
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=?;");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=? AND visible=TRUE AND disabled=FALSE;");
             stmt.setInt(1, Integer.valueOf(token));
 
             ResultSet results = stmt.executeQuery();

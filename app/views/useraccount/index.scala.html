@@ -1,4 +1,5 @@
-@(user: User, inventory: Optional[List[Product]], reviews: Optional[List[Review]], session: play.mvc.Http.Session)
+@import java.util
+@(user: User, inventory: util.List[Product], reviews: util.List[Review], session: play.mvc.Http.Session)
     @import components._
 
     @main("Restart") {
@@ -21,7 +22,7 @@
 
                                     <div class="profile-usertitle-membersince">
                                         Member Since:<br/>
-                                        @user.getMemberSince().format("dd-MM-yyyy")
+                                        @user.getMemberSince.format("dd-MM-yyyy")
                                     </div>
                                 </div>
                             </div>
@@ -30,17 +31,16 @@
                         <div class="col-md-8">
                             <div class="portlet light bordered">
                                 <h2>Selling and Trading</h2>
-                                @if(inventory.isPresent){
-                                    @{var inventoryList = inventory.get()}
+                                @if(inventory.nonEmpty){
+                                    @{var inventoryList = inventory}
                                     @*TODO Show Products in inventory*@
                                 } else {
                                     <h3>This user does not have any games for sale right now</h3>
                                 }
 
                                 <h2>Reviews</h2>
-                                @if(reviews.isPresent){
-                                    @{var reviewList = reviews.get()}
-                                    @*TODO Show Reviews for this user*@
+                                @if(reviews.nonEmpty){
+                                    @reviewsField(reviews)
                                 } else {
                                     <h3>There are no reviews for this user yet</h3>
                                 }

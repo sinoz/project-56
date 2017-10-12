@@ -1,15 +1,16 @@
-@import components._
-
 @*
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(gameCategory: GameCategory, product: Product, reviews: List[Review], session: play.mvc.Http.Session)
+@import java.util
+@(gameCategory: GameCategory, product: Product, reviews: util.List[Review], session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
 * argument is an `Html` object containing the body of the page. test
 *@
+@import components._
+
 @main("ReStart") {
     <body>
         <div class="site-content">
@@ -21,11 +22,28 @@
             <div class="container">
                 <div class="col-md-12">
                     <div class="col-md-3">
-                        <div class="live-camera">
-                            <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
-                            <h2>Seller: @product.getUser.getUsername()</h2>
-                            <h3>member since: @product.getUser.getMemberSince</h3>
-                        </div>
+                        <a href="/user/@product.getUser.getUsername">
+                            <div class="live-camera">
+                                <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                @*<h2>Seller: @product.getUser.getUsername()</h2>*@
+                                @*<h3>member since: @product.getUser.getMemberSince</h3>*@
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="profile-userpic">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getUser.getProfilePicture)" alt=""></figure>
+                                    </div>
+                                </div>
+
+                                <div class="profile-usertitle">
+                                    <div class="profile-usertitle-name-white">@product.getUser.getUsername</div>
+
+                                    <div class="profile-usertitle-membersince-white">
+                                        Member Since:<br/>
+                                        @product.getUser.getMemberSince.format("dd-MM-yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                     <div class="col-md-9">
                         <div class="container-fluid">
@@ -59,31 +77,7 @@
                                         </div>
                                         <div class="tab-pane fade" id="service-three">
                                             <!-- reviews-->
-                                            @for(review <- reviews) {
-                                                <div class="container-fluid">
-                                                    <div class="row">
-                                                        <div class="col-sm-3">
-                                                            <img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" class="img-rounded">
-                                                            <div class=><a href="/user/@review.getSender.getUsername">@review.getSender.getUsername</a></div>
-                                                        </div>
-                                                        <div class="col-sm-9">
-                                                            <div>
-                                                                @for(star_full <- 1 to review.getRating){
-                                                                <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
-                                                                }
-                                                                @for(star_empty <- 1 to (5 - review.getRating)){
-                                                                    <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
-                                                                }
-                                                                <br>
-                                                            </div>
-                                                            <br>
-                                                            <div ><h4>@review.getTitle</h4></div>
-                                                            <div>@review.getDescription</div>
-                                                            <hr>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            }
+                                            @reviewsField(reviews)
                                             </div>
                                         </div>
                                     </div>
