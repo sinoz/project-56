@@ -63,11 +63,11 @@
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-sm-3">
-                                                            <img src="/assets/images/default_profile_pic.png" class="img-rounded">
-                                                            <div class="review-block-name"><a href="#">@review.getSender.getUsername</a></div>
+                                                            <img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" class="img-rounded">
+                                                            <div class=><a href="/user/@review.getSender.getUsername">@review.getSender.getUsername</a></div>
                                                         </div>
                                                         <div class="col-sm-9">
-                                                            <div class="review-block-rate">
+                                                            <div>
                                                                 @for(star_full <- 1 to review.getRating){
                                                                 <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
                                                                 }
@@ -77,7 +77,7 @@
                                                                 <br>
                                                             </div>
                                                             <br>
-                                                            <div class="review-block-title"><h4>@review.getTitle</h4></div>
+                                                            <div ><h4>@review.getTitle</h4></div>
                                                             <div class="review-block-description">@review.getDescription</div>
                                                             <hr>
                                                         </div>
