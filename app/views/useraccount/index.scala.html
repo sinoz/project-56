@@ -1,4 +1,4 @@
-@(user: ViewableUser, inventory: Optional[List[List[Product]]], reviews: Optional[List[Review]], session: play.mvc.Http.Session)
+@(user: ViewableUser, inventory: Optional[List[List[Product]]], gameCategories: Optional[List[GameCategory]], reviews: Optional[List[Review]], session: play.mvc.Http.Session)
     @import components._
 
     @main("Restart") {
@@ -8,45 +8,73 @@
 
                 @banner()
 
-                <div class="container">
-                    <div class="col-md-12">
-                        <div class="col-md-4">
-                            @*<div class="portlet light profile-sidebar-portlet bordered">*@
-                            <div class="portlet dark profile-sidebar-portlet bordered">
-                                <div class="profile-userpic">
-                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
-                                </div>
+                <div class="fullwidth-block">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                @*<div class="portlet light profile-sidebar-portlet bordered">*@
+                                <div class="portlet dark profile-sidebar-portlet bordered">
+                                    <div class="profile-userpic">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
+                                    </div>
 
-                                <div class="profile-usertitle">
-                                    <div class="profile-usertitle-name">@user.getUsername</div>
+                                    <div class="profile-usertitle">
+                                        <div class="profile-usertitle-name">@user.getUsername</div>
 
-                                    <div class="profile-usertitle-membersince">
-                                        Member Since:<br/>
-                                        @user.getMemberSince().format("dd-MM-yyyy")
+                                        <div class="profile-usertitle-membersince">
+                                            Member Since:<br/>
+                                            @user.getMemberSince().format("dd-MM-yyyy")
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-8">
-                            @*<div class="portlet light bordered">*@
-                            <div class="container-fluid">
-                                <h2>Selling and Trading</h2>
-                                @if(inventory.isPresent){
-                                    @{var inventoryList = inventory.get()}
-                                    @*TODO Show Products in inventory*@
-                                    
-                                } else {
-                                    <h3>This user does not have any games for sale right now</h3>
-                                }
+                            <div class="col-md-9">
+                                <div class="container-fluid">
+                                    <h2>Selling and Trading</h2>
+                                    @if(inventory.isPresent()){
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                            @for(row <- inventory.get()) {
+                                                <div class="row">
+                                                @for(product <- row) {
+                                                    <div class="col-md-2 col-sm-2">
+                                                        <div class="live-camera">
+                                                            <a href="/products/selected/@product.getId">
+                                                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(UserAccountController.findImage(product, gameCategories.get()))" alt="">
+                                                                    <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                                </figure>
+                                                            </a>
+                                                        </div>
+                                                    </div>
 
-                                <h2>Reviews</h2>
-                                @if(reviews.isPresent){
-                                    @{var reviewList = reviews.get()}
-                                    @*TODO Show Reviews for this user*@
-                                } else {
-                                    <h3>There are no reviews for this user yet</h3>
-                                }
+                                                    <div class="col-md-3 col-sm-3 image">
+                                                        <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                                        <a href="/404"><button class="awesomebutton">Buy</button></a>
+                                                        <a href="/404"><button class="awesomebutton">Trade</button></a>
+                                                        <p>
+                                                            <br><strong>Rank: --</strong>
+                                                            <br>
+                                                            <br>@user.getUsername
+                                                        </p>
+                                                    </div>
+                                                }
+                                                </div>
+                                            }
+                                            </div>
+                                        </div>
+                                    } else {
+                                        <h3>This user does not have any games for sale right now</h3>
+                                    }
+
+                                    <h2>Reviews</h2>
+                                    @if(reviews.isPresent){
+                                        @{var reviewList = reviews.get()}
+                                        @*TODO Show Reviews for this user*@
+                                    } else {
+                                        <h3>There are no reviews for this user yet</h3>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
