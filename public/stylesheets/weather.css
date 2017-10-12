@@ -1826,9 +1826,9 @@ section#contact .text-danger {
 }
 
 .profile-usertitle-membersince{
-  color: #000000;
+  color: #FFFFFF;
   font-size: 15px;
-  font-weight: 600;
+  /*font-weight: 600;*/
   margin-bottom: 7px
 }
 
@@ -2317,8 +2317,17 @@ section#contact .text-danger {
   background-color: #fff
 }
 
+.portlet.dark {
+  padding: 12px 20px 15px;
+  background-color: #262936;
+}
+
 .portlet.light.bordered {
   border: 5px solid #009ad8!important
+}
+
+.portlet.dark.bordered {
+  border: 5px solid #5a7391!important
 }
 
 .portlet.light.bordered>.portlet-title {

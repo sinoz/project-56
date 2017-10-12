@@ -1,19 +1,20 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * A viewable user.
  *
  * @author Maurice van Veen
+ * @author Johan van der Hoeven
  */
 public final class ViewableUser {
+	/** userid for this user */
+	private String id;
 
 	/** username displayed in the webshop / can be used for log in */
 	private String username;
-
-	/** mail used to log in */
-	private String mail;
 
 	/** link to the image as profile picture for the user */
 	private String profilePicture;
@@ -21,19 +22,23 @@ public final class ViewableUser {
 	/** date of when the user first joined, it is only set once */
 	private Date memberSince;
 
-	public ViewableUser(String username, String mail, String profilePicture, Date memberSince) {
+	/** inventory from this user */
+	private List<String> inventory;
+
+	public ViewableUser(String id, String username, String profilePicture, List<String> inventory, Date memberSince) {
+		this.id = id;
 		this.username = username;
-		this.mail = mail;
 		this.profilePicture = profilePicture;
+		this.inventory = inventory;
 		this.memberSince = memberSince;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String getUsername() {
 		return username;
-	}
-
-	public String getMail() {
-		return mail;
 	}
 
 	public String getProfilePicture() {
@@ -42,5 +47,9 @@ public final class ViewableUser {
 
 	public Date getMemberSince() {
 		return memberSince;
+	}
+
+	public List<String> getInventory() {
+		return inventory;
 	}
 }

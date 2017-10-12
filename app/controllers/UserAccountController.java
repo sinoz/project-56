@@ -3,6 +3,7 @@ package controllers;
 import models.Product;
 import models.Review;
 import models.User;
+import models.ViewableUser;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +38,8 @@ public final class UserAccountController extends Controller {
 	 * Returns a {@link Result} combined with a user account page.
 	 */
 	public Result index(String username) {
-		Optional<User> user = getUser(username);
-		Optional<List<Product>> inventory;
+		Optional<ViewableUser> user = getUser(username);
+		Optional<List<List<Product>>> inventory;
 		Optional<List<Review>> reviews;
 
 		if (!user.isPresent()) return ok(empty.render(session()));
@@ -48,40 +50,38 @@ public final class UserAccountController extends Controller {
 	}
 
 	/**
-	 * Attempts to find a {@link User} that matches the given username.
+	 * Attempts to find a {@link ViewableUser} that matches the given username.
 	 */
-	private Optional<User> getUser(String username) {
+	private Optional<ViewableUser> getUser(String userName) {
 		return database.withConnection(connection -> {
-			Optional<User> user = Optional.empty();
+			Optional<ViewableUser> viewableUser = Optional.empty();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-			stmt.setString(1, username);
+			stmt.setString(1, userName);
 
 			ResultSet results = stmt.executeQuery();
 
 			if (results.next()) {
-				User u = new User();
+				String id = results.getString("id");
+                String username = results.getString("username");
+                String profilepicture = results.getString("profilepicture");
+                List<String> inventory = ((List<String>) results.getObject("inventory"));
+                Date membersince = results.getDate("membersince");
 
-                u.setId(results.getString("id"));
-                u.setUsername(results.getString("username"));
-                u.setProfilePicture(results.getString("profilepicture"));
-                u.setInventory(((List<String>) results.getObject("inventory")));
-                u.setMemberSince(results.getDate("membersince"));
-
-				user = Optional.of(u);
+				viewableUser = Optional.of(new ViewableUser(id, username, profilepicture, inventory, membersince));
 			}
 
-			return user;
+			return viewableUser;
 		});
 	}
 
 	/**
 	 * Attempts to get the {@link Product}s that belong to the given userId.
 	 */
-	private Optional<List<Product>> getUserProducts(String userId) {
+	private Optional<List<List<Product>>> getUserProducts(String userId) {
 		return database.withConnection(connection -> {
-			Optional<List<Product>> products = Optional.empty();
-			List<Product> list = new ArrayList<>();
+			Optional<List<List<Product>>> products = Optional.empty();
+			List<List<Product>> list = new ArrayList<>();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE");
 			stmt.setInt(1, Integer.parseInt(userId));
@@ -89,6 +89,8 @@ public final class UserAccountController extends Controller {
 			ResultSet results = stmt.executeQuery();
 
 			boolean empty = true;
+			List<Product> row = new ArrayList<>();
+			int l = 0;
 			while (results.next()) {
 				empty = false;
 				Product p = new Product();
@@ -103,7 +105,13 @@ public final class UserAccountController extends Controller {
 				p.setBuyPrice(results.getDouble("buyprice"));
 				p.setCanTrade(results.getBoolean("cantrade"));
 
-				list.add(p);
+				row.add(p);
+				l++;
+				if(l > 1) {
+					list.add(row);
+					row = new ArrayList<>();
+					l = 0;
+				}
 			}
 
 			if(empty) {
