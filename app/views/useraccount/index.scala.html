@@ -1,4 +1,4 @@
-@(user: ViewableUser, inventory: Optional[List[List[Product]]], gameCategories: Optional[List[GameCategory]], reviews: Optional[List[Review]], session: play.mvc.Http.Session)
+@(user: ViewableUser, inventory: Optional[List[List[Product]]], gameCategories: Optional[List[GameCategory]], reviews: Optional[List[List[Review]]], session: play.mvc.Http.Session)
     @import components._
 
     @main("Restart") {
@@ -9,10 +9,9 @@
                 @banner()
 
                 <div class="fullwidth-block">
-                    <div class="container">
+                    <div class="container-fluid">
                         <div class="col-md-12">
                             <div class="col-md-3">
-                                @*<div class="portlet light profile-sidebar-portlet bordered">*@
                                 <div class="portlet dark profile-sidebar-portlet bordered">
                                     <div class="profile-userpic">
                                         <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
@@ -69,8 +68,17 @@
 
                                     <h2>Reviews</h2>
                                     @if(reviews.isPresent){
-                                        @{var reviewList = reviews.get()}
-                                        @*TODO Show Reviews for this user*@
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12">
+                                            @for(row <- reviews.get()) {
+                                                <div class="row">
+                                                @for(review <- row) {
+
+                                                }
+                                                </div>
+                                            }
+                                            </div>
+                                        </div>
                                     } else {
                                         <h3>There are no reviews for this user yet</h3>
                                     }

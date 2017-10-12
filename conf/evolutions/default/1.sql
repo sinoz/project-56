@@ -433,4 +433,41 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   );
 
+INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES
+  (
+    1, -- userreceiverid
+    2, -- usersenderid
+    'This is the title', -- title
+    'This guy is great!!', -- description
+    5 -- rating
+  ),
+  (
+    1, -- userreceiverid
+    2, -- usersenderid
+    'This is another title', -- title
+    'This guy is awesome!!', -- description
+    4 -- rating
+  ),
+  (
+    1, -- userreceiverid
+    2, -- usersenderid
+    'And another title', -- title
+    'This guy is fantastic!!', -- description
+    3 -- rating
+  ),
+  (
+    2, -- userreceiverid
+    1, -- usersenderid
+    'My title', -- title
+    'He totally ripped me off', -- description
+    2 -- rating
+  ),
+  (
+    2, -- userreceiverid
+    1, -- usersenderid
+    'My 2nd title', -- title
+    'Meh', -- description
+    1 -- rating
+  );
+
 --- !Downs

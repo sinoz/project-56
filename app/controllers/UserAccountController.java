@@ -39,7 +39,7 @@ public final class UserAccountController extends Controller {
 		Optional<ViewableUser> user = getUser(username);
 		Optional<List<List<Product>>> inventory;
         Optional<List<GameCategory>> gameCategories;
-		Optional<List<Review>> reviews;
+		Optional<List<List<Review>>> reviews;
 
 		/** If the user does not exist render "User Not Found" page */
 		if (!user.isPresent()) return ok(empty.render(session()));
@@ -135,7 +135,6 @@ public final class UserAccountController extends Controller {
 
 				row.add(p);
 				l++;
-				System.out.println(l);
 				if(l > 1) {
 					list.add(row);
 					row = new ArrayList<>();
@@ -143,7 +142,6 @@ public final class UserAccountController extends Controller {
 				}
 			}
 			if(l > 0) list.add(row);
-
 
 			if(empty) {
 				return products;
@@ -191,10 +189,10 @@ public final class UserAccountController extends Controller {
 	/**
 	 * Attempts to get the {@link Review}s that belong to the given userId.
 	 */
-	private Optional<List<Review>> getUserReviews(String userId){
+	private Optional<List<List<Review>>> getUserReviews(String userId){
 		return database.withConnection(connection -> {
-			Optional<List<Review>> reviews = Optional.empty();
-			List<Review> list = new ArrayList<>();
+			Optional<List<List<Review>>> reviews = Optional.empty();
+			List<List<Review>> list = new ArrayList<>();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
 			stmt.setInt(1, Integer.parseInt(userId));
@@ -202,6 +200,8 @@ public final class UserAccountController extends Controller {
 			ResultSet results = stmt.executeQuery();
 
 			boolean empty = true;
+			List<Review> row = new ArrayList<>();
+			int l = 0;
 			while(results.next()){
 				empty = false;
 				Review r = new Review();
@@ -213,8 +213,15 @@ public final class UserAccountController extends Controller {
 				r.setDescription(results.getString("description"));
 				r.setRating(results.getInt("rating"));
 
-				list.add(r);
+				row.add(r);
+				l++;
+				if(l > 1) {
+					list.add(row);
+					row = new ArrayList<>();
+					l = 0;
+				}
 			}
+			if(l > 0) list.add(row);
 
 			if(empty) {
 				return reviews;
