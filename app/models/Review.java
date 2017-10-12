@@ -35,6 +35,9 @@ public final class Review extends Model {
 	@Constraints.Required
 	private int rating;
 
+	private User sender;
+	private User receiver;
+
 	public String getId() {
 		return id;
 	}
@@ -81,5 +84,21 @@ public final class Review extends Model {
 
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+
+	public User getSender() {
+		return sender;
+	}
+
+	public void setSender(User sender) {
+		this.sender = sender;
+	}
+
+	public User getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(User receiver) {
+		this.receiver = receiver;
 	}
 }

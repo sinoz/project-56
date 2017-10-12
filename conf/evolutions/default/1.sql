@@ -72,7 +72,7 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'admin', -- password
     'salt', -- password salt
     'contact@ReStart.com', -- mail
-    'http://www.yurisrunhouston.com/uploads/3/9/1/9/3919285/_457014621.png', -- profile picture
+    'images/dankadmin.gif', -- profile picture
     'payment@ReStart.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
@@ -435,39 +435,27 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
 
 INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES
   (
-    1, -- userreceiverid
-    2, -- usersenderid
-    'This is the title', -- title
-    'This guy is great!!', -- description
-    5 -- rating
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'Great Seller', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '5' --  rating
   ),
+
   (
-    1, -- userreceiverid
-    2, -- usersenderid
-    'This is another title', -- title
-    'This guy is awesome!!', -- description
-    4 -- rating
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'got extra dank memes', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '4' --  rating
   ),
+
   (
-    1, -- userreceiverid
-    2, -- usersenderid
-    'And another title', -- title
-    'This guy is fantastic!!', -- description
-    3 -- rating
-  ),
-  (
-    2, -- userreceiverid
-    1, -- usersenderid
-    'My title', -- title
-    'He totally ripped me off', -- description
-    2 -- rating
-  ),
-  (
-    2, -- userreceiverid
-    1, -- usersenderid
-    'My 2nd title', -- title
-    'Meh', -- description
-    1 -- rating
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'dankest Seller', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '3' --  rating
   );
 
 --- !Downs

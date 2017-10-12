@@ -5,7 +5,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, list: util.List[util.List[Product]], session: play.mvc.Http.Session)
+@(list: util.List[util.List[Product]], session: play.mvc.Http.Session)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -21,16 +21,12 @@
                 <main class="main-content">
                     <div class="fullwidth-block">
                         <div class="container">
-                            <h2 class="section-title">@gameCategory.getName</h2>
+                            <h2 class="section-title">Products</h2>
 
                             <div class="row">
                                 <div class="col-md-3 col-sm-6">
-                                    <div class="live-camera">
-                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
-                                    </div>
 
-                                <!-- filters -->
-                                @filter()
+                                    <!-- filters -->
 
                                 </div>
                                 <div class="col-md-9 col-sm-9">
@@ -40,7 +36,7 @@
                                             <div class="col-md-2 col-sm-2">
                                                 <div class="live-camera">
                                                     <a href="/products/selected/@product.getId">
-                                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage)" alt="">
+                                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
                                                             <div class="transbox"><p>@product.getBuyPriceText</p></div>
                                                         </figure>
                                                     </a>
