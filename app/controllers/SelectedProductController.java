@@ -1,8 +1,8 @@
 package controllers;
 
-import com.google.common.collect.Lists;
 import models.GameCategory;
 import models.Product;
+import models.Review;
 import models.User;
 import play.data.FormFactory;
 import play.db.Database;
@@ -12,6 +12,8 @@ import play.mvc.Result;
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,10 +42,12 @@ public class SelectedProductController extends Controller {
 
     public Result index(String token) {
         Optional<Product> product = fetchDetails(token);
+        List<Review> reviewsproduct;
         if (product.isPresent()) {
             Optional<GameCategory> gameCategory = fetchGameCategory(product.get().getGameId());
             if (gameCategory.isPresent()){
-                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get() , session()));
+                reviewsproduct = fetchUserReviews(product.get().getUserId());
+                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(),reviewsproduct, session()));
         }}
         return ok(views.html.selectedproduct.index.render(token, session()));
     }
@@ -144,5 +148,37 @@ public class SelectedProductController extends Controller {
         });
     }
 
+    /**
+     * Attempts to get the {@link Review}s that belong to the given userId.
+     */
+    private List<Review> fetchUserReviews(int userId){
+        return database.withConnection(connection -> {
+            List<Review> list = new ArrayList<>();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
+            stmt.setInt(1, userId);
+
+            ResultSet results = stmt.executeQuery();
+
+            while(results.next()){
+                Review r = new Review();
+
+                r.setId(results.getString("id"));
+                r.setUserReceiverId(results.getInt("userreceiverid"));
+                r.setUserSenderId(results.getInt("usersenderid"));
+                r.setTitle(results.getString("title"));
+                r.setDescription(results.getString("description"));
+                r.setRating(results.getInt("rating"));
+
+                Optional<User> sender = fetchUser(r.getUserSenderId());
+                sender.ifPresent(r::setSender);
+                Optional<User> receiver = fetchUser(r.getUserReceiverId());
+                receiver.ifPresent(r::setReceiver);
+
+                list.add(r);
+            }
+            return list;
+        });
+    }
 
 }

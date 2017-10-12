@@ -1457,7 +1457,8 @@ img {
 }
 
 .img-rounded {
-    border-radius: 6px;
+    border-radius: 100%;
+    width: 5em;
 }
 
 .img-thumbnail {
@@ -2086,6 +2087,7 @@ pre code {
 
 .col-xs-2 {
     width: 16.66666667%;
+    padding: 0px;
 }
 
 .col-xs-1 {
