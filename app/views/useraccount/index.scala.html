@@ -1,4 +1,4 @@
-@(user: User, session: play.mvc.Http.Session)
+@(user: User, inventory: Optional[List[Product]], reviews: Optional[List[Review]], session: play.mvc.Http.Session)
     @import components._
 
     @main("Restart") {
@@ -6,23 +6,56 @@
             <div class="site-content">
                 @header("", session)
 
-                <main class="main-content">
-                    <div class="fullwidth-block">
-                        <div class="container">
-                            <div class="find-location">
-                            @user.getUsername
+                @banner()
+
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            <div class="portlet light profile-sidebar-portlet bordered">
+                                <div class="profile-userpic">
+                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
+                                </div>
+
+                                <div class="profile-usertitle">
+                                    <div class="profile-usertitle-name">@user.getUsername</div>
+
+                                    <div class="profile-usertitle-membersince">
+                                        Member Since:<br/>
+                                        @user.getMemberSince().format("dd-MM-yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="portlet light bordered">
+                                <h2>Selling and Trading</h2>
+                                @if(inventory.isPresent){
+                                    @{var inventoryList = inventory.get()}
+                                    @*TODO Show Products in inventory*@
+                                } else {
+                                    <h3>This user does not have any games for sale right now</h3>
+                                }
+
+                                <h2>Reviews</h2>
+                                @if(reviews.isPresent){
+                                    @{var reviewList = reviews.get()}
+                                    @*TODO Show Reviews for this user*@
+                                } else {
+                                    <h3>There are no reviews for this user yet</h3>
+                                }
                             </div>
                         </div>
                     </div>
-                </main>
+                </div>
 
                 @footer()
-            </div>
 
                 <!-- Required for the banner -->
-            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+                <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
 
-            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
-            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+                <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+                <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+            </div>
         </body>
     }
