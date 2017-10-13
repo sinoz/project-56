@@ -59,11 +59,26 @@ public class ProductsController extends Controller {
     }
 
     public Result index(String token) {
+        String[] split = token.split("&");
+        token = split[0];
+        String filters = null;
+        if (split.length > 1) {
+            filters = split[split.length - 1];
+            if (split.length > 2)
+                return redirect(token + "&" + filters);
+        }
+
         if (token.startsWith("game=")) {
             token = token.replaceFirst("game=", "").replace("_", " ");
             Optional<GameCategory> gameCategory = fetchGameCategory(token);
             if (gameCategory.isPresent()) {
                 List<Product> products = fetchProducts(gameCategory.get());
+                try {
+                    products = filterProducts(products, filters);
+                } catch (Exception e) {
+                    return redirect("/404");
+                }
+
                 if (products.size() > 0)
                     return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session()));
                 else
@@ -73,12 +88,34 @@ public class ProductsController extends Controller {
             }
         } else if (token.startsWith("input=")) {
             token = token.replaceFirst("input=", "");
-            return processInput(token);
+            return processInput(token, filters);
         }
         return ok(views.html.selectedproduct.index.render(token, session()));
     }
 
-    private Result processInput(String token) {
+    private List<Product> filterProducts(List<Product> products, String filters) throws Exception {
+        List<Product> list = new ArrayList<>();
+
+        // TODO: change when more filters needed
+        if (filters != null) {
+            filters = filters.replace("filter=maxprice:", "");
+            if (filters.length() > 0) {
+                double buyPrice = Double.valueOf(filters);
+
+                for (Product product : products) {
+                    if (product.getBuyPrice() <= buyPrice) {
+                        list.add(product);
+                    }
+                }
+
+                return list;
+            }
+        }
+
+        return products;
+    }
+
+    private Result processInput(String token, String filters) {
         List<GameCategory> gameCategories = fetchGameCategories();
         List<Product> products = fetchProducts();
         GameCategory selectedGameCategory = null;
@@ -210,6 +247,11 @@ public class ProductsController extends Controller {
             products = sortedProducts;
         }
 
+        try {
+            products = filterProducts(products, filters);
+        } catch (Exception e) {
+            return redirect("/404");
+        }
 
         if (products.size() > 0)
             if (selectedGameCategory != null)
