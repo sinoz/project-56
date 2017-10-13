@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s for the {@link controllers.UserAccountController}
+ *
+ * @author Johan van der Hoeven
+ */
 public final class UserViewService {
     private final play.db.Database database;
 

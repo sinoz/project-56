@@ -1872,7 +1872,7 @@ section#contact .text-danger {
 .profile-usertitle-membersince-white {
   color: #ffffff;
   font-size: 15px;
-  font-weight: 600;
+  /*font-weight: 600;*/
   margin-bottom: 7px
 }
 
