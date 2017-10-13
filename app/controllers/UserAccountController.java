@@ -1,9 +1,13 @@
 package controllers;
 
+import concurrent.DbExecContext;
 import models.*;
 import play.db.Database;
+import play.libs.concurrent.HttpExecution;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.UserViewService;
 import views.html.useraccount.empty;
 import views.html.useraccount.index;
 
@@ -14,6 +18,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
  * A {@link Controller} for showing user accounts.
@@ -27,54 +36,48 @@ public final class UserAccountController extends Controller {
 	 */
 	private Database database;
 
+	/**
+	 * The execution context used to asynchronously perform database operations.
+	 */
+	private final DbExecContext dbEc;
+	/**
+	 * The execution context used to asynchronously perform operations.
+	 */
+	private final HttpExecutionContext httpEc;
+	/**
+	 * The {@link services.UserViewService} to obtain product data from.
+	 */
+	private UserViewService userViewService;
+
+	/**
+	 * Creates a new {@link UserAccountController}.
+	 */
 	@Inject
-	public UserAccountController(Database database) {
+	public UserAccountController(Database database, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc) {
 		this.database = database;
+		this.userViewService = userViewService;
+		this.dbEc = dbEc;
+		this.httpEc = httpEc;
 	}
 
 	/**
 	 * Returns a {@link Result} combined with a user account page.
 	 */
-	public Result index(String username) {
+	public CompletionStage<Result> index(String username) {
 		Optional<ViewableUser> user = getViewableUser(username);
-		List<List<Product>> inventory;
-//        Optional<List<GameCategory>> gameCategories;
-		List<List<Review>> reviews;
+		CompletableFuture<List<List<Product>>> productsFetch;
+		CompletableFuture<List<List<Review>>> reviewFetch;
 
-		/** If the user does not exist render "User Not Found" page */
-		if (!user.isPresent()) return ok(empty.render(session()));
+		// If the user does not exist render "User Not Found" page
+		if (!user.isPresent()) return CompletableFuture.completedFuture(ok(empty.render(session())));
 
-		/** Otherwise get inventory, gameCategories, and reviews for this user */
-		inventory = getUserProducts(user.get().getId());
-        reviews = getUserReviews(user.get().getId());
+		// Otherwise get inventory and reviews for this user
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-//        List<Integer> gameIds = new ArrayList<>();
-//		if(inventory.isPresent()){
-//		    for(List list : inventory.get()){
-//		        for(Object p : list){
-//                    gameIds.add(((Product) p).getGameId());
-//                }
-//            }
-//		    gameCategories = getGameCategories(gameIds);
-//		} else {
-//		    gameCategories = Optional.empty();
-//        }
+		productsFetch = supplyAsync(() -> userViewService.getUserProducts(user.get().getId()), dbExecutor);
+		reviewFetch = supplyAsync(() -> userViewService.getUserReviews(user.get().getId()), dbExecutor);
 
-        /** And render user account page */
-		return ok(index.render(user.get(), inventory, reviews, session()));
-	}
-
-	/**
-	 * Finds the game image that belongs to the given product.
-	 * */
-	public static String findImage(Product product, List<GameCategory> gameCats){
-		int id = product.getGameId();
-		for(GameCategory cat : gameCats){
-			if(cat.getId() == id){
-				return cat.getImage();
-			}
-		}
-		return "";
+		return productsFetch.thenCombineAsync(reviewFetch, (products, reviews) -> ok(index.render(user.get(), products, reviews, session())), httpEc.current());
 	}
 
 	/**
@@ -242,36 +245,6 @@ public final class UserAccountController extends Controller {
             if(l > 0) list.add(row);
 
 			return list;
-		});
-	}
-
-	/**
-	 * Attempts to find a {@link User} that matches the given username and password combination.
-	 */
-	private Optional<User> fetchUser(int id) {
-		return database.withConnection(connection -> {
-			Optional<User> user = Optional.empty();
-
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
-			stmt.setInt(1, id);
-
-			ResultSet results = stmt.executeQuery();
-
-			if (results.next()) {
-				User u = new User();
-
-				u.setId(results.getString("id"));
-				u.setUsername(results.getString("username"));
-				u.setPassword(results.getString("password"));
-				u.setMail(results.getString("mail"));
-				u.setPaymentMail(results.getString("paymentmail"));
-				u.setProfilePicture(results.getString("profilepicture"));
-				u.setMemberSince(results.getDate("membersince"));
-
-				user = Optional.of(u);
-			}
-
-			return user;
 		});
 	}
 }
