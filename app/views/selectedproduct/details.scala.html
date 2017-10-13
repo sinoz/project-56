@@ -24,6 +24,8 @@
                     <div class="col-md-3">
                         <div class="live-camera">
                             <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                <a href="/404"><div class="example">&#10084;
+                                </div></a>
                         </div>
                         <a href="/user/@product.getUser.getUsername">
                             <div class="live-camera">
@@ -126,10 +128,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
             @footer()
-        </div>
+
+            </div>
 
             <!-- Required for the banner -->
         <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
