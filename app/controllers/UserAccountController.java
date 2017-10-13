@@ -205,40 +205,6 @@ public final class UserAccountController extends Controller {
 		});
 	}
 
-    /**
-     * Attempts to get the {@link GameCategory}s that belong to the given Products.
-     */
-	private Optional<List<GameCategory>> getGameCategories(List<Integer> gameIds){
-	    return database.withConnection(connection -> {
-	        Optional<List<GameCategory>> gameCategories = Optional.empty();
-	        List<GameCategory> list = new ArrayList<>();
-
-	        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories");
-
-	        ResultSet results = stmt.executeQuery();
-
-	        boolean empty = true;
-	        while(results.next()){
-	            if(gameIds.contains(results.getInt("id"))){
-					empty = false;
-					GameCategory g = new GameCategory();
-
-					g.setId(results.getInt("id"));
-					g.setImage(results.getString("image"));
-
-					list.add(g);
-				}
-            }
-
-            if(empty) {
-                return gameCategories;
-            } else {
-                gameCategories = Optional.of(list);
-                return gameCategories;
-            }
-        });
-    }
-
 	/**
 	 * Attempts to get the {@link Review}s that belong to the given userId.
 	 */

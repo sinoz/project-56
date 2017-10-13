@@ -48,7 +48,13 @@ public class SelectedProductController extends Controller {
             Optional<GameCategory> gameCategory = fetchGameCategory(product.get().getGameId());
             if (gameCategory.isPresent()){
                 reviewsproduct = fetchUserReviews(product.get().getUserId());
-                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(),reviewsproduct, session()));
+
+                int totalRating = 0;
+                for (Review review : reviewsproduct)
+                    totalRating += review.getRating();
+                int rating = (int) (totalRating / (double) reviewsproduct.size());
+
+                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, session()));
         }}
         return ok(views.html.selectedproduct.index.render(token, session()));
     }

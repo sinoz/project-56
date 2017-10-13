@@ -6,7 +6,7 @@ $("[name=range]").on("change", function() {
 
 // I.A: Say thanks to my buddy Collin Haines
 $("[name=range]").mouseup(function(event) {
-    var path = window.location.pathname + "?filter=maxprice:" + this.value + "";
+    var path = window.location.pathname + "&filter=maxprice:" + this.value + "";
 
     window.location.replace(path);
     window.location.href = path;
