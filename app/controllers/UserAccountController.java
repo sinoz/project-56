@@ -38,43 +38,17 @@ public final class UserAccountController extends Controller {
 	public Result index(String username) {
 		Optional<ViewableUser> user = getViewableUser(username);
 		List<List<Product>> inventory;
-//        Optional<List<GameCategory>> gameCategories;
 		List<List<Review>> reviews;
 
-		/** If the user does not exist render "User Not Found" page */
+		// If the user does not exist render "User Not Found" page
 		if (!user.isPresent()) return ok(empty.render(session()));
 
-		/** Otherwise get inventory, gameCategories, and reviews for this user */
+		// Otherwise get inventory, gameCategories, and reviews for this user
 		inventory = getUserProducts(user.get().getId());
         reviews = getUserReviews(user.get().getId());
 
-//        List<Integer> gameIds = new ArrayList<>();
-//		if(inventory.isPresent()){
-//		    for(List list : inventory.get()){
-//		        for(Object p : list){
-//                    gameIds.add(((Product) p).getGameId());
-//                }
-//            }
-//		    gameCategories = getGameCategories(gameIds);
-//		} else {
-//		    gameCategories = Optional.empty();
-//        }
-
-        /** And render user account page */
+        // And render user account page
 		return ok(index.render(user.get(), inventory, reviews, session()));
-	}
-
-	/**
-	 * Finds the game image that belongs to the given product.
-	 * */
-	public static String findImage(Product product, List<GameCategory> gameCats){
-		int id = product.getGameId();
-		for(GameCategory cat : gameCats){
-			if(cat.getId() == id){
-				return cat.getImage();
-			}
-		}
-		return "";
 	}
 
 	/**
@@ -205,40 +179,6 @@ public final class UserAccountController extends Controller {
 		});
 	}
 
-    /**
-     * Attempts to get the {@link GameCategory}s that belong to the given Products.
-     */
-	private Optional<List<GameCategory>> getGameCategories(List<Integer> gameIds){
-	    return database.withConnection(connection -> {
-	        Optional<List<GameCategory>> gameCategories = Optional.empty();
-	        List<GameCategory> list = new ArrayList<>();
-
-	        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories");
-
-	        ResultSet results = stmt.executeQuery();
-
-	        boolean empty = true;
-	        while(results.next()){
-	            if(gameIds.contains(results.getInt("id"))){
-					empty = false;
-					GameCategory g = new GameCategory();
-
-					g.setId(results.getInt("id"));
-					g.setImage(results.getString("image"));
-
-					list.add(g);
-				}
-            }
-
-            if(empty) {
-                return gameCategories;
-            } else {
-                gameCategories = Optional.of(list);
-                return gameCategories;
-            }
-        });
-    }
-
 	/**
 	 * Attempts to get the {@link Review}s that belong to the given userId.
 	 */
@@ -276,36 +216,6 @@ public final class UserAccountController extends Controller {
             if(l > 0) list.add(row);
 
 			return list;
-		});
-	}
-
-	/**
-	 * Attempts to find a {@link User} that matches the given username and password combination.
-	 */
-	private Optional<User> fetchUser(int id) {
-		return database.withConnection(connection -> {
-			Optional<User> user = Optional.empty();
-
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
-			stmt.setInt(1, id);
-
-			ResultSet results = stmt.executeQuery();
-
-			if (results.next()) {
-				User u = new User();
-
-				u.setId(results.getString("id"));
-				u.setUsername(results.getString("username"));
-				u.setPassword(results.getString("password"));
-				u.setMail(results.getString("mail"));
-				u.setPaymentMail(results.getString("paymentmail"));
-				u.setProfilePicture(results.getString("profilepicture"));
-				u.setMemberSince(results.getDate("membersince"));
-
-				user = Optional.of(u);
-			}
-
-			return user;
 		});
 	}
 }
