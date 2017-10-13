@@ -1,14 +1,14 @@
 @(session: play.mvc.Http.Session)
     @import components._
 
-    @main("ReStart") {
-        <body>
-            <div class="site-content">
-                @header("MyAccount", session)
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("MyAccount", session)
 
-                @banner()
+            @banner()
 
-                <div class="container">
+            <div class="container">
                 <div class="col-md-12">
                     <div class="col-md-4">
                         <div class="portlet light profile-sidebar-portlet bordered">
@@ -55,14 +55,14 @@
                         </div>
                     </div>
                 </div>
-                </div>
-                @footer()
-
-                    <!-- Required for the banner -->
-                <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
-
-                <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
-                <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
             </div>
-        </body>
-    }
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

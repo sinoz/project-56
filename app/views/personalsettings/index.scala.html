@@ -58,7 +58,7 @@
                             <h2>Personal settings</h2>
 
                             @helper.form(action = helper.CSRF(routes.PersonalSettingsController.editSettings()), 'class -> "form-horizontal") {
-                                <!-- Text input-->
+                                    <!-- Text input-->
                                 <div class="form-group">
                                     <label class="col-md-4 control-label" for="textinput">Change Username:</label>
                                     <div class="col-md-4">
@@ -70,49 +70,31 @@
                                 <div class="form-group">
                                     <label class="col-md-4 control-label" for="textinput">Change Email:</label>
                                     <div class="col-md-4">
-                                        <input id="textinput" name="emailToChangeTo" type="text" class="form-control input-md" value="">
+                                        <input id="textinput" name="emailToChangeTo" type="text" class="form-control input-md" value=@session.get("usedMail")>
                                     </div>
                                 </div>
 
+                                    <!-- Payment email input-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                    <div class="col-md-4">
+                                        <input id="textinput" name="paymentMailToChangeTo" type="text" class="form-control input-md" value=@session.get("usedPaymentMail")>
+                                    </div>
+                                </div>
+
+                                <br>
                                     <!-- Password input-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="passwordinput">new password</label>
+                                    <label class="col-md-4 control-label" for="passwordinput">password</label>
                                     <div class="col-md-4">
-                                        <input id="passwordinput" name="passwordToChangeTo" type="password" class="form-control input-md">
+                                        <input id="passwordinput" name="password" type="password" class="form-control input-md">
 
-                                    </div>
-                                </div>
-
-                                    <!-- Password input-->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="passwordinput">repeat password</label>
-                                    <div class="col-md-4">
-                                        <input id="passwordinput" name="passwordToChangeToRepeated" type="password" class="form-control input-md">
-
-                                    </div>
-                                </div>
-
-                                    <!-- paymentmail input-->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
-                                    <div class="col-md-4">
-                                        <input id="textinput" name="paymentEmailToChangeTo" type="text" class="form-control input-md" value="")>
-                                    </div>
-                                </div>
-
-
-                                    <!-- delete account Button -->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="singlebutton">Remove my account</label>
-                                    <div class="col-md-4">
-                                        <button id="singlebutton" name="singlebutton" class="btn btn-danger">remove</button>
                                     </div>
                                 </div>
 
                                     <!-- Submit Button -->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="singlebutton">Save Changes</label>
-                                    <div class="col-md-4">
+                                    <div class="col-md-8">
                                         <input type="submit" name="Submit" value="Save">
                                     </div>
                                 </div>

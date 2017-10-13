@@ -72,7 +72,7 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'admin', -- password
     'salt', -- password salt
     'contact@ReStart.com', -- mail
-    'http://www.yurisrunhouston.com/uploads/3/9/1/9/3919285/_457014621.png', -- profile picture
+    'images/dankadmin.gif', -- profile picture
     'payment@ReStart.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
@@ -187,6 +187,36 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     now(), -- addedsince
     TRUE, -- canbuy
     52.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    1, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'CSGO: Medium Player', -- title,
+    'This is a Medium Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    25.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    2, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'CSGO: Worst Player', -- title,
+    'This is a Worst Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    -10.00, -- buyprice
     FALSE, -- cantrade
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
@@ -401,6 +431,31 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
+  );
+
+INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES
+  (
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'Great Seller', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '5' --  rating
+  ),
+
+  (
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'got extra dank memes', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '4' --  rating
+  ),
+
+  (
+    '1', -- userreceiverid
+    '2', -- usersenderid
+    'dankest Seller', -- Title
+    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '3' --  rating
   );
 
 --- !Downs

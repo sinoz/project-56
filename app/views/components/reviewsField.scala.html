@@ -1,0 +1,30 @@
+@import java.util
+@(reviews: util.List[Review])
+
+    @for(review <- reviews) {
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div align="center">
+                        <img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" class="img-rounded">
+                        <div class=><h3><a href="/user/@review.getSender.getUsername">@review.getSender.getUsername</a></h3></div>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div>
+                        @for(star_full <- 1 to review.getRating){
+                            <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                        }
+                        @for(star_empty <- 1 to (5 - review.getRating)){
+                            <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                        }
+                    <br>
+                    </div>
+                    <br>
+                    <div ><h4>@review.getTitle</h4></div>
+                    <div>@review.getDescription</div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    }

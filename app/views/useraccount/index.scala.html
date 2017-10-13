@@ -1,0 +1,121 @@
+@import java.util
+@(user: ViewableUser, inventory: util.List[util.List[Product]], reviews: util.List[util.List[Review]], session: play.mvc.Http.Session)
+@import components._
+
+@main("Restart") {
+    <body>
+        <div class="site-content">
+            @header("", session)
+
+            @banner()
+
+            <div class="fullwidth-block">
+                <div class="container-fluid">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <div class="portlet dark profile-sidebar-portlet bordered">
+                                <div class="profile-userpic">
+                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
+                                </div>
+
+                                <div class="profile-usertitle">
+                                    <div class="profile-usertitle-name">@user.getUsername</div>
+
+                                    <div class="profile-usertitle-membersince">
+                                        Member Since:<br/>
+                                        @user.getMemberSince.format("dd-MM-yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="container-fluid">
+                                <h1>Selling and Trading</h1>
+                                @if(inventory.nonEmpty){
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                        @for(row <- inventory) {
+                                            <div class="row">
+                                            @for(product <- row) {
+                                                <div class="col-md-2 col-sm-2">
+                                                    <div class="live-camera">
+                                                        <a href="/products/selected/@product.getId">
+
+                                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                                <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                            </figure>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3 col-sm-3 image">
+                                                    <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                                    <a href="/404"><button class="awesomebutton">Buy</button></a>
+                                                    <a href="/404"><button class="awesomebutton">Trade</button></a>
+                                                    <p>
+                                                        <br><strong>Rank: --</strong>
+                                                    </p>
+                                                </div>
+                                            }
+                                            </div>
+                                        }
+                                        </div>
+                                    </div>
+                                } else {
+                                    <h3>This user does not have any games for sale right now</h3>
+                                }
+
+                                <h1>Reviews</h1>
+                                @if(reviews.nonEmpty){
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12">
+                                        @for(row <- reviews) {
+                                            <div class="row">
+                                            @for(review <- row) {
+                                                <div class="col-md-2 col-sm-2">
+                                                    <div class="live-camera">
+                                                        <a href="/user/@review.getSender.getUsername">
+                                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" alt="">
+                                                                <div class="transbox"><p>@review.getSender.getUsername</p></div>
+                                                            </figure>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-3 image">
+                                                    <h3>@review.getTitle</h3>
+
+                                                    @for(star_full <- 1 to review.getRating){
+                                                        <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                                                    }
+                                                    @for(star_empty <- 1 to (5 - review.getRating)){
+                                                        <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                                                    }
+                                                    <br><br>
+                                                    @review.getDescription
+                                                    <br><br><br>
+                                                </div>
+                                            }
+                                            </div>
+                                        }
+                                        </div>
+                                    </div>
+                                } else {
+                                    <h3>There are no reviews for this user yet</h3>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

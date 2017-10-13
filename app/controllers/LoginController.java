@@ -4,15 +4,13 @@ import forms.LoginForm;
 import models.User;
 import play.data.Form;
 import play.data.FormFactory;
-import play.db.Database;
 import play.mvc.Call;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
+import services.AuthenticationService;
 
 import javax.inject.Inject;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Optional;
 
 /**
@@ -29,17 +27,17 @@ public final class LoginController extends Controller {
 	private FormFactory formFactory;
 
 	/**
-	 * The required {@link Database} dependency to fetch database connections.
+	 * TODO
 	 */
-	private Database database;
+	private AuthenticationService auth;
 
 	/**
 	 * Creates a new {@link LoginController}.
 	 */
 	@Inject
-	public LoginController(FormFactory formFactory, Database database) {
+	public LoginController(FormFactory formFactory, AuthenticationService auth) {
 		this.formFactory = formFactory;
-		this.database = database;
+		this.auth = auth;
 	}
 
 	/**
@@ -60,12 +58,15 @@ public final class LoginController extends Controller {
 		} else {
 			LoginForm form = formBinding.get();
 
-			Optional<User> user = fetchUser(form.getUsername().toLowerCase(), form.getPassword());
+			Optional<User> user = auth.fetchUser(form.getUsername().toLowerCase(), form.getPassword());
 			if (user.isPresent()) {
 				session().clear();
 
 				session().put("loggedInAs", user.get().getUsername());
-				session().put("profilePictureURL", Optional.ofNullable(user.get().getProfilePicture()).orElse(""));
+				session().put("profilePictureURL", Optional.ofNullable(user.get().getProfilePicture()).orElse("images/default_profile_pic.png"));
+				session().put("usedMail", user.get().getMail());
+				session().put("usedPaymentMail", Optional.ofNullable(user.get().getPaymentMail()).orElse(""));
+
 
 				return redirect("/");
 			} else {
@@ -74,34 +75,5 @@ public final class LoginController extends Controller {
 				return badRequest(views.html.login.index.render(formBinding, session()));
 			}
 		}
-	}
-
-	/**
-	 * Attempts to find a {@link User} that matches the given username and password combination.
-	 */
-	private Optional<User> fetchUser(String username, String password) {
-		return database.withConnection(connection -> {
-			Optional<User> user = Optional.empty();
-
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
-			stmt.setString(1, username);
-			stmt.setString(2, password);
-
-			ResultSet results = stmt.executeQuery();
-
-			if (results.next()) {
-				User u = new User();
-
-				u.setId(results.getString("id"));
-				u.setUsername(results.getString("username"));
-				u.setPassword(results.getString("password"));
-				u.setMail(results.getString("mail"));
-				u.setProfilePicture(results.getString("profilepicture"));
-
-				user = Optional.of(u);
-			}
-
-			return user;
-		});
 	}
 }
