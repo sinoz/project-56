@@ -53,20 +53,18 @@
                                 @for(star_empty <- 1 to (5 - rating)){
                                     <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
                                 }
+                                <br><br>
                             </div>
                         </a>
-
-                        <br>
-                        <div class="profile-usertitle-membersince-white">
-                            Added Since:<br/>
-                            @product.getAddedSince.format("dd-MM-yyyy")
-                        </div>
                     </div>
                     <div class="col-md-9">
                         <div class="container-fluid">
                             <div class="content-wrapper">
                                 <div class="product-title"><h1>@gameCategory.getName</h1></div>
                                 <div class="product-desc"><h2>@product.getTitle </h2></div>
+                                <div class="profile-usertitle-membersince-white">
+                                    <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
+                                </div>
 
                                 <ul id="myTab" class="nav nav-tabs nav_tabs">
 
