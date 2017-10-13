@@ -33,13 +33,24 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 		if (name.length() < 2) {
 			errors.add(new ValidationError("name", "Name must be at least 2 characters long"));
 		}
+		if (name.length() > 16) {
+			errors.add(new ValidationError("name", "Name must be maximum of 16 characters long"));
+		}
 
 		if (email.length() < 8) {
 			errors.add(new ValidationError("email", "Email must be at least 8 characters long"));
 		}
 
+		if (email.length() > 128) {
+			errors.add(new ValidationError("email", "Email must be maximum of 128 characters long"));
+		}
+
 		if (password.length() < 6) {
 			errors.add(new ValidationError("password", "Password must be at least 6 characters long"));
+		}
+
+		if (password.length() > 64) {
+			errors.add(new ValidationError("password", "Password must be maximum of 64 characters long"));
 		}
 
 		if (!password.equals(repeatPassword)) {
