@@ -43,7 +43,7 @@ public final class UserAccountController extends Controller {
 		// If the user does not exist render "User Not Found" page
 		if (!user.isPresent()) return ok(empty.render(session()));
 
-		// Otherwise get inventory, gameCategories, and reviews for this user
+		// Otherwise get inventory and reviews for this user
 		inventory = getUserProducts(user.get().getId());
         reviews = getUserReviews(user.get().getId());
 
