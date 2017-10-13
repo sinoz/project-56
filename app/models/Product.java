@@ -1,10 +1,8 @@
 package models;
 
-import io.ebean.Model;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -12,8 +10,7 @@ import java.util.Date;
 /**
  * A product.
  */
-@Entity(name = "product")
-public final class Product extends Model {
+public final class Product {
 	@Id
 	private int id;
 
