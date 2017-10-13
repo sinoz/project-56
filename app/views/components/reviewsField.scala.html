@@ -5,8 +5,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-3">
-                    <img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" class="img-rounded">
-                    <div class=><a href="/user/@review.getSender.getUsername">@review.getSender.getUsername</a></div>
+                    <div align="center">
+                        <img src="@routes.Assets.versioned(review.getSender.getProfilePicture)" class="img-rounded">
+                        <div class=><h3><a href="/user/@review.getSender.getUsername">@review.getSender.getUsername</a></h3></div>
+                    </div>
                 </div>
                 <div class="col-sm-9">
                     <div>
