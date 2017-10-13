@@ -1,9 +1,13 @@
 package controllers;
 
+import concurrent.DbExecContext;
 import models.*;
 import play.db.Database;
+import play.libs.concurrent.HttpExecution;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.UserViewService;
 import views.html.useraccount.empty;
 import views.html.useraccount.index;
 
@@ -14,6 +18,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
  * A {@link Controller} for showing user accounts.
@@ -27,28 +36,48 @@ public final class UserAccountController extends Controller {
 	 */
 	private Database database;
 
+	/**
+	 * The execution context used to asynchronously perform database operations.
+	 */
+	private final DbExecContext dbEc;
+	/**
+	 * The execution context used to asynchronously perform operations.
+	 */
+	private final HttpExecutionContext httpEc;
+	/**
+	 * The {@link services.UserViewService} to obtain product data from.
+	 */
+	private UserViewService userViewService;
+
+	/**
+	 * Creates a new {@link UserAccountController}.
+	 */
 	@Inject
-	public UserAccountController(Database database) {
+	public UserAccountController(Database database, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc) {
 		this.database = database;
+		this.userViewService = userViewService;
+		this.dbEc = dbEc;
+		this.httpEc = httpEc;
 	}
 
 	/**
 	 * Returns a {@link Result} combined with a user account page.
 	 */
-	public Result index(String username) {
+	public CompletionStage<Result> index(String username) {
 		Optional<ViewableUser> user = getViewableUser(username);
-		List<List<Product>> inventory;
-		List<List<Review>> reviews;
+		CompletableFuture<List<List<Product>>> productsFetch;
+		CompletableFuture<List<List<Review>>> reviewFetch;
 
 		// If the user does not exist render "User Not Found" page
-		if (!user.isPresent()) return ok(empty.render(session()));
+		if (!user.isPresent()) return CompletableFuture.completedFuture(ok(empty.render(session())));
 
 		// Otherwise get inventory and reviews for this user
-		inventory = getUserProducts(user.get().getId());
-        reviews = getUserReviews(user.get().getId());
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-        // And render user account page
-		return ok(index.render(user.get(), inventory, reviews, session()));
+		productsFetch = supplyAsync(() -> userViewService.getUserProducts(user.get().getId()), dbExecutor);
+		reviewFetch = supplyAsync(() -> userViewService.getUserReviews(user.get().getId()), dbExecutor);
+
+		return productsFetch.thenCombineAsync(reviewFetch, (products, reviews) -> ok(index.render(user.get(), products, reviews, session())), httpEc.current());
 	}
 
 	/**

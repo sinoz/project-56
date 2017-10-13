@@ -1,9 +1,7 @@
 package models;
 
-import io.ebean.Model;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
@@ -11,8 +9,7 @@ import javax.persistence.Id;
  *
  * @author Maurice van Veen
  */
-@Entity(name = "review")
-public final class Review extends Model {
+public final class Review {
 	@Id
 	private String id;
 
