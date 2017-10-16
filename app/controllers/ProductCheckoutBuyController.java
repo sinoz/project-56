@@ -19,12 +19,10 @@ import java.util.Optional;
 /**
  * A {@link Controller} that handles searches.
  *
- * @author: Joris Stander
- * @author: D.Bakhuis
  * @author: Maurice van Veen
- *
+ * @author Johan van der Hoeven
  */
-public class SelectedProductController extends Controller {
+public class ProductCheckoutBuyController extends Controller {
     /**
      * A {@link FormFactory} to use search forms.
      */
@@ -36,77 +34,43 @@ public class SelectedProductController extends Controller {
     private Database database;
 
     @Inject
-    public SelectedProductController(FormFactory formFactory, Database database){
+    public ProductCheckoutBuyController(FormFactory formFactory, Database database){
         this.formFactory = formFactory;
         this.database = database;
     }
 
     public Result index(String token) {
-        Optional<Product> product = fetchDetails(token);
-        List<Review> reviewsproduct;
-        if (product.isPresent()) {
-            Optional<GameCategory> gameCategory = fetchGameCategory(product.get().getGameId());
-            if (gameCategory.isPresent()){
-                reviewsproduct = fetchUserReviews(product.get().getUserId());
+        try {
+            int id = Integer.valueOf(token);
+            Optional<Product> p = fetchProduct(id);
+            if (p.isPresent()) {
+                Product product = p.get();
+                Optional<User> user = fetchUser(product.getUserId());
+
+                List<Review> reviewsproduct = fetchUserReviews(product.getUserId());
 
                 int totalRating = 0;
                 for (Review review : reviewsproduct)
                     totalRating += review.getRating();
                 int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, session()));
-        }}
-        return ok(views.html.selectedproduct.index.render(token, session()));
-    }
-
-    /**
-     * Attempts to find a {@link Product} that matches the given token.
-     */
-    private Optional<Product> fetchDetails(String token) {
-        return database.withConnection(connection -> {
-            Optional<Product> returned = Optional.empty();
-
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=? AND visible=TRUE AND disabled=FALSE;");
-            stmt.setInt(1, Integer.valueOf(token));
-
-            ResultSet results = stmt.executeQuery();
-
-            while (results.next()) {
-                Product product = new Product();
-
-                product.setId(results.getInt("id"));
-                product.setUserId(results.getInt("userid"));
-                product.setGameId(results.getInt("gameid"));
-                product.setVisible(results.getBoolean("visible"));
-                product.setDisabled(results.getBoolean("disabled"));
-                product.setTitle(results.getString("title"));
-                product.setDescription(results.getString("description"));
-                product.setAddedSince(results.getDate("addedsince"));
-                product.setCanBuy(results.getBoolean("canbuy"));
-                product.setBuyPrice(results.getDouble("buyprice"));
-                product.setCanTrade(results.getBoolean("cantrade"));
-                product.setMailLast(results.getString("maillast"));
-                product.setMailCurrent(results.getString("mailcurrent"));
-                product.setPasswordCurrent(results.getString("passwordcurrent"));
-
-                Optional<User> user = fetchUser(product.getUserId());
-                user.ifPresent(product::setUser);
-                returned = Optional.of(product);
-
+                return ok(views.html.checkout.buy.render(product, user, rating, session()));
             }
-            return returned;
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return redirect("/404");
     }
 
     /**
-     * Attempts to find a {@link GameCategory} that matches the given game name.
+     * Attempts to find a {@link GameCategory} that matches the given game id.
      */
-    private Optional<GameCategory> fetchGameCategory(int gameId) {
+    private Optional<GameCategory> fetchGameCategory(int id) {
         return database.withConnection(connection -> {
             Optional<GameCategory> gameCategory = Optional.empty();
 
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
-            stmt.setInt(1, gameId);
+            stmt.setInt(1, id);
 
             ResultSet results = stmt.executeQuery();
 
@@ -152,6 +116,49 @@ public class SelectedProductController extends Controller {
             }
 
             return user;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link Product} by an id.
+     */
+    private Optional<Product> fetchProduct(int id) {
+        return database.withConnection(connection -> {
+            Optional<Product> product = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=? AND visible=TRUE AND disabled=FALSE;");
+            stmt.setInt(1, id);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                Product p = new Product();
+
+                p.setId(results.getInt("id"));
+                p.setUserId(results.getInt("userid"));
+                p.setGameId(results.getInt("gameid"));
+                p.setVisible(results.getBoolean("visible"));
+                p.setDisabled(results.getBoolean("disabled"));
+                p.setTitle(results.getString("title"));
+                p.setDescription(results.getString("description"));
+                p.setAddedSince(results.getDate("addedsince"));
+                p.setCanBuy(results.getBoolean("canbuy"));
+                p.setBuyPrice(results.getDouble("buyprice"));
+                p.setCanTrade(results.getBoolean("cantrade"));
+                p.setMailLast(results.getString("maillast"));
+                p.setMailCurrent(results.getString("mailcurrent"));
+                p.setPasswordCurrent(results.getString("passwordcurrent"));
+
+                Optional<User> user = fetchUser(p.getUserId());
+                user.ifPresent(p::setUser);
+
+                Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
+                gameCategory.ifPresent(p::setGameCategory);
+
+                product = Optional.of(p);
+            }
+
+            return product;
         });
     }
 

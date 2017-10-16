@@ -1,0 +1,77 @@
+@import components._
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@(product: Product, user: Optional[User], rating: Integer, session: play.mvc.Http.Session)
+    @*
+    * Call the `main` template with two arguments. The first
+    * argument is a `String` with the title of the page, the second
+    * argument is an `Html` object containing the body of the page. test
+    *@
+    @main("ReStart") {
+        <body>
+            <div class="site-content">
+                @header("Home", session)
+
+                @banner()
+
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <div class="live-camera">
+                                <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(product.getGameCategory.getImage())" alt=""></figure>
+                                <a href="/404"><div class="example">&#10084;
+                                </div></a>
+                            </div>
+                            <a href="/user/@product.getUser.getUsername">
+                                <div class="live-camera">
+
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="profile-userpic">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getUser.getProfilePicture)" alt=""></figure>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-usertitle">
+                                        <div class="profile-usertitle-name-white">@product.getUser.getUsername</div>
+
+                                        <div class="profile-usertitle-membersince-white">
+                                            Member Since:<br/>
+                                            @product.getUser.getMemberSince.format("dd-MM-yyyy")
+                                        </div>
+                                    </div>
+
+                                    @for(star_full <- 1 to rating){
+                                        <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                                    }
+                                    @for(star_empty <- 1 to (5 - rating)){
+                                        <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                                    }
+                                    <br><br>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-9">
+                                    <div class="product-title"><h1>@product.getGameCategory.getName</h1></div>
+                                    <div class="product-desc"><h2>@product.getTitle </h2></div>
+                                    <div class="profile-usertitle-membersince-white">
+                                        <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @footer()
+            </div>
+
+            <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </body>
+    }
