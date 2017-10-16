@@ -59,8 +59,48 @@
                                     <div class="profile-usertitle-membersince-white">
                                         <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
                                     </div>
+                                    <hr>
+
+                            <div class="col-md-9">
+                                    <div class="payment-title"><h1>Checkout</h1></div>
+
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="product-price"><h1>@product.getBuyPriceText</h1></div>
+
+                            </div>
+
+                                <!-- Coupon Input -->
+                            <div class="form-group">
+                                <h2><label class="col-md-3 control-label" for="couponinput">Coupon Code:</label></h2>
+                                <div class="col-md-5">
+                                    <input id="couponinput" name="coupon" type="coupon" class="form-control input-md">
                                 </div>
                             </div>
+
+                                <!-- Submit Button -->
+                            @*TODO*@
+                            <div class="btn-group cart">
+                                <a href="/404">
+                                    <button type="button" class="awesomebutton">
+                                        Submit
+                                    </button>
+                                </a>
+                            </div>
+
+                            <br>
+
+                                <!-- Payment Methods -->
+                            @*TODO*@
+                            <div class="col-md-9">
+                                <h2>Payment Methods</h2>
+                                <a href="/404">
+                                    <span><img src="/assets/images/PayPal.png" alt=""></span>
+                                </a>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>

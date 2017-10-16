@@ -20,7 +20,7 @@ import java.util.Optional;
  * A {@link Controller} that handles searches.
  *
  * @author: Maurice van Veen
- * @author Johan van der Hoeven
+ * @author D.Bakhuis
  */
 public class ProductCheckoutBuyController extends Controller {
     /**
