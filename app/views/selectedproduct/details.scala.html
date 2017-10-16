@@ -104,20 +104,24 @@
                                     <section class="container-fluid product-info">
                                         <div class="product-price"><h1>@product.getBuyPriceText</h1></div>
 
-                                        <div class="btn-group cart">
-                                            <a href="/404">
-                                                <button type="button" class="awesomebutton">
-                                                    Buy
-                                                </button>
-                                            </a>
-                                        </div>
-                                        <div class="btn-group wishlist">
-                                            <a href="/404">
-                                                <button type="button" class="awesomebutton">
-                                                    Trade
-                                                </button>
-                                            </a>
-                                        </div>
+                                        @if(product.isCanBuy) {
+                                            <div class="btn-group cart">
+                                                <a href="/products/checkout/buy/@product.getId">
+                                                    <button type="button" class="awesomebutton">
+                                                        Buy
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if(product.isCanTrade) {
+                                            <div class="btn-group wishlist">
+                                                <a href="/products/checkout/trade/@product.getId">
+                                                    <button type="button" class="awesomebutton">
+                                                        Trade
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        }
                                     </section>
                                 </div>
 
