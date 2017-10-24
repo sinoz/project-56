@@ -33,3 +33,7 @@ POST        /myaccount/personalsettings        controllers.PersonalSettingsContr
 GET         /logout                            controllers.LogoutController.index
 
 GET         /user/:username                    controllers.UserAccountController.index(username: String)
+
+GET         /orderconfirmed                    controllers.OrderConfirmedController.index
+
+GET         /orderfailed                       controllers.OrderFailedController.index
