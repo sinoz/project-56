@@ -27,10 +27,6 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  * @author Maurice van Veen
  */
 public final class UserAccountController extends Controller {
-	/**
-	 * The required {@link Database} dependency to fetch database connections.
-	 */
-	private Database database;
 
 	/**
 	 * The execution context used to asynchronously perform database operations.
@@ -50,8 +46,7 @@ public final class UserAccountController extends Controller {
 	 * Creates a new {@link UserAccountController}.
 	 */
 	@Inject
-	public UserAccountController(Database database, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc) {
-		this.database = database;
+	public UserAccountController(UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc) {
 		this.userViewService = userViewService;
 		this.dbEc = dbEc;
 		this.httpEc = httpEc;

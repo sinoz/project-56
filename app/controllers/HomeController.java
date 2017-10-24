@@ -56,6 +56,6 @@ public final class HomeController extends Controller {
 	public CompletionStage<Result> index() {
 		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-		return supplyAsync(() -> products.getGameCategories(), dbExecutor).thenApplyAsync(i -> ok(index.render(Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+		return supplyAsync(() -> products.fetchGameCategories(), dbExecutor).thenApplyAsync(i -> ok(index.render(Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
 	}
 }

@@ -30,7 +30,7 @@ public class SelectedProductController extends Controller {
     private FormFactory formFactory;
 
     /**
-     * The {@link services.ProductService} to obtain data from.
+     * The {@link services.UserViewService} to obtain data from.
      */
     private UserViewService userViewService;
 
@@ -47,20 +47,26 @@ public class SelectedProductController extends Controller {
     }
 
     public Result index(String token) {
-        Optional<Product> product = productService.fetchProductDetails(token);
-        List<Review> reviewsproduct;
-        if (product.isPresent()) {
-            Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.get().getGameId());
-            if (gameCategory.isPresent()){
-                reviewsproduct = userViewService.fetchUserReviews(product.get().getUserId());
+        try {
+            int id = Integer.valueOf(token);
+            Optional<Product> product = productService.fetchProduct(id);
+            List<Review> reviewsproduct;
+            if (product.isPresent()) {
+                Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.get().getGameId());
+                if (gameCategory.isPresent()) {
+                    reviewsproduct = userViewService.fetchUserReviews(product.get().getUserId());
 
-                int totalRating = 0;
-                for (Review review : reviewsproduct)
-                    totalRating += review.getRating();
-                int rating = (int) (totalRating / (double) reviewsproduct.size());
+                    int totalRating = 0;
+                    for (Review review : reviewsproduct)
+                        totalRating += review.getRating();
+                    int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, session()));
-        }}
+                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, session()));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return ok(views.html.selectedproduct.index.render(token, session()));
     }
 }
