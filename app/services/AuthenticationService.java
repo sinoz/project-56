@@ -13,9 +13,6 @@ import java.util.Optional;
  * @author I.A
  */
 public final class AuthenticationService {
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
