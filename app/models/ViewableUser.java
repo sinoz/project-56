@@ -22,14 +22,15 @@ public final class ViewableUser {
 	/** date of when the user first joined, it is only set once */
 	private Date memberSince;
 
-	/** inventory from this user */
-	private List<String> inventory;
+	// TODO:
+//	/** inventory from this user */
+//	private List<String> inventory;
 
-	public ViewableUser(int id, String username, String profilePicture, List<String> inventory, Date memberSince) {
+	public ViewableUser(int id, String username, String profilePicture, Date memberSince) {
 		this.id = id;
 		this.username = username;
 		this.profilePicture = profilePicture;
-		this.inventory = inventory;
+//		this.inventory = inventory;
 		this.memberSince = memberSince;
 	}
 
@@ -49,7 +50,7 @@ public final class ViewableUser {
 		return memberSince;
 	}
 
-	public List<String> getInventory() {
-		return inventory;
-	}
+//	public List<String> getInventory() {
+//		return inventory;
+//	}
 }

@@ -12,10 +12,6 @@ import views.html.useraccount.empty;
 import views.html.useraccount.index;
 
 import javax.inject.Inject;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -44,8 +40,9 @@ public final class UserAccountController extends Controller {
 	 * The execution context used to asynchronously perform operations.
 	 */
 	private final HttpExecutionContext httpEc;
+
 	/**
-	 * The {@link services.UserViewService} to obtain product data from.
+	 * The {@link services.UserViewService} to obtain data from.
 	 */
 	private UserViewService userViewService;
 
@@ -64,7 +61,7 @@ public final class UserAccountController extends Controller {
 	 * Returns a {@link Result} combined with a user account page.
 	 */
 	public CompletionStage<Result> index(String username) {
-		Optional<ViewableUser> user = getViewableUser(username);
+		Optional<ViewableUser> user = userViewService.fetchViewableUser(username);
 		CompletableFuture<List<List<Product>>> productsFetch;
 		CompletableFuture<List<List<Review>>> reviewFetch;
 
@@ -74,35 +71,9 @@ public final class UserAccountController extends Controller {
 		// Otherwise get inventory and reviews for this user
 		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-		productsFetch = supplyAsync(() -> userViewService.getUserProducts(user.get().getId()), dbExecutor);
+		productsFetch = supplyAsync(() -> userViewService.fetchUserProducts(user.get().getId()), dbExecutor);
 		reviewFetch = supplyAsync(() -> userViewService.getUserReviews(user.get().getId()), dbExecutor);
 
 		return productsFetch.thenCombineAsync(reviewFetch, (products, reviews) -> ok(index.render(user.get(), products, reviews, session())), httpEc.current());
-	}
-
-	/**
-	 * Attempts to find a {@link ViewableUser} that matches the given username.
-	 */
-	private Optional<ViewableUser> getViewableUser(String userName) {
-		return database.withConnection(connection -> {
-			Optional<ViewableUser> viewableUser = Optional.empty();
-
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-			stmt.setString(1, userName);
-
-			ResultSet results = stmt.executeQuery();
-
-			if (results.next()) {
-				int id = results.getInt("id");
-                String username = results.getString("username");
-                String profilepicture = results.getString("profilepicture");
-                List<String> inventory = ((List<String>) results.getObject("inventory"));
-                Date membersince = results.getDate("membersince");
-
-				viewableUser = Optional.of(new ViewableUser(id, username, profilepicture, inventory, membersince));
-			}
-
-			return viewableUser;
-		});
 	}
 }

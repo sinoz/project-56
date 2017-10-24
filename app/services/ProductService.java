@@ -2,17 +2,21 @@ package services;
 
 import com.google.common.collect.ImmutableList;
 import models.GameCategory;
+import models.Product;
+import models.User;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TODO
  *
  * @author I.A
+ * @author Maurice van Veen
  */
 public final class ProductService {
 	/**
@@ -21,11 +25,17 @@ public final class ProductService {
 	private final play.db.Database database;
 
 	/**
+	 * The {@link services.UserViewService} to obtain data from.
+	 */
+	private UserViewService userViewService;
+
+	/**
 	 * Creates a new {@link ProductService}.
 	 */
 	@Inject
-	public ProductService(play.db.Database database) {
+	public ProductService(play.db.Database database, UserViewService userViewService) {
 		this.database = database;
+		this.userViewService = userViewService;
 	}
 
 	/**
@@ -50,6 +60,72 @@ public final class ProductService {
 			}
 
 			return ImmutableList.copyOf(gameCategories);
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link GameCategory} that matches the given game name.
+	 */
+	public Optional<GameCategory> fetchGameCategory(int gameId) {
+		return database.withConnection(connection -> {
+			Optional<GameCategory> gameCategory = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
+			stmt.setInt(1, gameId);
+
+			ResultSet results = stmt.executeQuery();
+
+			if (results.next()) {
+				GameCategory gc = new GameCategory();
+
+				gc.setId(results.getInt("id"));
+				gc.setName(results.getString("name"));
+				gc.setImage(results.getString("image"));
+				gc.setDescription(results.getString("description"));
+
+				gameCategory = Optional.of(gc);
+			}
+
+			return gameCategory;
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link Product} that matches the given token.
+	 */
+	public Optional<Product> fetchProductDetails(String token) {
+		return database.withConnection(connection -> {
+			Optional<Product> returned = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=? AND visible=TRUE AND disabled=FALSE;");
+			stmt.setInt(1, Integer.valueOf(token));
+
+			ResultSet results = stmt.executeQuery();
+
+			while (results.next()) {
+				Product product = new Product();
+
+				product.setId(results.getInt("id"));
+				product.setUserId(results.getInt("userid"));
+				product.setGameId(results.getInt("gameid"));
+				product.setVisible(results.getBoolean("visible"));
+				product.setDisabled(results.getBoolean("disabled"));
+				product.setTitle(results.getString("title"));
+				product.setDescription(results.getString("description"));
+				product.setAddedSince(results.getDate("addedsince"));
+				product.setCanBuy(results.getBoolean("canbuy"));
+				product.setBuyPrice(results.getDouble("buyprice"));
+				product.setCanTrade(results.getBoolean("cantrade"));
+				product.setMailLast(results.getString("maillast"));
+				product.setMailCurrent(results.getString("mailcurrent"));
+				product.setPasswordCurrent(results.getString("passwordcurrent"));
+
+				Optional<User> user = userViewService.fetchUser(product.getUserId());
+				user.ifPresent(product::setUser);
+				returned = Optional.of(product);
+
+			}
+			return returned;
 		});
 	}
 }
