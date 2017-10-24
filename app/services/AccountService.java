@@ -11,6 +11,7 @@ import java.sql.Timestamp;
  * TODO
  *
  * @author I.A
+ * @author Maurice van Veen
  */
 public final class AccountService {
 	/**
@@ -45,12 +46,13 @@ public final class AccountService {
 	 */
 	public void registered(RegistrationForm form) {
 		database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?)");
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail, paymentmail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?, ?)");
 			stmt.setString(1, form.name.toLowerCase());
 			stmt.setString(2, form.password);
 			stmt.setString(3, form.email);
-			stmt.setString(4, "images/default_profile_pic.png");
-			stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+			stmt.setString(4, form.paymentmail);
+			stmt.setString(5, "images/default_profile_pic.png");
+			stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
 			stmt.execute();
 		});
 	}
@@ -60,9 +62,11 @@ public final class AccountService {
 	 */
 	public void updateSettings(String loggedInAs, PersonalSettingsForm form) {
 		database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username = ? WHERE username = ?");
+			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username=?, mail=?, paymentmail=? WHERE username=?");
 			stmt.setString(1, form.usernameToChangeTo);
-			stmt.setString(2, loggedInAs);
+			stmt.setString(2, form.emailToChangeTo);
+			stmt.setString(3, form.paymentMailToChangeTo);
+			stmt.setString(4, loggedInAs);
 			stmt.execute();
 		});
 	}
