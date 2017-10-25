@@ -34,6 +34,6 @@ GET         /logout                            controllers.LogoutController.inde
 
 GET         /user/:username                    controllers.UserAccountController.index(username: String)
 
-GET         /orderconfirmed                    controllers.OrderConfirmedController.index
+GET         /orderconfirmed/:token             controllers.OrderConfirmedController.index(token: String)
 
 GET         /orderfailed                       controllers.OrderFailedController.index

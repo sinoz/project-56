@@ -11,7 +11,7 @@ import views.html.orderconfirmed.index;
  * @author I.A
  */
 public final class OrderConfirmedController extends Controller {
-    public Result index() {
+    public Result index(String token) {
         return ok(index.render(session()));
     }
 }
