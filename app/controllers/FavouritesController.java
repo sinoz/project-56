@@ -1,6 +1,8 @@
 package controllers;
 
+import com.google.common.collect.Lists;
 import forms.FavouriteForm;
+import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
@@ -8,6 +10,7 @@ import play.mvc.Result;
 import services.FavouritesService;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * A {@link Controller} for the Favourites page.
@@ -33,7 +36,9 @@ public final class FavouritesController extends Controller{
         if (loggedInAs == null || loggedInAs.length() == 0) {
             return redirect("/login");
         } else {
-            return ok(views.html.favourites.index.render(session()));
+            List<Integer> ids = favouritesService.getFavourites(loggedInAs);
+            List<Product> favourites = favouritesService.getProducts(ids);
+            return ok(views.html.favourites.index.render(Lists.partition(favourites, 2), session()));
         }
     }
 

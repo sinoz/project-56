@@ -1,5 +1,7 @@
-@(session: play.mvc.Http.Session)
+@import java.util
 @import components._
+
+@(list: util.List[util.List[Product]], session: play.mvc.Http.Session)
 
 @main("ReStart") {
     <body>
@@ -52,7 +54,40 @@
                     </div>
                     <div class="col-md-8">
                         <div class="portlet light bordered">
+                            <div class="container">
+                                <h1 class="section-title">Favourites</h1>
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-9">
+                                    @for(row <- list) {
+                                        <div class="row">
+                                        @for(product <- row) {
+                                            <div class="col-md-2 col-sm-2">
+                                                <div class="live-camera">
+                                                    <a href="/products/selected/@product.getId">
+                                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                            <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                        </figure>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 image">
+                                                <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                                @if(product.isCanBuy) {
+                                                    <a href="/products/checkout/buy/@product.getId"><button class="awesomebutton">Buy</button></a>
+                                                }
+                                                @if(product.isCanTrade) {
+                                                    <a href="/products/checkout/trade/@product.getId"><button class="awesomebutton">Trade</button></a>
+                                                }
 
+                                                <br>
+                                                @userIconSmall(product.getUser)
+                                            </div>
+                                        }
+                                        </div>
+                                    }
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
