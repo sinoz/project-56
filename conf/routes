@@ -30,6 +30,9 @@ POST        /login                             controllers.LoginController.login
 GET         /myaccount/personalsettings        controllers.PersonalSettingsController.index
 POST        /myaccount/personalsettings        controllers.PersonalSettingsController.editSettings
 
+GET         /myaccount/favourites              controllers.FavouritesController.index
+POST        /myaccount/addfavourite            controllers.FavouritesController.addFavourite()
+
 GET         /logout                            controllers.LogoutController.index
 
 GET         /user/:username                    controllers.UserAccountController.index(username: String)

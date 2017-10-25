@@ -1,5 +1,5 @@
 @(session: play.mvc.Http.Session)
-    @import components._
+@import components._
 
 @main("ReStart") {
     <body>
@@ -19,9 +19,10 @@
                             <div class="profile-usertitle">
                                 <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
                             </div>
+
                             <div class="profile-usermenu">
                                 <ul class="nav">
-                                    <li class="active">
+                                    <li>
                                         <a href="/myaccount">
                                             <i class="icon-home"></i> Order History </a>
                                     </li>
@@ -29,7 +30,7 @@
                                         <a href="/myaccount/personalsettings">
                                             <i class="icon-settings"></i> Personal Settings </a>
                                     </li>
-                                    <li>
+                                    <li class="active">
                                         <a href="/myaccount/favourites">
                                             <i class="icon-settings"></i> Favorites </a>
                                     </li>

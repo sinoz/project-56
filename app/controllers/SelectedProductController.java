@@ -1,5 +1,6 @@
 package controllers;
 
+import forms.FavouriteForm;
 import models.GameCategory;
 import models.Product;
 import models.Review;
@@ -26,7 +27,7 @@ import java.util.Optional;
  */
 public class SelectedProductController extends Controller {
     /**
-     * A {@link FormFactory} to use search forms.
+     * A {@link FormFactory} to use forms.
      */
     private FormFactory formFactory;
 
@@ -54,7 +55,7 @@ public class SelectedProductController extends Controller {
                     totalRating += review.getRating();
                 int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, session()));
+                return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), session()));
         }}
         return ok(views.html.selectedproduct.index.render(token, session()));
     }

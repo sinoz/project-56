@@ -3,7 +3,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], session: play.mvc.Http.Session)
+@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -24,8 +24,12 @@
                     <div class="col-md-3">
                         <div class="live-camera">
                             <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
-                                <a href="/404"><div class="example">&#10084;
-                                </div></a>
+                            @if(session.get("loggedInAs") != null){
+                                @helper.form(action = helper.CSRF(routes.FavouritesController.addFavourite()), 'style -> "width:400px; margin: 0 auto;") {
+                                    <input type="hidden" name="id" value=@product.getId>
+                                    <input type="image" src="/assets/images/star_full.png">
+                                }
+                            }
                         </div>
                         <a href="/user/@product.getUser.getUsername">
                             <div class="live-camera">
