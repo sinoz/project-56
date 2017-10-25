@@ -12,6 +12,9 @@
     *@
     @main("ReStart") {
         <body>
+                <!-- required for the paypal method-->
+            <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
             <div class="site-content">
                 @header("Home", session)
 
@@ -95,9 +98,50 @@
                             @*TODO*@
                             <div class="col-md-9">
                                 <h2>Payment Methods</h2>
-                                <a href="/404">
-                                    <span><img src="/assets/images/PayPal.png" alt=""></span>
-                                </a>
+                                <div id="paypal-button-container"></div>
+
+                                <script>
+                                        paypal.Button.render({
+
+                                            env: 'production', // sandbox | production
+
+                                            // PayPal Client IDs - replace with your own
+                                            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+                                            client: {
+                                                sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+                                                production: 'ARxZxqOufz-0wO7RHEZy4zHGBPP19avRGjM9iAfeZhrGg35TWu2TzozRpp4YFm2c4eJn-emXop_onnoz'
+                                            },
+
+                                            // Show the buyer a 'Pay Now' button in the checkout flow
+                                            commit: true,
+
+                                            // payment() is called when the button is clicked
+                                            payment: function(data, actions) {
+
+                                                // Make a call to the REST api to create the payment
+                                                return actions.payment.create({
+                                                    payment: {
+                                                        transactions: [
+                                                            {
+                                                                amount: { total: @product.getBuyPrice, currency: 'EUR' }
+                                                            }
+                                                        ]
+                                                    }
+                                                });
+                                            },
+
+                                            // onAuthorize() is called when the buyer approves the payment
+                                            onAuthorize: function(data, actions) {
+
+                                                // Make a call to the REST api to execute the payment
+                                                return actions.payment.execute().then(function() {
+                                                    window.alert('Payment Complete!');
+                                                });
+                                            }
+
+                                        }, '#paypal-button-container');
+
+                                </script>
                             </div>
 
 
@@ -113,5 +157,8 @@
 
             <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
             <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+
+
+
         </body>
     }

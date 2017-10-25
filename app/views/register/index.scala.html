@@ -39,6 +39,17 @@
                             </div>
 
                             <div class="required-field-block">
+                                <input type="text" name="paymentmail" placeholder="Payment Email" class="form-control">
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("paymentmail").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="required-field-block">
                                 <input type="password" name="password" placeholder="Password" class="form-control">
                                 <div class="required-icon">
                                     <div class="text">*</div>
