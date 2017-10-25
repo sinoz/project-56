@@ -1,16 +1,25 @@
 package controllers;
 
 import com.google.common.collect.Lists;
+import concurrent.DbExecContext;
 import forms.FavouriteForm;
 import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
+import play.libs.concurrent.HttpExecution;
+import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.FavouritesService;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
+
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
  * A {@link Controller} for the Favourites page.
@@ -21,42 +30,48 @@ public final class FavouritesController extends Controller{
     /**
      * A {@link FormFactory} to use forms.
      */
-    private FormFactory formFactory;
+    private final FormFactory formFactory;
 
-    private FavouritesService favouritesService;
+    private final FavouritesService favouritesService;
+
+    private final DbExecContext dbEc;
+
+    private final HttpExecutionContext httpEc;
 
     @Inject
-    public FavouritesController(FormFactory formFactory, FavouritesService favouritesService){
+    public FavouritesController(FormFactory formFactory, FavouritesService favouritesService, DbExecContext dbEc, HttpExecutionContext httpEc){
         this.formFactory = formFactory;
         this.favouritesService = favouritesService;
+        this.dbEc = dbEc;
+        this.httpEc = httpEc;
     }
 
-    public Result index() {
+    public CompletionStage<Result> index() {
         String loggedInAs = session().get("loggedInAs");
         if (loggedInAs == null || loggedInAs.length() == 0) {
-            return redirect("/login");
+            return completedFuture(redirect("/login"));
         } else {
-            List<Integer> ids = favouritesService.getFavourites(loggedInAs);
-            List<Product> favourites = favouritesService.getProducts(ids);
-            return ok(views.html.favourites.index.render(Lists.partition(favourites, 2), session()));
+            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+            return supplyAsync(() -> favouritesService.getFavourites(loggedInAs), dbExecutor)
+                    .thenApplyAsync(favouritesService::getProducts, dbExecutor)
+                    .thenApplyAsync(prods -> ok(views.html.favourites.index.render(Lists.partition(prods, 2), session())), httpEc.current());
         }
     }
 
     /**
      * The method that adds/deletes a game to a users favourites
      */
-    public Result addFavourite() {
+    public CompletionStage<Result> addFavourite() {
         Form<FavouriteForm> formBinding = formFactory.form(FavouriteForm.class).bindFromRequest();
 
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-            return badRequest();
+            return completedFuture(badRequest());
         } else {
+            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             FavouriteForm form = formBinding.get();
             String prodId = form.getId();
 
-            favouritesService.add(prodId, session().get("loggedInAs"));
-
-            return redirect("/products/selected/" + prodId);
+            return runAsync(() -> favouritesService.add(prodId, session().get("loggedInAs")), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
         }
     }
 }
