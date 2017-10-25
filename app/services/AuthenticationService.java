@@ -13,9 +13,6 @@ import java.util.Optional;
  * @author I.A
  */
 public final class AuthenticationService {
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
@@ -46,6 +43,7 @@ public final class AuthenticationService {
 				u.setUsername(results.getString("username"));
 				u.setPassword(results.getString("password"));
 				u.setMail(results.getString("mail"));
+				u.setPaymentMail(results.getString("paymentmail"));
 				u.setProfilePicture(results.getString("profilepicture"));
 				u.setMemberSince(results.getDate("membersince"));
 

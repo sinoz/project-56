@@ -2,6 +2,7 @@ package controllers;
 
 import concurrent.DbExecContext;
 import forms.PersonalSettingsForm;
+import models.User;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecution;
@@ -9,8 +10,10 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.AccountService;
+import services.AuthenticationService;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -45,15 +48,21 @@ public final class PersonalSettingsController extends Controller {
 	 */
 	private final HttpExecutionContext httpEc;
 
+    /**
+     * The {@link services.AuthenticationService} to obtain data from.
+     */
+    private AuthenticationService auth;
+
 	/**
 	 * Creates a new {@link PersonalSettingsController}.
 	 */
 	@Inject
-	public PersonalSettingsController(FormFactory formFactory, AccountService accounts, DbExecContext dbEc, HttpExecutionContext httpEc) {
+	public PersonalSettingsController(FormFactory formFactory, AccountService accounts, DbExecContext dbEc, HttpExecutionContext httpEc, AuthenticationService auth) {
 		this.formFactory = formFactory;
 		this.accounts = accounts;
 		this.dbEc = dbEc;
 		this.httpEc = httpEc;
+		this.auth = auth;
 	}
 
 	public Result index() {
@@ -77,13 +86,20 @@ public final class PersonalSettingsController extends Controller {
 			String loggedInAs = session().get("loggedInAs");
 
 			// TODO add password check back in
+            Optional<User> user = auth.fetchUser(loggedInAs, form.password);
 
-			// runs the account update operation on the database pool of threads and then switches
-			// to the internal HTTP pool of threads to safely update the session and returning the view
-			return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor).thenApplyAsync(i -> {
-				session().put("loggedInAs", form.usernameToChangeTo);
-				return redirect("/myaccount");
-			}, httpEc.current());
+            if (user.isPresent()) {
+                // runs the account update operation on the database pool of threads and then switches
+                // to the internal HTTP pool of threads to safely update the session and returning the view
+                return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor).thenApplyAsync(i -> {
+                    session().put("loggedInAs", form.usernameToChangeTo);
+                    session().put("usedMail", form.emailToChangeTo);
+                    session().put("usedPaymentMail", form.paymentMailToChangeTo);
+                    return redirect("/myaccount/personalsettings");
+                }, httpEc.current());
+            } else {
+                return completedFuture(badRequest(views.html.personalsettings.index.render(formBinding, session())));
+            }
 		}
 	}
 }
