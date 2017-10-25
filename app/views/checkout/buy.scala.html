@@ -12,6 +12,9 @@
     *@
     @main("ReStart") {
         <body>
+                <!-- required for the paypal method-->
+            <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
             <div class="site-content">
                 @header("Home", session)
 
@@ -95,9 +98,41 @@
                             @*TODO*@
                             <div class="col-md-9">
                                 <h2>Payment Methods</h2>
-                                <a href="/404">
-                                    <span><img src="/assets/images/PayPal.png" alt=""></span>
-                                </a>
+                                <div id="paypal-button"></div>
+                                <script>
+                                        paypal.Button.render({
+
+                                            env: 'production', // Or 'sandbox'
+                                            client:{
+                                                sandbox:    'Ad2FmUDH6T2s40awT5GU5nnVhXgTDy2nyYUmmVtxLq68I5gd2ZeIXnCBrytuNN0oNk41V59iwD4xN3DT',
+                                                production: 'ARxZxqOufz-0wO7RHEZy4zHGBPP19avRGjM9iAfeZhrGg35TWu2TzozRpp4YFm2c4eJn-emXop_onnoz'
+                                            },
+
+                                            commit: true, // Show a 'Pay Now' button
+
+                                            payment: function(data, actions) {
+                                                return actions.payment.create({
+                                                    payment: {
+                                                        transaction: [
+                                                            {
+                                                                amount: {total: '10.00', currency: 'USD' }
+                                                            }
+                                                        ]
+                                                    }
+                                                });
+                                            },
+
+                                            onAuthorize: function(data, actions) {
+
+                                                return actions.payment.execute().then(function(payment){
+                                                    console.log("Hello World");
+                                                    // The payment is complete
+                                                    // TODO confirmation msg to the customer
+                                                });
+                                            }
+
+                                        }, '#paypal-button');
+                                </script>
                             </div>
 
 
@@ -113,5 +148,8 @@
 
             <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
             <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+
+
+
         </body>
     }
