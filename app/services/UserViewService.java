@@ -3,12 +3,10 @@ package services;
 import models.*;
 
 import javax.inject.Inject;
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s for the {@link controllers.UserAccountController}
@@ -97,6 +95,15 @@ public final class UserViewService {
                 u.setProfilePicture(results.getString("profilepicture"));
                 u.setMemberSince(results.getDate("membersince"));
 
+                Array favorites_array = results.getArray("favorites");
+                // TODO: improve
+                if (favorites_array != null) {
+                    Integer[] f1 = (Integer[]) favorites_array.getArray();
+                    ArrayList<Integer> f2 = new ArrayList<>();
+                    f2.addAll(Arrays.asList(f1));
+                    u.setFavorites(f2);
+                }
+
                 user = Optional.of(u);
             }
 
@@ -184,6 +191,15 @@ public final class UserViewService {
 
             return list;
         });
+    }
+
+    /**
+     * Attempts to get the {@link Product}s that belong to the given userId.
+     */
+    public boolean fetchProductIsFavourited(int userId, int productId) {
+        Optional<User> user = fetchUser(userId);//
+        return user.isPresent() && user.get().getFavorites() != null && user.get().getFavorites().contains(productId);
+
     }
 
     /**

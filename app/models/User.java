@@ -47,7 +47,7 @@ public final class User extends Model {
 	private List<String> inventory;
 
 	/** list with product ids, used for searching for product (if a product is found that is disabled or not visible in the webshop it should be removed from this list) */
-	private List<String> favorites;
+	private List<Integer> favorites;
 
 	/** list with order ids, used for searching for order */
 	private List<String> orderHistory;
@@ -114,11 +114,11 @@ public final class User extends Model {
 		this.inventory = inventory;
 	}
 
-	public List<String> getFavorites() {
+	public List<Integer> getFavorites() {
 		return favorites;
 	}
 
-	public void setFavorites(List<String> favorites) {
+	public void setFavorites(List<Integer> favorites) {
 		this.favorites = favorites;
 	}
 

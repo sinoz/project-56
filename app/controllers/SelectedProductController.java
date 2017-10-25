@@ -49,8 +49,8 @@ public class SelectedProductController extends Controller {
 
     public Result index(String token) {
         try {
-            int id = Integer.valueOf(token);
-            Optional<Product> product = productService.fetchProduct(id);
+            int productId = Integer.valueOf(token);
+            Optional<Product> product = productService.fetchProduct(productId);
             List<Review> reviewsproduct;
             if (product.isPresent()) {
                 Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.get().getGameId());
@@ -62,7 +62,10 @@ public class SelectedProductController extends Controller {
                         totalRating += review.getRating();
                     int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), session()));
+                    boolean isFavourited = userViewService.fetchProductIsFavourited(product.get().getUserId(), productId);
+                    System.out.println(isFavourited);
+
+                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), isFavourited, session()));
                 }
             }
         } catch (Exception e) {

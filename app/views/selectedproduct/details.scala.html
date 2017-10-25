@@ -3,7 +3,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], session: play.mvc.Http.Session)
+@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], isFavourited: Boolean, session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -28,7 +28,11 @@
                                 @if(session.get("loggedInAs") != null){
                                     @helper.form(action = helper.CSRF(routes.FavouritesController.addFavourite())) {
                                         <input type="hidden" name="id" value=@product.getId>
-                                        <input type="image" src="/assets/images/heart_small.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        @if(isFavourited) {
+                                            <input type="image" src="/assets/images/heart_small.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        } else {
+                                            <input type="image" src="/assets/images/heart_small_empty.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        }
                                     }
                                 }
                                 <img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt="">
