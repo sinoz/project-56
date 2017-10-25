@@ -56,6 +56,9 @@
                         <div class="portlet light bordered">
                             <div class="container">
                                 <h1 class="section-title">Favourites</h1>
+                                @if(list.isEmpty){
+                                    <h3>You don't have any favourites yet!</h3>
+                                } else {
                                 <div class="row">
                                     <div class="col-md-8 col-sm-9">
                                     @for(row <- list) {
@@ -87,6 +90,7 @@
                                     }
                                     </div>
                                 </div>
+                                }
                             </div>
                         </div>
                     </div>
