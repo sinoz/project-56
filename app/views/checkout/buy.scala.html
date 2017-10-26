@@ -1,0 +1,162 @@
+@import components._
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@(product: Product, user: Optional[User], rating: Integer, session: play.mvc.Http.Session)
+    @*
+    * Call the `main` template with two arguments. The first
+    * argument is a `String` with the title of the page, the second
+    * argument is an `Html` object containing the body of the page. test
+    *@
+    @main("ReStart") {
+        <body>
+                <!-- required for the paypal method-->
+            <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+            <div class="site-content">
+                @header("Home", session)
+
+                @banner()
+
+                <div class="container">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <div class="live-camera">
+                                <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(product.getGameCategory.getImage())" alt=""></figure>
+                            </div>
+                            <a href="/user/@product.getUser.getUsername">
+                                <div class="live-camera">
+
+                                    <div class="col-md-6 col-sm-6">
+                                        <div class="profile-userpic">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getUser.getProfilePicture)" alt=""></figure>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-usertitle">
+                                        <div class="profile-usertitle-name-white">@product.getUser.getUsername</div>
+
+                                        <div class="profile-usertitle-membersince-white">
+                                            Member Since:<br/>
+                                            @product.getUser.getMemberSince.format("dd-MM-yyyy")
+                                        </div>
+                                    </div>
+
+                                    @for(star_full <- 1 to rating){
+                                        <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                                    }
+                                    @for(star_empty <- 1 to (5 - rating)){
+                                        <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                                    }
+                                    <br><br>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-9">
+                                    <div class="product-title"><h1>@product.getGameCategory.getName</h1></div>
+                                    <div class="product-desc"><h2>@product.getTitle </h2></div>
+                                    <div class="profile-usertitle-membersince-white">
+                                        <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
+                                    </div>
+                                    <hr>
+
+                            <div class="col-md-9">
+                                    <div class="payment-title"><h1>Checkout</h1></div>
+
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="product-price"><h1>@product.getBuyPriceText</h1></div>
+
+                            </div>
+
+                                <!-- Coupon Input -->
+                            <div class="form-group">
+                                <h2><label class="col-md-3 control-label" for="couponinput">Coupon Code:</label></h2>
+                                <div class="col-md-5">
+                                    <input id="couponinput" name="coupon" type="coupon" class="form-control input-md">
+                                </div>
+                            </div>
+
+                                <!-- Submit Button -->
+                            @*TODO*@
+                            <div class="btn-group cart">
+                                <a href="/404">
+                                    <button type="button" class="awesomebutton">
+                                        Submit
+                                    </button>
+                                </a>
+                            </div>
+
+                            <br>
+
+                                <!-- Payment Methods -->
+                            @*TODO*@
+                            <div class="col-md-9">
+                                <h2>Payment Methods</h2>
+                                <div id="paypal-button-container"></div>
+
+                                <script>
+                                        paypal.Button.render({
+
+                                            env: 'production', // sandbox | production
+
+                                            // PayPal Client IDs - replace with your own
+                                            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+                                            client: {
+                                                sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+                                                production: 'ARxZxqOufz-0wO7RHEZy4zHGBPP19avRGjM9iAfeZhrGg35TWu2TzozRpp4YFm2c4eJn-emXop_onnoz'
+                                            },
+
+                                            // Show the buyer a 'Pay Now' button in the checkout flow
+                                            commit: true,
+
+                                            // payment() is called when the button is clicked
+                                            payment: function(data, actions) {
+
+                                                // Make a call to the REST api to create the payment
+                                                return actions.payment.create({
+                                                    payment: {
+                                                        transactions: [
+                                                            {
+                                                                amount: { total: @product.getBuyPrice, currency: 'EUR' }
+                                                            }
+                                                        ]
+                                                    }
+                                                });
+                                            },
+
+                                            // onAuthorize() is called when the buyer approves the payment
+                                            onAuthorize: function(data, actions) {
+
+                                                // Make a call to the REST api to execute the payment
+                                                return actions.payment.execute().then(function() {
+                                                    window.alert('Payment Complete!');
+                                                });
+                                            }
+
+                                        }, '#paypal-button-container');
+
+                                </script>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                @footer()
+            </div>
+
+            <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+
+
+
+        </body>
+    }

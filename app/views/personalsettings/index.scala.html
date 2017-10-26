@@ -34,8 +34,8 @@
                                             <i class="icon-settings"></i> Personal Settings </a>
                                     </li>
                                     <li>
-                                        <a href="#">
-                                            <i class="icon-settings"></i> Favorites </a>
+                                        <a href="/myaccount/favourites">
+                                            <i class="icon-settings"></i> Favourites </a>
                                     </li>
                                     <li>
                                         <a href="#">
@@ -63,6 +63,9 @@
                                     <label class="col-md-4 control-label" for="textinput">Change Username:</label>
                                     <div class="col-md-4">
                                         <input id="textinput" name="usernameToChangeTo" type="text" class="form-control input-md" value=@session.get("loggedInAs")>
+                                        @for(error <- form("usernameToChangeTo").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
                                     </div>
                                 </div>
 
@@ -71,14 +74,20 @@
                                     <label class="col-md-4 control-label" for="textinput">Change Email:</label>
                                     <div class="col-md-4">
                                         <input id="textinput" name="emailToChangeTo" type="text" class="form-control input-md" value=@session.get("usedMail")>
+                                        @for(error <- form("emailToChangeTo").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
                                     </div>
                                 </div>
 
                                     <!-- Payment email input-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                    <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
                                     <div class="col-md-4">
                                         <input id="textinput" name="paymentMailToChangeTo" type="text" class="form-control input-md" value=@session.get("usedPaymentMail")>
+                                        @for(error <- form("paymentMailToChangeTo").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
                                     </div>
                                 </div>
 
@@ -88,7 +97,9 @@
                                     <label class="col-md-4 control-label" for="passwordinput">password</label>
                                     <div class="col-md-4">
                                         <input id="passwordinput" name="password" type="password" class="form-control input-md">
-
+                                        @for(error <- form("password").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
                                     </div>
                                 </div>
 

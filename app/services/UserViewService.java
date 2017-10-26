@@ -1,21 +1,18 @@
 package services;
 
-import models.GameCategory;
-import models.Product;
-import models.Review;
-import models.User;
+import models.*;
 
 import javax.inject.Inject;
+import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s for the {@link controllers.UserAccountController}
  *
  * @author Johan van der Hoeven
+ * @author Maurice van Veen
  */
 public final class UserViewService {
     private final play.db.Database database;
@@ -26,9 +23,59 @@ public final class UserViewService {
     }
 
     /**
-     * Attempts to find a {@link User} that matches the given id.
+     * Attempts to find a {@link ViewableUser} that matches the given id.
      */
-    private Optional<User> getUser(int id) {
+    public Optional<ViewableUser> fetchViewableUser(int id) {
+        return database.withConnection(connection -> {
+            Optional<ViewableUser> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE id=?");
+            stmt.setInt(1, id);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                String username = results.getString("username");
+                String profilepicture = results.getString("profilepicture");
+                Date memberSince = results.getDate("membersince");
+                ViewableUser u = new ViewableUser(id, username, profilepicture, memberSince);
+
+                user = Optional.of(u);
+            }
+
+            return user;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link ViewableUser} that matches the given username.
+     */
+    public Optional<ViewableUser> fetchViewableUser(String username) {
+        return database.withConnection(connection -> {
+            Optional<ViewableUser> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
+            stmt.setString(1, username);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                int id = results.getInt("id");
+                String profilepicture = results.getString("profilepicture");
+                Date memberSince = results.getDate("membersince");
+                ViewableUser u = new ViewableUser(id, username, profilepicture, memberSince);
+
+                user = Optional.of(u);
+            }
+
+            return user;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link User} that matches the given username and password combination.
+     */
+    public Optional<User> fetchUser(int id) {
         return database.withConnection(connection -> {
             Optional<User> user = Optional.empty();
 
@@ -42,7 +89,20 @@ public final class UserViewService {
 
                 u.setId(results.getString("id"));
                 u.setUsername(results.getString("username"));
+                u.setPassword(results.getString("password"));
+                u.setMail(results.getString("mail"));
+                u.setPaymentMail(results.getString("paymentmail"));
                 u.setProfilePicture(results.getString("profilepicture"));
+                u.setMemberSince(results.getDate("membersince"));
+
+                Array favorites_array = results.getArray("favorites");
+                // TODO: improve
+                if (favorites_array != null) {
+                    Integer[] f1 = (Integer[]) favorites_array.getArray();
+                    ArrayList<Integer> f2 = new ArrayList<>();
+                    f2.addAll(Arrays.asList(f1));
+                    u.setFavorites(f2);
+                }
 
                 user = Optional.of(u);
             }
@@ -52,11 +112,44 @@ public final class UserViewService {
     }
 
     /**
+     * Attempts to get the {@link Review}s that belong to the given userId.
+     */
+    public List<Review> fetchUserReviews(int userId){
+        return database.withConnection(connection -> {
+            List<Review> list = new ArrayList<>();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews WHERE userreceiverid=?");
+            stmt.setInt(1, userId);
+
+            ResultSet results = stmt.executeQuery();
+
+            while(results.next()){
+                Review r = new Review();
+
+                r.setId(results.getString("id"));
+                r.setUserReceiverId(results.getInt("userreceiverid"));
+                r.setUserSenderId(results.getInt("usersenderid"));
+                r.setTitle(results.getString("title"));
+                r.setDescription(results.getString("description"));
+                r.setRating(results.getInt("rating"));
+
+                Optional<User> sender = fetchUser(r.getUserSenderId());
+                sender.ifPresent(r::setSender);
+                Optional<User> receiver = fetchUser(r.getUserReceiverId());
+                receiver.ifPresent(r::setReceiver);
+
+                list.add(r);
+            }
+            return list;
+        });
+    }
+
+    /**
      * Attempts to get the {@link Product}s that belong to the given userId.
      */
-    public List<List<Product>> getUserProducts(int userId) {
+    public List<List<Product>> fetchUserProducts(int userId) {
         return database.withConnection(connection -> {
-            Optional<User> user = getUser(userId);
+            Optional<User> user = fetchUser(userId);
             List<List<Product>> list = new ArrayList<>();
 
             if (user.isPresent()) {
@@ -98,6 +191,15 @@ public final class UserViewService {
 
             return list;
         });
+    }
+
+    /**
+     * Attempts to get the {@link Product}s that belong to the given userId.
+     */
+    public boolean fetchProductIsFavourited(int userId, int productId) {
+        Optional<User> user = fetchUser(userId);//
+        return user.isPresent() && user.get().getFavorites() != null && user.get().getFavorites().contains(productId);
+
     }
 
     /**
@@ -151,7 +253,8 @@ public final class UserViewService {
                 r.setDescription(results.getString("description"));
                 r.setRating(results.getInt("rating"));
                 int senderid = results.getInt("usersenderid");
-                r.setSender(getUser(senderid).get());
+                Optional<User> user = fetchUser(senderid);
+                user.ifPresent(r::setSender);
 
                 row.add(r);
                 l++;

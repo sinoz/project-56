@@ -20,6 +20,10 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 	@Constraints.Required
 	public String email;
 
+	@Constraints.Email
+	@Constraints.Required
+	public String paymentmail;
+
 	@Constraints.Required
 	public String password;
 
@@ -45,6 +49,14 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 			errors.add(new ValidationError("email", "Email must be maximum of 128 characters long"));
 		}
 
+		if (paymentmail.length() < 8) {
+			errors.add(new ValidationError("paymentmail", "Email must be at least 8 characters long"));
+		}
+
+		if (paymentmail.length() > 128) {
+			errors.add(new ValidationError("paymentmail", "Email must be maximum of 128 characters long"));
+		}
+
 		if (password.length() < 6) {
 			errors.add(new ValidationError("password", "Password must be at least 6 characters long"));
 		}
@@ -66,6 +78,10 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 
 	public String getEmail() {
 		return email;
+	}
+
+	public String getPaymentmail() {
+		return paymentmail;
 	}
 
 	public String getPassword() {

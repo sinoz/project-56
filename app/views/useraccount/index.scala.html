@@ -51,8 +51,12 @@
 
                                                 <div class="col-md-3 col-sm-3 image">
                                                     <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
-                                                    <a href="/404"><button class="awesomebutton">Buy</button></a>
-                                                    <a href="/404"><button class="awesomebutton">Trade</button></a>
+                                                    @if(product.isCanBuy) {
+                                                        <a href="/products/checkout/buy/@product.getId"><button class="awesomebutton">Buy</button></a>
+                                                    }
+                                                    @if(product.isCanTrade) {
+                                                        <a href="/products/checkout/trade/@product.getId"><button class="awesomebutton">Trade</button></a>
+                                                    }
                                                     <p>
                                                         <br><strong>Rank: --</strong>
                                                     </p>

@@ -3,7 +3,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], session: play.mvc.Http.Session)
+@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], isFavourited: Boolean, session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -23,9 +23,21 @@
                 <div class="col-md-12">
                     <div class="col-md-3">
                         <div class="live-camera">
-                            <figure class="live-camera-cover"><img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
-                                <a href="/404"><div class="example">&#10084;
-                                </div></a>
+                            <figure class="live-camera-cover">
+                                <div>
+                                @if(session.get("loggedInAs") != null){
+                                    @helper.form(action = helper.CSRF(routes.FavouritesController.addFavourite())) {
+                                        <input type="hidden" name="id" value=@product.getId>
+                                        @if(isFavourited) {
+                                            <input type="image" src="/assets/images/heart_small.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        } else {
+                                            <input type="image" src="/assets/images/heart_small_empty.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        }
+                                    }
+                                }
+                                <img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt="">
+                                </div>
+                            </figure>
                         </div>
                         <a href="/user/@product.getUser.getUsername">
                             <div class="live-camera">
@@ -104,20 +116,24 @@
                                     <section class="container-fluid product-info">
                                         <div class="product-price"><h1>@product.getBuyPriceText</h1></div>
 
-                                        <div class="btn-group cart">
-                                            <a href="/404">
-                                                <button type="button" class="awesomebutton">
-                                                    Buy
-                                                </button>
-                                            </a>
-                                        </div>
-                                        <div class="btn-group wishlist">
-                                            <a href="/404">
-                                                <button type="button" class="awesomebutton">
-                                                    Trade
-                                                </button>
-                                            </a>
-                                        </div>
+                                        @if(product.isCanBuy) {
+                                            <div class="btn-group cart">
+                                                <a href="/products/checkout/buy/@product.getId">
+                                                    <button type="button" class="awesomebutton">
+                                                        Buy
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if(product.isCanTrade) {
+                                            <div class="btn-group wishlist">
+                                                <a href="/products/checkout/trade/@product.getId">
+                                                    <button type="button" class="awesomebutton">
+                                                        Trade
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        }
                                     </section>
                                 </div>
 
