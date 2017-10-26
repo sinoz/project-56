@@ -6,7 +6,6 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public final class User extends Model {
 
 	/** link to the image as profile picture for the user */
 	@Constraints.Required
-	private URL profilePicture;
+	private String profilePicture;
 
 	/** mail used for payout after a user bought a product with this seller */
 	@Constraints.Required
@@ -48,7 +47,7 @@ public final class User extends Model {
 	private List<String> inventory;
 
 	/** list with product ids, used for searching for product (if a product is found that is disabled or not visible in the webshop it should be removed from this list) */
-	private List<String> favorites;
+	private List<Integer> favorites;
 
 	/** list with order ids, used for searching for order */
 	private List<String> orderHistory;
@@ -91,11 +90,11 @@ public final class User extends Model {
 		this.mail = mail;
 	}
 
-	public URL getProfilePicture() {
+	public String getProfilePicture() {
 		return profilePicture;
 	}
 
-	public void setProfilePicture(URL profilePicture) {
+	public void setProfilePicture(String profilePicture) {
 		this.profilePicture = profilePicture;
 	}
 
@@ -115,11 +114,11 @@ public final class User extends Model {
 		this.inventory = inventory;
 	}
 
-	public List<String> getFavorites() {
+	public List<Integer> getFavorites() {
 		return favorites;
 	}
 
-	public void setFavorites(List<String> favorites) {
+	public void setFavorites(List<Integer> favorites) {
 		this.favorites = favorites;
 	}
 

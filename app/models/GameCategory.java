@@ -5,7 +5,6 @@ import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.net.URL;
 
 /**
  * A category of types of games.
@@ -16,14 +15,14 @@ import java.net.URL;
 public final class GameCategory extends Model {
 	/** The primary key of the category. */
 	@Id
-	private String id;
+	private int id;
 
 	/** The name of the game */
 	@Constraints.Required
 	private String name;
 
 	/** The link to the image for this game */
-	private URL image;
+	private String image;
 
 	/** General information about the game. */
 	private String description;
@@ -31,11 +30,11 @@ public final class GameCategory extends Model {
 	/** Specific information about the game (ranks, stats, etc.) */
 	//  TODO: this may be unnecessary
 	//	private String specifications;
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -47,11 +46,11 @@ public final class GameCategory extends Model {
 		this.name = name;
 	}
 
-	public URL getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(URL image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 

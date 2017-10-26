@@ -1,0 +1,108 @@
+@import java.util
+@import components._
+
+@(list: util.List[util.List[Product]], session: play.mvc.Http.Session)
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("MyAccount", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet light profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(session.get("profilePictureURL"))" alt=""></figure>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            <div class="profile-usermenu">
+                                <ul class="nav">
+                                    <li>
+                                        <a href="/myaccount">
+                                            <i class="icon-home"></i> Order History </a>
+                                    </li>
+                                    <li>
+                                        <a href="/myaccount/personalsettings">
+                                            <i class="icon-settings"></i> Personal Settings </a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="/myaccount/favourites">
+                                            <i class="icon-settings"></i> Favourites </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-info"></i> Inventory </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="icon-info"></i> Reviews </a>
+                                    </li>
+                                    <li>
+                                        <a href="/logout">
+                                            <i class="icon-info"></i> Log Out </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet light bordered">
+                            <div class="container">
+                                <h1 class="section-title">Favourites</h1>
+                                @if(list.isEmpty){
+                                    <h3>You don't have any favourites yet!</h3>
+                                } else {
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-9">
+                                    @for(row <- list) {
+                                        <div class="row">
+                                        @for(product <- row) {
+                                            <div class="col-md-2 col-sm-2">
+                                                <div class="live-camera">
+                                                    <a href="/products/selected/@product.getId">
+                                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                            <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                        </figure>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 image">
+                                                <a href="/products/selected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                                @if(product.isCanBuy) {
+                                                    <a href="/products/checkout/buy/@product.getId"><button class="awesomebutton">Buy</button></a>
+                                                }
+                                                @if(product.isCanTrade) {
+                                                    <a href="/products/checkout/trade/@product.getId"><button class="awesomebutton">Trade</button></a>
+                                                }
+
+                                                <br>
+                                                @userIconSmall(product.getUser)
+                                            </div>
+                                        }
+                                        </div>
+                                    }
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

@@ -1,28 +1,26 @@
 package models;
 
-import io.ebean.Model;
 import play.data.format.Formats;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
  * A product.
  */
-@Entity(name = "product")
-public final class Product extends Model {
+public final class Product {
 	@Id
-	private String id;
+	private int id;
 
 	/** id of the seller/user, can be used for searching for seller/user */
 	@Constraints.Required
-	private String userId;
+	private int userId;
 
 	/** id of the game, can be used for searching for game category */
 	@Constraints.Required
-	private String gameId;
+	private int gameId;
 
 	/** if the product is displayed/visible in webshop */
 	@Constraints.Required
@@ -49,7 +47,7 @@ public final class Product extends Model {
 	private boolean canBuy;
 
 	/** indicates the price of the product if it can be bought */
-	private float buyPrice;
+	private double buyPrice;
 
 	/** indicates if the product can be traded in the webshop */
 	@Constraints.Required
@@ -67,27 +65,33 @@ public final class Product extends Model {
 	@Constraints.Required
 	private String passwordCurrent;
 
-	public String getId() {
+	/** creates user */
+	private User user;
+
+	/** creates game category */
+	private GameCategory gameCategory;
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
-	public String getGameId() {
+	public int getGameId() {
 		return gameId;
 	}
 
-	public void setGameId(String gameId) {
+	public void setGameId(int gameId) {
 		this.gameId = gameId;
 	}
 
@@ -101,6 +105,10 @@ public final class Product extends Model {
 
 	public boolean isDisabled() {
 		return disabled;
+	}
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	public String getTitle() {
@@ -135,11 +143,15 @@ public final class Product extends Model {
 		this.canBuy = canBuy;
 	}
 
-	public float getBuyPrice() {
+	public double getBuyPrice() {
 		return buyPrice;
 	}
 
-	public void setBuyPrice(float buyPrice) {
+	public String getBuyPriceText() {
+		return "€ " + new DecimalFormat("#.00").format(buyPrice);
+	}
+
+	public void setBuyPrice(double buyPrice) {
 		this.buyPrice = buyPrice;
 	}
 
@@ -173,5 +185,21 @@ public final class Product extends Model {
 
 	public void setPasswordCurrent(String passwordCurrent) {
 		this.passwordCurrent = passwordCurrent;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public GameCategory getGameCategory() {
+		return gameCategory;
+	}
+
+	public void setGameCategory(GameCategory gameCategory) {
+		this.gameCategory = gameCategory;
 	}
 }

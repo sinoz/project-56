@@ -3,13 +3,40 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index
+GET         /                                  controllers.HomeController.index
+
+GET         /products/:token                   controllers.ProductsController.index(token: String)
+POST        /products/search                   controllers.ProductsController.redirect
+
+GET         /products/selected/:token          controllers.SelectedProductController.index(token: String)
+
+GET         /products/checkout/buy/:token      controllers.ProductCheckoutBuyController.index(token: String)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
 
-GET     /faq                        controllers.FAQController.index
+GET         /faq                               controllers.FAQController.index
 
-GET     /contact                    controllers.ContactController.index
+GET         /register                          controllers.RegistrationController.index
+POST        /register                          controllers.RegistrationController.register
 
-GET     /myaccount                  controllers.MyAccountController.index
+GET         /contact                           controllers.ContactController.index
+
+GET         /myaccount                         controllers.MyAccountController.index
+
+GET         /login                             controllers.LoginController.index
+POST        /login                             controllers.LoginController.login
+
+GET         /myaccount/personalsettings        controllers.PersonalSettingsController.index
+POST        /myaccount/personalsettings        controllers.PersonalSettingsController.editSettings
+
+GET         /myaccount/favourites              controllers.FavouritesController.index
+POST        /myaccount/addfavourite            controllers.FavouritesController.addFavourite()
+
+GET         /logout                            controllers.LogoutController.index
+
+GET         /user/:username                    controllers.UserAccountController.index(username: String)
+
+GET         /orderconfirmed/:token             controllers.OrderConfirmedController.index(token: String)
+
+GET         /orderfailed                       controllers.OrderFailedController.index

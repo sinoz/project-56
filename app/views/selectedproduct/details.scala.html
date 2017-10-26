@@ -1,0 +1,155 @@
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@import java.util
+@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], isFavourited: Boolean, session: play.mvc.Http.Session)
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Home", session)
+
+            @banner()
+
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-3">
+                        <div class="live-camera">
+                            <figure class="live-camera-cover">
+                                <div>
+                                @if(session.get("loggedInAs") != null){
+                                    @helper.form(action = helper.CSRF(routes.FavouritesController.addFavourite())) {
+                                        <input type="hidden" name="id" value=@product.getId>
+                                        @if(isFavourited) {
+                                            <input type="image" src="/assets/images/heart_small.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        } else {
+                                            <input type="image" src="/assets/images/heart_small_empty.png" style="position:absolute; bottom: 0; padding: 5px">
+                                        }
+                                    }
+                                }
+                                <img id="item-display" src="@routes.Assets.versioned(gameCategory.getImage())" alt="">
+                                </div>
+                            </figure>
+                        </div>
+                        <a href="/user/@product.getUser.getUsername">
+                            <div class="live-camera">
+                                @*<h2>Seller: @product.getUser.getUsername()</h2>*@
+                                @*<h3>member since: @product.getUser.getMemberSince</h3>*@
+
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="profile-userpic">
+                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getUser.getProfilePicture)" alt=""></figure>
+                                    </div>
+                                </div>
+
+                                <div class="profile-usertitle">
+                                    <div class="profile-usertitle-name-white">@product.getUser.getUsername</div>
+
+                                    <div class="profile-usertitle-membersince-white">
+                                        Member Since:<br/>
+                                        @product.getUser.getMemberSince.format("dd-MM-yyyy")
+                                    </div>
+                                </div>
+
+                                @for(star_full <- 1 to rating){
+                                    <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                                }
+                                @for(star_empty <- 1 to (5 - rating)){
+                                    <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                                }
+                                <br><br>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="container-fluid">
+                            <div class="content-wrapper">
+                                <div class="product-title"><h1>@gameCategory.getName</h1></div>
+                                <div class="product-desc"><h2>@product.getTitle </h2></div>
+                                <div class="profile-usertitle-membersince-white">
+                                    <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
+                                </div>
+
+                                <ul id="myTab" class="nav nav-tabs nav_tabs">
+
+                                    <li class="active"><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
+                                    <li><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
+                                    <li><a href="#service-three" data-toggle="tab">REVIEWS</a></li>
+
+                                </ul>
+
+                                <div class="col-md-9">
+                                    <div id="myTabContent" class="tab-content">
+                                        <div class="tab-pane fade in active" id="service-one">
+
+                                            <section class="container-fluid product-info">
+                                                @gameCategory.getDescription
+                                            </section>
+
+                                        </div>
+                                        <div class="tab-pane fade" id="service-two">
+
+                                            <section class="container">
+                                                @product.getDescription
+                                            </section>
+
+                                        </div>
+                                        <div class="tab-pane fade" id="service-three">
+                                            <!-- reviews-->
+                                            @reviewsField(reviews)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-md-3">
+                                    <section class="container-fluid product-info">
+                                        <div class="product-price"><h1>@product.getBuyPriceText</h1></div>
+
+                                        @if(product.isCanBuy) {
+                                            <div class="btn-group cart">
+                                                <a href="/products/checkout/buy/@product.getId">
+                                                    <button type="button" class="awesomebutton">
+                                                        Buy
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        }
+                                        @if(product.isCanTrade) {
+                                            <div class="btn-group wishlist">
+                                                <a href="/products/checkout/trade/@product.getId">
+                                                    <button type="button" class="awesomebutton">
+                                                        Trade
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        }
+                                    </section>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @footer()
+
+            </div>
+
+            <!-- Required for the banner -->
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}

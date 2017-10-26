@@ -1,9 +1,7 @@
 import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
-import services.auth.AuthenticationService;
-import services.Service;
-import services.ServiceConstants;
-import services.auth.PlayAuthenticationService;
+import services.AccountService;
+import services.AuthenticationService;
+import services.ProductService;
 
 import java.time.Clock;
 
@@ -24,16 +22,12 @@ public final class Module extends AbstractModule {
 		bindOthers();
 	}
 
-	/**
-	 * Binds all of the {@link Service} implementations.
-	 */
 	private void bindServices() {
-		bind(AuthenticationService.class).annotatedWith(Names.named(ServiceConstants.DEFAULT_AUTH)).to(PlayAuthenticationService.class);
+		bind(AccountService.class).asEagerSingleton();
+		bind(AuthenticationService.class).asEagerSingleton();
+		bind(ProductService.class).asEagerSingleton();
 	}
 
-	/**
-	 * Binds all of the other dependencies.
-	 */
 	private void bindOthers() {
 		bind(Clock.class).toInstance(Clock.systemDefaultZone());
 	}

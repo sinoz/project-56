@@ -1,9 +1,7 @@
 package models;
 
-import io.ebean.Model;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
@@ -11,18 +9,17 @@ import javax.persistence.Id;
  *
  * @author Maurice van Veen
  */
-@Entity(name = "review")
-public final class Review extends Model {
+public final class Review {
 	@Id
 	private String id;
 
 	/** user for whom the review is meant, review is displayed on this user's account */
 	@Constraints.Required
-	private String userReceiverId;
+	private int userReceiverId;
 
 	/** user who wrote the review */
 	@Constraints.Required
-	private String userSenderId;
+	private int userSenderId;
 
 	/** title of the review */
 	@Constraints.Required
@@ -35,6 +32,9 @@ public final class Review extends Model {
 	@Constraints.Required
 	private int rating;
 
+	private User sender;
+	private User receiver;
+
 	public String getId() {
 		return id;
 	}
@@ -43,19 +43,19 @@ public final class Review extends Model {
 		this.id = id;
 	}
 
-	public String getUserReceiverId() {
+	public int getUserReceiverId() {
 		return userReceiverId;
 	}
 
-	public void setUserReceiverId(String userReceiverId) {
+	public void setUserReceiverId(int userReceiverId) {
 		this.userReceiverId = userReceiverId;
 	}
 
-	public String getUserSenderId() {
+	public int getUserSenderId() {
 		return userSenderId;
 	}
 
-	public void setUserSenderId(String userSenderId) {
+	public void setUserSenderId(int userSenderId) {
 		this.userSenderId = userSenderId;
 	}
 
@@ -81,5 +81,21 @@ public final class Review extends Model {
 
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+
+	public User getSender() {
+		return sender;
+	}
+
+	public void setSender(User sender) {
+		this.sender = sender;
+	}
+
+	public User getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(User receiver) {
+		this.receiver = receiver;
 	}
 }

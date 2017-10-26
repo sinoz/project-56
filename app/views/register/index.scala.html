@@ -1,0 +1,98 @@
+@(form: play.data.Form[forms.RegistrationForm], session: play.mvc.Http.Session)
+    @import components._
+
+@main("Registration Form") {
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/registration.css")">
+
+    <body>
+        <div class="site-content">
+            @header("Register", session)
+
+            @banner()
+
+            <main class="main-content">
+                <div class="fullwidth-block">
+                    <div class="container">
+                        <h1>Registering Your ReStart</h1>
+
+                        @helper.form(action = helper.CSRF(routes.RegistrationController.register()), 'style -> "width:400px; margin: 0 auto;") {
+                            <div class="required-field-block">
+                                <input type="text" name="name" placeholder="Name" class="form-control">
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("name").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="required-field-block">
+                                <input type="text" name="email" placeholder="Email" class="form-control">
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("email").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="required-field-block">
+                                <input type="text" name="paymentmail" placeholder="Payment Email" class="form-control">
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("paymentmail").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="required-field-block">
+                                <input type="password" name="password" placeholder="Password" class="form-control">
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("password").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="required-field-block">
+                                <input type="password" name="repeatPassword" placeholder="RepeatPassword" class="form-control">
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("repeatPassword").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <button class="btn btn-primary">Send</button>
+
+                            @if(form.hasGlobalErrors) {
+                                <p class="error">
+                                @for(error <- form.globalErrors) {
+                                    @error.format(messages())
+                                }
+                                </p>
+                            }
+                        }
+                    </div>
+                </div>
+            </main>
+
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/registration.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
