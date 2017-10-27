@@ -32,7 +32,11 @@
                 }
 
                 @if(!session.containsKey("loggedInAs")) {
-                    <li class="menu-item"><a href="/login">Login</a></li>
+                    @if(activeMenuItem.equals("Login")) {
+                        <li class="menu-item current-menu-item"><a href="/login">Login</a></li>
+                    } else {
+                        <li class="menu-item"><a href="/login">Login</a></li>
+                    }
                 } else {
                     <li class="menu-item"><a href="/myaccount">My Account</a></li>
                 }
