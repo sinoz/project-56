@@ -1,7 +1,5 @@
 import com.google.inject.AbstractModule;
-import services.AccountService;
-import services.AuthenticationService;
-import services.ProductService;
+import services.*;
 
 import java.time.Clock;
 
@@ -20,12 +18,15 @@ public final class Module extends AbstractModule {
 	public void configure() {
 		bindServices();
 		bindOthers();
+		requestStaticInjection(SearchBarService.class);
 	}
 
 	private void bindServices() {
 		bind(AccountService.class).asEagerSingleton();
 		bind(AuthenticationService.class).asEagerSingleton();
+		bind(FavouritesService.class).asEagerSingleton();
 		bind(ProductService.class).asEagerSingleton();
+		bind(UserViewService.class).asEagerSingleton();
 	}
 
 	private void bindOthers() {
