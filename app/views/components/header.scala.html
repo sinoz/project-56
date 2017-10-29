@@ -25,10 +25,18 @@
                     <li class="menu-item"><a href="/faq">FAQ</a></li>
                 }
 
-            <li class="menu-item"><a href="/contact">Contact</a></li>
+                @if(activeMenuItem.equals("Contact")) {
+                    <li class="menu-item current-menu-item"><a href="/contact">Contact</a></li>
+                } else {
+                    <li class="menu-item"><a href="/contact">Contact</a></li>
+                }
 
                 @if(!session.containsKey("loggedInAs")) {
-                    <li class="menu-item"><a href="/login">Login</a></li>
+                    @if(activeMenuItem.equals("Login")) {
+                        <li class="menu-item current-menu-item"><a href="/login">Login</a></li>
+                    } else {
+                        <li class="menu-item"><a href="/login">Login</a></li>
+                    }
                 } else {
                     <li class="menu-item"><a href="/myaccount">My Account</a></li>
                 }
