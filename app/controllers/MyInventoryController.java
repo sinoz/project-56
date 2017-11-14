@@ -14,6 +14,7 @@ import services.ProductService;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -133,6 +134,24 @@ public final class MyInventoryController extends Controller{
         }
 
         return out;
+    }
+
+    public CompletionStage<Result> indexProductDetails(String id) {
+        try {
+            int ID = Integer.valueOf(id);
+
+            String loggedInAs = session().get("loggedInAs");
+            if (loggedInAs == null || loggedInAs.length() == 0) {
+                return completedFuture(redirect("/login"));
+            } else {
+                Optional<Product> product = productService.fetchProduct(ID);
+                if (product.isPresent())
+                    return completedFuture(ok(views.html.inventory.details.render(product.get(), session(), "")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return completedFuture(redirect("/404"));
     }
 
 //    /**

@@ -1,0 +1,104 @@
+@import java.util
+@import components._
+
+@(product: Product, session: play.mvc.Http.Session, activeSubMenuItem: String)
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("MyAccount", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(session.get("profilePictureURL"))" alt=""></figure>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @profileUserMenu("inventory", activeSubMenuItem)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="container">
+                                @inventoryTitle()
+
+                                <div class="col-md-9">
+                                    <div class="col-md-3">
+                                        <div class="live-camera">
+                                            <figure class="live-camera-cover">
+                                                <div>
+                                                    <img id="item-display" src="@routes.Assets.versioned(product.getGameCategory.getImage())" alt="">
+                                                </div>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="container-fluid">
+                                            <div class="content-wrapper">
+                                                <div class="product-title"><h1>@product.getGameCategory.getName</h1></div>
+                                                <div class="product-desc"><h2>@product.getTitle </h2></div>
+                                                <div class="profile-usertitle-membersince-white">
+                                                    <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-9">
+                                    <ul id="myTab" class="nav nav-tabs nav_tabs">
+                                        <li class="active"><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
+                                        <li><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
+                                        <li><a href="#service-three" data-toggle="tab">SETTINGS</a></li>
+                                    </ul>
+
+                                    <div class="col-md-9">
+                                        <div id="myTabContent" class="tab-content">
+                                            <div class="tab-pane fade in active" id="service-one">
+
+                                                <section class="container-fluid product-info">
+                                                @product.getGameCategory.getDescription
+                                                </section>
+
+                                            </div>
+                                            <div class="tab-pane fade" id="service-two">
+
+                                                <section class="container-fluid product-info">
+                                                @product.getDescription
+                                                </section>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="service-three">
+
+                                                <section class="container-fluid product-info">
+                                                Some settings here
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*TODO: set for buying and trading*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
