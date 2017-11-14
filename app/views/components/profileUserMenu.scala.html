@@ -1,0 +1,99 @@
+@(activeMenuItem: String, activeSubMenuItem: String)
+
+<div class="profile-usermenu">
+    <ul class="nav">
+        @if(activeMenuItem.equals("myaccount")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/myaccount">
+                <i class="icon-home"></i> Order History </a>
+        </li>
+
+        @if(activeMenuItem.equals("personalsettings")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/myaccount/personalsettings">
+                <i class="icon-settings"></i> Personal Settings </a>
+        </li>
+
+        @if(activeMenuItem.equals("favourites")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/myaccount/favourites">
+                <i class="icon-settings"></i> Favourites </a>
+        </li>
+
+        @if(activeMenuItem.equals("inventory")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/myaccount/inventory">
+                <i class="icon-info"></i> Inventory </a>
+        </li>
+        @if(activeMenuItem.equals("inventory")) {
+            <div style="margin-left: 50px; margin-top: 10px; margin-bottom: 10px;">
+                <div class="profile-usermenu-inventory">
+                    <ul class="nav">
+                        @if(activeSubMenuItem.equals("all")) {
+                            <li class="active">
+                        } else {
+                            <li>
+                        }
+                            <a href="/myaccount/inventory">
+                                <i class="icon-info"></i> All Products </a>
+                        </li>
+
+                        @if(activeSubMenuItem.equals("selling")) {
+                            <li class="active">
+                        } else {
+                            <li>
+                        }
+                            <a href="/myaccount/inventory/selling">
+                                <i class="icon-info"></i> Selling Products </a>
+                        </li>
+
+                        @if(activeSubMenuItem.equals("trading")) {
+                            <li class="active">
+                        } else {
+                            <li>
+                        }
+                            <a href="/myaccount/inventory/trading">
+                                <i class="icon-info"></i> Trading Products </a>
+                        </li>
+
+                        @if(activeSubMenuItem.equals("pergame")) {
+                            <li class="active">
+                        } else {
+                            <li>
+                            }
+                        <a href="/myaccount/inventory/game">
+                            <i class="icon-info"></i> Products per Game </a>
+                    </li>
+                    </ul>
+                </div>
+            </div>
+        }
+
+
+        @if(activeMenuItem.equals("reviews")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="#">
+                <i class="icon-info"></i> Reviews </a>
+        </li>
+
+        <li>
+            <a href="/logout">
+                <i class="icon-info"></i> Log Out </a>
+        </li>
+    </ul>
+</div>
