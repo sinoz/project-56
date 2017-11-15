@@ -17,20 +17,20 @@ import java.util.Optional;
 /**
  * The UserViewService that retrieves Favourites
  *
- * @author Johan van der Hoeven
+ * @author Maurice van Veen
  */
-public final class FavouritesService{
+public final class MyInventoryService {
     /**
      * The required {@link Database} dependency to fetch database connections.
      */
-    private final play.db.Database database;
+    private final Database database;
 
     private final ProductService productService;
 
     private final UserViewService userViewService;
 
     @Inject
-    public FavouritesService(play.db.Database database, ProductService productService, UserViewService userViewService){
+    public MyInventoryService(Database database, ProductService productService, UserViewService userViewService){
         this.database = database;
         this.productService = productService;
         this.userViewService = userViewService;
@@ -39,58 +39,57 @@ public final class FavouritesService{
     /**
      * The method that adds/deletes a game to a users favourites in the database
      */
-    public void add(String prodId, String username){
-        Integer productId = Integer.valueOf(prodId);
-
+    public void init(int ID) {
         database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("SELECT favorites FROM users WHERE username=?");
-            stmt.setString(1, username);
+            PreparedStatement stmt = connection.prepareStatement("SELECT id FROM gameaccounts WHERE userid=?");
+            stmt.setInt(1, ID);
 
             ResultSet results = stmt.executeQuery();
 
-            if(results.next()){
-                List<Integer> list = new ArrayList<>();
-
-                Array a = results.getArray("favorites");
-                if(a != null){
-                    for(Integer i : (Integer[]) a.getArray()){
-                        list.add(i);
-                    }
-                }
-
-                if(list.contains(productId)){
-                    list.remove(productId);
-                } else {
-                    list.add(productId);
-                }
-                Array sqlArray = connection.createArrayOf("INTEGER", list.toArray());
-
-                stmt = connection.prepareStatement("UPDATE users SET favorites=? WHERE username=?");
-                stmt.setArray(1, sqlArray);
-                stmt.setString(2, username);
-
-                stmt.execute();
+            List<Integer> list = new ArrayList<>();
+            while (results.next()) {
+                list.add(results.getInt("id"));
             }
+
+            Array sqlArray = connection.createArrayOf("INTEGER", list.toArray());
+
+            stmt = connection.prepareStatement("UPDATE users SET inventory=? WHERE id=?");
+            stmt.setArray(1, sqlArray);
+            stmt.setInt(2, ID);
+
+            stmt.execute();
         });
     }
 
     /**
      * Attempts to find the favourites for a given username.
      */
-    public List<Integer> getFavourites(String username) {
+    public List<Integer> getInventory(String username) {
         return database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("SELECT favorites FROM users WHERE username=?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT id FROM users WHERE username=?");
             stmt.setString(1, username);
 
             ResultSet results = stmt.executeQuery();
+
             List<Integer> list = new ArrayList<>();
 
+            int ID;
+            if(results.next())
+                ID = results.getInt("id");
+            else
+                return list;
+
+            init(ID);
+
+            stmt = connection.prepareStatement("SELECT inventory FROM users WHERE id=?");
+            stmt.setInt(1, ID);
+
+            results = stmt.executeQuery();
+
             if(results.next()) {
-                Array a = results.getArray("favorites");
+                Array a = results.getArray("inventory");
                 if (a != null) {
-                    for (Integer i : (Integer[]) a.getArray()) {
-                        list.add(i);
-                    }
+                    list.addAll(Arrays.asList((Integer[]) a.getArray()));
                 }
             }
             return list;
@@ -100,13 +99,23 @@ public final class FavouritesService{
     /**
      * Attempts to find the {@link Product}s that match the given ids.
      */
-    public List<Product> getProducts(List<Integer> ids) {
+    public List<Product> getProducts(List<Integer> ids, String activeSubMenuItem) {
         return database.withConnection(connection -> {
             List<Product> list = new ArrayList<>();
 
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE visible=TRUE AND disabled=FALSE;");
 
             ResultSet results = stmt.executeQuery();
+
+            boolean filterOutSelling = false;
+            boolean filterOutTrading = false;
+
+            if (activeSubMenuItem != null)
+                if (activeSubMenuItem.equals("selling")) {
+                    filterOutTrading = true;
+                } else if (activeSubMenuItem.equals("trading")) {
+                    filterOutSelling = true;
+                }
 
             while (results.next()) {
                 if(!ids.contains(results.getInt("id"))){
@@ -128,6 +137,12 @@ public final class FavouritesService{
                 product.setMailLast(results.getString("maillast"));
                 product.setMailCurrent(results.getString("mailcurrent"));
                 product.setPasswordCurrent(results.getString("passwordcurrent"));
+
+                if (filterOutSelling && product.isCanBuy() && !product.isCanTrade()) {
+                    continue;
+                } else if (filterOutTrading && product.isCanTrade() && !product.isCanBuy()) {
+                    continue;
+                }
 
                 Optional<User> user = userViewService.fetchUser(product.getUserId());
                 user.ifPresent(product::setUser);

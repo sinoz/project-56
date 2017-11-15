@@ -19,9 +19,6 @@ import java.util.Optional;
  * @author Maurice van Veen
  */
 public final class ProductService {
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
