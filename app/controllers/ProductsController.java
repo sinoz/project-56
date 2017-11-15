@@ -96,19 +96,34 @@ public class ProductsController extends Controller {
 
         // TODO: change when more filters needed
         if (filters != null) {
-            filters = filters.replace("filter=maxprice:", "");
-            if (filters.length() > 0) {
-                double buyPrice = Double.valueOf(filters);
+            filters = filters.replace("filter=", "");
+            String[] split = filters.split(";");
+
+            double minPrice = 0;
+            double maxPrice = 150;
+            for (String s : split) {
+                String[] d = s.split(":");
+                String a = d[0];
+                String b = d[1];
+
+                switch (a) {
+                    case "minprice":
+                        minPrice = Integer.valueOf(b);
+                        break;
+                    case "maxprice":
+                        maxPrice = Integer.valueOf(b);
+                        break;
+                }
+            }
 
                 for (Product product : products) {
-                    if (product.getBuyPrice() <= buyPrice) {
+                    if (product.getBuyPrice() <= maxPrice && product.getBuyPrice() >= minPrice) {
                         list.add(product);
                     }
                 }
 
                 return list;
             }
-        }
 
         return products;
     }

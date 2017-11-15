@@ -11,3 +11,33 @@ $("[name=range]").mouseup(function(event) {
     window.location.replace(path);
     window.location.href = path;
 });
+
+
+
+var min = $("#min").val();
+var max = $("#max").val();
+
+$("[id=min]").keypress(function (event) {
+    if (event.which == 13) {
+        event.preventDefault();
+
+        min = $("#min").val();
+        refresh(min,max);
+    }
+});
+
+$("[id=max]").keypress(function (event) {
+    if (event.which == 13) {
+        event.preventDefault();
+
+        max = $("#max").val();
+        refresh(min,max);
+    }
+});
+
+function refresh(minprice, maxprice) {
+    var path = window.location.pathname + "&filter=minprice:" + minprice + ";maxprice:" + maxprice + "";
+
+    window.location.replace(path);
+    window.location.href = path;
+}
