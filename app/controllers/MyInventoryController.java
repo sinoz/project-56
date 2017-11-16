@@ -2,14 +2,20 @@ package controllers;
 
 import com.google.common.collect.Lists;
 import concurrent.DbExecContext;
+import forms.GameAccountProductInfoForm;
+import forms.RegistrationForm;
 import models.GameCategory;
 import models.Product;
+import play.data.Form;
+import play.data.FormFactory;
+import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.MyInventoryService;
 import services.ProductService;
+import views.html.register.index;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -30,14 +36,17 @@ public final class MyInventoryController extends Controller{
     private final MyInventoryService myInventoryService;
     private final ProductService productService;
 
+    private final FormFactory formFactory;
+
     private final DbExecContext dbEc;
 
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public MyInventoryController(MyInventoryService myInventoryService, ProductService productService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public MyInventoryController(MyInventoryService myInventoryService, ProductService productService, FormFactory formFactory, DbExecContext dbEc, HttpExecutionContext httpEc){
         this.myInventoryService = myInventoryService;
         this.productService = productService;
+        this.formFactory = formFactory;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
@@ -146,12 +155,33 @@ public final class MyInventoryController extends Controller{
             } else {
                 Optional<Product> product = productService.fetchProduct(ID);
                 if (product.isPresent())
-                    return completedFuture(ok(views.html.inventory.details.render(product.get(), session(), "")));
+                    return completedFuture(ok(views.html.inventory.details.render(product.get(), formFactory.form(GameAccountProductInfoForm.class), session(), "")));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return completedFuture(redirect("/404"));
+    }
+
+    /**
+     * Attempts to register a user. Returns either a {@link Controller#badRequest()} indicating
+     * a failure in registering the user or a {@link Controller#ok()} result, indicating a successful
+     * registration.
+     */
+    public Result updateProductInfo(String id) {
+        System.out.println("RANNN");
+        Form<GameAccountProductInfoForm> formBinding = formFactory.form(GameAccountProductInfoForm.class).bindFromRequest();
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return redirect("/404");
+        } else {
+            GameAccountProductInfoForm form = formBinding.get();
+
+            System.out.println("RUN");
+
+            // TODO: update description here
+            System.out.println(form.getDescription());
+            return redirect("/myaccount/inventory/details/" + id);
+        }
     }
 
 //    /**
