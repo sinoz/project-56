@@ -75,6 +75,14 @@
                             }
                         <a href="/myaccount/inventory/game">
                             <i class="icon-info"></i> Products per Game </a>
+
+                        @if(activeSubMenuItem.equals("addgameaccount")) {
+                            <li class="active">
+                        } else {
+                            <li>
+                            }
+                        <a href="/myaccount/addgameaccount">
+                            <i class="icon-info"></i> Add Game Account </a>
                     </li>
                     </ul>
                 </div>
