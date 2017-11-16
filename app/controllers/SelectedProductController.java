@@ -63,7 +63,6 @@ public class SelectedProductController extends Controller {
                     int rating = (int) (totalRating / (double) reviewsproduct.size());
 
                     boolean isFavourited = userViewService.fetchProductIsFavourited(product.get().getUserId(), productId);
-                    System.out.println(isFavourited);
 
                     return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), isFavourited, session()));
                 }

@@ -41,9 +41,6 @@
                         </div>
                         <a href="/user/@product.getUser.getUsername">
                             <div class="live-camera">
-                                @*<h2>Seller: @product.getUser.getUsername()</h2>*@
-                                @*<h3>member since: @product.getUser.getMemberSince</h3>*@
-
                                 <div class="col-md-6 col-sm-6">
                                     <div class="profile-userpic">
                                         <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getUser.getProfilePicture)" alt=""></figure>
@@ -97,7 +94,7 @@
                                         </div>
                                         <div class="tab-pane fade" id="service-two">
 
-                                            <section class="container">
+                                            <section class="container-fluid product-info">
                                                 @product.getDescription
                                             </section>
 
@@ -136,15 +133,12 @@
                                         }
                                     </section>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
                 </div>
-            @footer()
-
             </div>
+            @footer()
 
             <!-- Required for the banner -->
         <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
