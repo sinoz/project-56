@@ -160,22 +160,21 @@ public final class MyInventoryService {
      */
     public void addProduct(Product product){
         database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO gameaccounts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO gameaccounts(userid, gameid, visible, disabled, title, description, addedsince, canbuy, buyprice, cantrade, maillast, mailcurrent, passwordcurrent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-            stmt.setInt(1, product.getId());
-            stmt.setInt(2, product.getUserId());
-            stmt.setInt(3, product.getGameId());
-            stmt.setBoolean(4, product.isVisible());
-            stmt.setBoolean(5, product.isDisabled());
-            stmt.setString(6, product.getTitle());
-            stmt.setString(7, product.getDescription());
-            stmt.setTimestamp(8, new Timestamp(product.getAddedSince().getTime()));
-            stmt.setBoolean(9, product.isCanBuy());
-            stmt.setDouble(10, product.getBuyPrice());
-            stmt.setBoolean(11, product.isCanTrade());
-            stmt.setString(12, product.getMailLast());
-            stmt.setString(13, product.getMailCurrent());
-            stmt.setString(14, product.getPasswordCurrent());
+            stmt.setInt(1, product.getUserId());
+            stmt.setInt(2, product.getGameId());
+            stmt.setBoolean(3, product.isVisible());
+            stmt.setBoolean(4, product.isDisabled());
+            stmt.setString(5, product.getTitle());
+            stmt.setString(6, product.getDescription());
+            stmt.setTimestamp(7, new Timestamp(product.getAddedSince().getTime()));
+            stmt.setBoolean(8, product.isCanBuy());
+            stmt.setDouble(9, product.getBuyPrice());
+            stmt.setBoolean(10, product.isCanTrade());
+            stmt.setString(11, product.getMailLast());
+            stmt.setString(12, product.getMailCurrent());
+            stmt.setString(13, product.getPasswordCurrent());
 
             stmt.execute();
         });
