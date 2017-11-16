@@ -57,10 +57,68 @@
                                 <h2>Add Product</h2>
 
                                 @helper.form(action = helper.CSRF(routes.AddProductController.addProduct()), 'class -> "form-horizontal") {
-
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="title">Title:</label>
+                                        <div class="col-xs-4">
+                                            <input id="title" name="title" type="text" class="form-control input-md" placeholder="Title">
+                                            @for(error <- form("title").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
-                                        <div class="col-md-8">
+                                        <label class="col-md-3 control-label" for="description">Description:</label>
+                                        <div class="col-xs-4">
+                                            <input id="description" name="description" type="text" class="form-control input-md" placeholder="Description">
+                                            @for(error <- form("description").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="buy">I want to sell this account:</label>
+                                        <div style="float: left; position: relative; width: 4%; padding-left: 15px">
+                                            <input id="buy" name="canBuy" type="checkbox" class="form-control input-md">
+                                            @for(error <- form("canBuy").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="trade">I want to trade this account:</label>
+                                        <div style="float: left; position: relative; width: 4%; padding-left: 15px">
+                                            <input id="trade" name="canTrade" type="checkbox" class="form-control input-md">
+                                            @for(error <- form("canTrade").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="buyprice">Selling price:</label>
+                                        <div class="col-xs-4">
+                                            <input id="buyprice" name="buyPrice" type="number" class="form-control input-md">
+                                            @for(error <- form("buyPrice").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="password">The current password for this account:</label>
+                                        <div class="col-xs-4">
+                                            <input id="password" name="passwordCurrent" type="password" class="form-control input-md">
+                                            @for(error <- form("passwordCurrent").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-xs-8">
                                             <input type="submit" name="Submit" value="Save">
                                         </div>
                                     </div>

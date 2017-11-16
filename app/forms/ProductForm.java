@@ -34,11 +34,12 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
         List<ValidationError> errors = new ArrayList<>();
 
         if(title.length() < 6){
-            errors.add(new ValidationError("title", "The title must be at least 6 characters long."));
+            errors.add(new ValidationError("title", "The title must be at least 6 characters long"));
         }
 
         if(!canBuy && !canTrade){
-            errors.add(new ValidationError("canBuy", "You must at least select \"For Sale\" or \"Tradeable\"."));
+            errors.add(new ValidationError("canBuy", "You must at least select \"For Sale\" or \"Tradeable\""));
+            errors.add(new ValidationError("canTrade", "You must at least select \"For Sale\" or \"Tradeable\""));
         }
         return errors;
     }
