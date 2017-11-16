@@ -7,6 +7,7 @@ import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
+import play.mvc.Filter;
 import play.mvc.Result;
 import services.ProductService;
 import services.UserViewService;
@@ -66,19 +67,20 @@ public class ProductsController extends Controller {
                 return redirect(token + "&" + filters);
         }
 
+        FilterPrices prices = filterToken(filters);
         if (token.startsWith("game=")) {
             token = token.replaceFirst("game=", "").replace("_", " ");
             Optional<GameCategory> gameCategory = productService.fetchGameCategory(token);
             if (gameCategory.isPresent()) {
                 List<Product> products = productService.fetchProducts(gameCategory.get());
                 try {
-                    products = filterProducts(products, filters);
+                    products = filterProducts(products, filters, prices);
                 } catch (Exception e) {
                     return redirect("/404");
                 }
 
                 if (products.size() > 0)
-                    return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session()));
+                    return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
                 else
                     return ok(views.html.products.gameError.render(gameCategory.get(), session()));
             } else {
@@ -91,16 +93,30 @@ public class ProductsController extends Controller {
         return ok(views.html.selectedproduct.index.render(token, session()));
     }
 
-    private List<Product> filterProducts(List<Product> products, String filters) throws Exception {
-        List<Product> list = new ArrayList<>();
+    public final class FilterPrices {
+        private final int min, max;
 
-        // TODO: change when more filters needed
-        if (filters != null) {
-            filters = filters.replace("filter=", "");
-            String[] split = filters.split(";");
+        public FilterPrices(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
 
-            double minPrice = 0;
-            double maxPrice = 150;
+        public int getMin() {
+            return min;
+        }
+
+        public int getMax() {
+            return max;
+        }
+    }
+
+    private FilterPrices filterToken(String token) {
+        if (token != null) {
+            token = token.replace("filter=", "");
+            String[] split = token.split(";");
+
+            int minPrice = 0;
+            int maxPrice = 150;
             for (String s : split) {
                 String[] d = s.split(":");
                 String a = d[0];
@@ -115,15 +131,25 @@ public class ProductsController extends Controller {
                         break;
                 }
             }
+            return new FilterPrices(minPrice, maxPrice);
+        }
+        return new FilterPrices(0, 150);
+    }
 
-                for (Product product : products) {
-                    if (product.getBuyPrice() <= maxPrice && product.getBuyPrice() >= minPrice) {
-                        list.add(product);
-                    }
+    private List<Product> filterProducts(List<Product> products, String filters, FilterPrices prices) throws Exception {
+        List<Product> list = new ArrayList<>();
+
+        // TODO: change when more filters needed
+        if (filters != null) {
+
+            for (Product product : products) {
+                if (product.getBuyPrice() <= prices.getMax() && product.getBuyPrice() >= prices.getMin()) {
+                    list.add(product);
                 }
-
-                return list;
             }
+
+            return list;
+        }
 
         return products;
     }
@@ -260,17 +286,18 @@ public class ProductsController extends Controller {
             products = sortedProducts;
         }
 
+        FilterPrices prices = filterToken(filters);
         try {
-            products = filterProducts(products, filters);
+            products = filterProducts(products, filters, prices);
         } catch (Exception e) {
             return redirect("/404");
         }
 
         if (products.size() > 0)
             if (selectedGameCategory != null)
-                return ok(views.html.products.game.render(selectedGameCategory, Lists.partition(products, 2), session()));
+                return ok(views.html.products.game.render(selectedGameCategory, Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
             else
-                return ok(views.html.products.products.render(Lists.partition(products, 2), session()));
+                return ok(views.html.products.products.render(Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
         else if (selectedGameCategory != null)
             return ok(views.html.products.gameError.render(selectedGameCategory, session()));
         else

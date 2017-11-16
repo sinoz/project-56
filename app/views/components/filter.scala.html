@@ -1,4 +1,4 @@
-@()
+@(minPrice: Integer, maxPrice: Integer)
 
 <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/filter.css")">
 
@@ -10,13 +10,13 @@
         <div class="min">
             <div class="col-md-6 col-sm-6">
                 <p>Min Price</p>
-                <input type="text" class="form-control" id="min" value="0">
+                <input type="text" class="form-control" id="min" value="@minPrice">
             </div>
         </div>
         <div class="max">
             <div class="col-md-6 col-sm-6">
                 <p>Max Price</p>
-                <input type="text" class="form-control" id="max" value="150">
+                <input type="text" class="form-control" id="max" value="@maxPrice">
             </div>
         </div>
     </form>
