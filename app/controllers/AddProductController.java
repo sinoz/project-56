@@ -45,6 +45,7 @@ public class AddProductController extends Controller {
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
+
     public Result index(){
         String loggedInAs = session().get("loggedInAs");
         if(loggedInAs == null){

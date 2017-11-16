@@ -200,4 +200,14 @@ public final class MyInventoryController extends Controller{
 //            return runAsync(() -> myInventoryService.add(prodId, session().get("loggedInAs")), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
 //        }
 //    }
+
+    public CompletionStage<Result> indexAddGameAccount() {
+        String loggedInAs = session().get("loggedInAs");
+        if (loggedInAs == null || loggedInAs.length() == 0) {
+            return completedFuture(redirect("/login"));
+        } else {
+            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+            return supplyAsync(productService::fetchGameCategories, dbExecutor).thenApplyAsync(gameCategories -> ok(views.html.inventory.addgameaccount.render(Lists.partition(gameCategories, 4), session(), "")), httpEc.current());
+        }
+    }
 }
