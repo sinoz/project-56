@@ -1,5 +1,6 @@
 package forms;
 
+import models.Product;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 
