@@ -11,6 +11,7 @@ POST        /products/search                     controllers.ProductsController.
 GET         /products/selected/:token            controllers.SelectedProductController.index(token: String)
 
 GET         /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.index(token: String)
+POST        /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.couponCode(token: String)
 
 GET         /newproduct/:gamecat                 controllers.AddProductController.index(gamecat: String)
 POST        /addproduct/:id                      controllers.AddProductController.addProduct(id: String)

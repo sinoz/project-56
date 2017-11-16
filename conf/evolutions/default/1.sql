@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS gameaccounts;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS gamecategories;
+DROP TABLE IF EXISTS couponcodes;
 
 CREATE TABLE gamecategories (
   id SERIAL PRIMARY KEY,
@@ -65,6 +66,19 @@ CREATE TABLE reviews (
   description TEXT,
   rating INTEGER
 );
+
+CREATE TABLE couponcodes(
+  id SERIAL PRIMARY KEY,
+  code VARCHAR(128),
+  percentage DOUBLE PRECISION,
+  end_date TIMESTAMP
+);
+
+INSERT INTO couponcodes(code, percentage) VALUES ('dank', 19);
+INSERT INTO couponcodes(code, percentage) VALUES ('johan', -1);
+INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
+INSERT INTO couponcodes(code, percentage) VALUES ('maurice', 99);
+INSERT INTO couponcodes(code, percentage) VALUES ('ilyas', 100);
 
 INSERT INTO users (username, password, passwordsalt, mail, profilepicture, paymentmail, inventory, favorites, orderhistory, membersince, isadmin) VALUES
   (
