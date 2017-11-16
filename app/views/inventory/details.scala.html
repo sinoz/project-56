@@ -1,7 +1,6 @@
-@import java.util
 @import components._
 
-@(product: Product, session: play.mvc.Http.Session, activeSubMenuItem: String)
+@(product: Product, form: play.data.Form[forms.GameAccountProductInfoForm], session: play.mvc.Http.Session, activeSubMenuItem: String)
 
 @main("ReStart") {
     <body>
@@ -55,24 +54,37 @@
 
                                 <div class="col-md-9">
                                     <ul id="myTab" class="nav nav-tabs nav_tabs">
-                                        <li class="active"><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
-                                        <li><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
+                                        <li><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
+                                        <li class="active"><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
                                         <li><a href="#service-three" data-toggle="tab">SETTINGS</a></li>
                                     </ul>
 
                                     <div class="col-md-9">
                                         <div id="myTabContent" class="tab-content">
-                                            <div class="tab-pane fade in active" id="service-one">
+                                            <div class="tab-pane fade" id="service-one">
 
                                                 <section class="container-fluid product-info">
                                                 @product.getGameCategory.getDescription
                                                 </section>
 
                                             </div>
-                                            <div class="tab-pane fade" id="service-two">
+                                            <div class="tab-pane fade in active" id="service-two">
 
                                                 <section class="container-fluid product-info">
-                                                @product.getDescription
+                                                    @helper.form(action = helper.CSRF(routes.MyInventoryController.indexProductDetails(String.valueOf(product.getId))), 'style -> "width:600px;") {
+                                                        <div class="required-field-block">
+                                                            <input type="text" name="description" value="@product.getDescription" placeholder="Description" class="form-control">
+                                                            <div class="required-icon">
+                                                                <div class="text">*</div>
+                                                            </div>
+
+                                                            @for(error <- form("description").errors) {
+                                                                <p>@error.format(messages())</p>
+                                                            }
+                                                        </div>
+
+                                                        <button class="awesomebutton btn btn-primary">Update</button>
+                                                    }
                                                 </section>
                                             </div>
 
