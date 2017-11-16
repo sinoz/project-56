@@ -187,9 +187,6 @@ public final class MyInventoryService {
         database.withConnection(connection -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE gameaccounts SET title=?,description=?,canbuy=?,buyprice=?,cantrade=?,maillast=?,mailcurrent=?,passwordcurrent=? WHERE id=?;");
 
-            System.out.println("RANN!!!");
-            System.out.println(product.getTitle());
-            System.out.println(product.getDescription());
             stmt.setString(1, product.getTitle());
             stmt.setString(2, product.getDescription());
             stmt.setBoolean(3, product.isCanBuy());

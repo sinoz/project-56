@@ -77,7 +77,7 @@ public class AddProductController extends Controller {
 
                 Optional<Product> product = productService.fetchProduct(id);
                 if (product.isPresent()) {
-                    return ok(update.render(form, product.get(), gameid, session(), "updategameaccount"));
+                    return ok(update.render(form, product.get(), session(), "updategameaccount"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -122,14 +122,14 @@ public class AddProductController extends Controller {
         }
     }
 
-    public CompletionStage<Result> updateProduct(String gameid){
+    public CompletionStage<Result> updateProduct(String productid){
         Form<ProductForm> formBinding = formFactory.form(ProductForm.class).bindFromRequest();
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
             try {
-                int id = Integer.valueOf(gameid);
+                int id = Integer.valueOf(productid);
                 Optional<Product> product = productService.fetchProduct(id);
                 if (product.isPresent()) {
-                    return completedFuture(badRequest(update.render(formBinding, product.get(), gameid, session(), "updategameaccount")));
+                    return completedFuture(badRequest(update.render(formBinding, product.get(), session(), "updategameaccount")));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -146,28 +146,28 @@ public class AddProductController extends Controller {
                 return completedFuture(redirect("/login"));
             }
 
-            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-            Product product = new Product();
+            try {
+                int id = Integer.valueOf(productid);
 
-            product.setUserId(user.get().getId());
-            product.setGameId(Integer.valueOf(gameid));
-            product.setVisible(true);
-            product.setDisabled(false);
-            product.setTitle(formBinding.get().title);
-            product.setDescription(formBinding.get().description);
-            product.setAddedSince(new Date());
-            product.setCanBuy(formBinding.get().canBuy);
-            product.setBuyPrice(formBinding.get().buyPrice);
-            product.setCanTrade(formBinding.get().canTrade);
-            product.setMailLast(formBinding.get().emailCurrent);
-            product.setMailCurrent(formBinding.get().emailCurrent);
-            product.setPasswordCurrent(formBinding.get().passwordCurrent);
+                Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+                Product product = new Product();
 
-            myInventoryService.updateProduct(product);
+                product.setId(id);
+                product.setTitle(formBinding.get().title);
+                product.setDescription(formBinding.get().description);
+                product.setAddedSince(new Date());
+                product.setCanBuy(formBinding.get().canBuy);
+                product.setBuyPrice(formBinding.get().buyPrice);
+                product.setCanTrade(formBinding.get().canTrade);
+                product.setMailLast(formBinding.get().emailCurrent);
+                product.setMailCurrent(formBinding.get().emailCurrent);
+                product.setPasswordCurrent(formBinding.get().passwordCurrent);
 
-            //  return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
-
-            return completedFuture(redirect("/myaccount/inventory"));
+                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return completedFuture(redirect("/404"));
         }
     }
 }
