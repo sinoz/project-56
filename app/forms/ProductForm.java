@@ -26,6 +26,10 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
     @Constraints.Required
     public boolean canTrade;
 
+    @Constraints.Email
+    @Constraints.Required
+    public String emailCurrent;
+
     @Constraints.Required
     public String passwordCurrent;
 
@@ -35,7 +39,7 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if(title.length() < 6){
+        if(title.length() < 6 && title.length() > 0){
             errors.add(new ValidationError("title", "The title must be at least 6 characters long"));
         }
 

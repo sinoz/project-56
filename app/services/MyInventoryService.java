@@ -6,13 +6,11 @@ import models.User;
 import play.db.Database;
 
 import javax.inject.Inject;
-import java.sql.Array;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
  * The UserViewService that retrieves Favourites
@@ -154,6 +152,32 @@ public final class MyInventoryService {
             }
 
             return list;
+        });
+    }
+
+    /**
+     * Adds the product to the database
+     */
+    public void addProduct(Product product){
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO gameaccounts VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+            stmt.setInt(1, product.getId());
+            stmt.setInt(2, product.getUserId());
+            stmt.setInt(3, product.getGameId());
+            stmt.setBoolean(4, product.isVisible());
+            stmt.setBoolean(5, product.isDisabled());
+            stmt.setString(6, product.getTitle());
+            stmt.setString(7, product.getDescription());
+            stmt.setTimestamp(8, new Timestamp(product.getAddedSince().getTime()));
+            stmt.setBoolean(9, product.isCanBuy());
+            stmt.setDouble(10, product.getBuyPrice());
+            stmt.setBoolean(11, product.isCanTrade());
+            stmt.setString(12, product.getMailLast());
+            stmt.setString(13, product.getMailCurrent());
+            stmt.setString(14, product.getPasswordCurrent());
+
+            stmt.execute();
         });
     }
 }

@@ -2,21 +2,23 @@ package controllers;
 
 import concurrent.DbExecContext;
 import forms.ProductForm;
+import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
+import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.ProductService;
-import services.UserViewService;
+import services.MyInventoryService;
 import views.html.addproduct.index;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.runAsync;
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 /**
  * A {@link Controller} for the Add Product page
@@ -29,19 +31,16 @@ public class AddProductController extends Controller {
      */
     private final FormFactory formFactory;
 
-    private final ProductService productService;
-
-    private final UserViewService userViewService;
+    private final MyInventoryService myInventoryService;
 
     private final DbExecContext dbEc;
 
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public AddProductController(FormFactory formFactory, ProductService productService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public AddProductController(FormFactory formFactory, MyInventoryService myInventoryService, DbExecContext dbEc, HttpExecutionContext httpEc){
         this.formFactory = formFactory;
-        this.productService = productService;
-        this.userViewService = userViewService;
+        this.myInventoryService = myInventoryService;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
@@ -59,7 +58,24 @@ public class AddProductController extends Controller {
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
             return completedFuture(badRequest(index.render(formBinding, gameid, session())));
         } else {
-            return completedFuture(ok());
+            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+            Product product = new Product();
+
+            product.setUserId(Integer.valueOf(session().get("userId")));
+            product.setGameId(Integer.valueOf(gameid));
+            product.setVisible(true);
+            product.setDisabled(false);
+            product.setTitle(formBinding.get().title);
+            product.setDescription(formBinding.get().description);
+            product.setAddedSince(new Date());
+            product.setCanBuy(formBinding.get().canBuy);
+            product.setBuyPrice(formBinding.get().buyPrice);
+            product.setCanTrade(formBinding.get().canTrade);
+            product.setMailLast(formBinding.get().emailCurrent);
+            product.setMailCurrent(formBinding.get().emailCurrent);
+            product.setPasswordCurrent(formBinding.get().passwordCurrent);
+
+            return runAsync(() -> myInventoryService.addProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
         }
     }
 }
