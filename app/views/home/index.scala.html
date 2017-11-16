@@ -26,9 +26,9 @@
                             @for(gameCategory <- row) {
                                 <div class="col-md-3 col-sm-6">
                                     <div class="live-camera">
-                                        <a href="/products/game=@gameCategory.getName().replace(" ", "_")" )>
+                                        <a href="/products/game=@gameCategory.getName.replace(" ", "_")">
                                             <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
-                                            <h3 class="location">@gameCategory.getName()</h3>
+                                            <h3 class="location">@gameCategory.getName</h3>
                                         </a>
                                     </div>
                                 </div>

@@ -1,0 +1,67 @@
+@import java.util
+@import components._
+
+@(list: util.List[util.List[GameCategory]], session: play.mvc.Http.Session, activeSubMenuItem: String)
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("MyAccount", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(session.get("profilePictureURL"))" alt=""></figure>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @profileUserMenu("inventory", activeSubMenuItem)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="container">
+                                <h1 class="section-title">Add Game Account</h1>
+                                <br>
+
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-9">
+                                        <h1 class="section-title">Games</h1>
+                                        @for(row <- list) {
+                                            <div class="row">
+                                            @for(gameCategory <- row) {
+                                                <div class="col-md-3 col-sm-6">
+                                                    <div class="live-camera">
+                                                        <a href="/newproduct/@gameCategory.getId">
+                                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                                            <h3 class="location">@gameCategory.getName</h3>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

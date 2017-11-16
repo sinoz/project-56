@@ -3,7 +3,6 @@ package controllers;
 import com.google.common.collect.Lists;
 import concurrent.DbExecContext;
 import forms.FavouriteForm;
-import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecution;
@@ -13,7 +12,6 @@ import play.mvc.Result;
 import services.FavouritesService;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
