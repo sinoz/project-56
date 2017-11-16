@@ -179,4 +179,34 @@ public final class MyInventoryService {
             stmt.execute();
         });
     }
+
+    /**
+     * Updates the product in the database
+     */
+    public void updateProduct(Product product) {
+        database.withConnection(connection -> {
+            System.out.println("RAN??");
+
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM gameaccounts where id=?;");
+            stmt.setInt(1, product.getId());
+
+//            PreparedStatement stmt = connection.prepareStatement("UPDATE gameaccounts SET title=?,description=?,canbuy=?,buyprice=?,cantrade=?,maillast=?,mailcurrent=?,passwordcurrent=? WHERE id=?;");
+//
+//            System.out.println("RANN!!!");
+//            System.out.println(product.getTitle());
+//            System.out.println(product.getDescription());
+//            stmt.setString(1, product.getTitle());
+//            stmt.setString(2, product.getDescription());
+//            stmt.setBoolean(3, product.isCanBuy());
+//            stmt.setDouble(4, product.getBuyPrice());
+//            stmt.setBoolean(5, product.isCanTrade());
+//            stmt.setString(6, product.getMailLast());
+//            stmt.setString(7, product.getMailCurrent());
+//            stmt.setString(8, product.getPasswordCurrent());
+//            stmt.setInt(9, product.getId());
+
+            stmt.execute();
+            System.out.println("RAN!!!!");
+        });
+    }
 }

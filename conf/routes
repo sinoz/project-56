@@ -14,6 +14,8 @@ GET         /products/checkout/buy/:token        controllers.ProductCheckoutBuyC
 
 GET         /newproduct/:gamecat                 controllers.AddProductController.index(gamecat: String)
 POST        /addproduct/:id                      controllers.AddProductController.addProduct(id: String)
+GET        /myaccount/inventory/update/:id       controllers.AddProductController.indexUpdateProduct(id: String)
+POST        /myaccount/inventory/update/:id      controllers.AddProductController.updateProduct(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                        controllers.Assets.versioned(path="/public", file: Asset)

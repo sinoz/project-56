@@ -47,6 +47,8 @@
                                                 <div class="profile-usertitle-membersince-white">
                                                     <strong>Added Since:</strong> @product.getAddedSince.format("dd-MM-yyyy")
                                                 </div>
+                                                <br>
+                                                <a href="/products/selected/@product.getId"><button class="awesomebutton" style="width:250px">Show as user</button></a>
                                             </div>
                                         </div>
                                     </div>
@@ -54,44 +56,32 @@
 
                                 <div class="col-md-9">
                                     <ul id="myTab" class="nav nav-tabs nav_tabs">
-                                        <li><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
-                                        <li class="active"><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
+                                        <li class="active"><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
+                                        <li><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
                                         <li><a href="#service-three" data-toggle="tab">SETTINGS</a></li>
                                     </ul>
 
                                     <div class="col-md-9">
                                         <div id="myTabContent" class="tab-content">
-                                            <div class="tab-pane fade" id="service-one">
+                                            <div class="tab-pane fade in active" id="service-one">
 
                                                 <section class="container-fluid product-info">
                                                 @product.getGameCategory.getDescription
                                                 </section>
 
                                             </div>
-                                            <div class="tab-pane fade in active" id="service-two">
+                                            <div class="tab-pane fade" id="service-two">
 
                                                 <section class="container-fluid product-info">
-                                                    @helper.form(action = helper.CSRF(routes.MyInventoryController.indexProductDetails(String.valueOf(product.getId))), 'style -> "width:600px;") {
-                                                        <div class="required-field-block">
-                                                            <input type="text" name="description" value="@product.getDescription" placeholder="Description" class="form-control">
-                                                            <div class="required-icon">
-                                                                <div class="text">*</div>
-                                                            </div>
-
-                                                            @for(error <- form("description").errors) {
-                                                                <p>@error.format(messages())</p>
-                                                            }
-                                                        </div>
-
-                                                        <button class="awesomebutton btn btn-primary">Update</button>
-                                                    }
+                                                @product.getDescription
                                                 </section>
                                             </div>
 
                                             <div class="tab-pane fade" id="service-three">
 
                                                 <section class="container-fluid product-info">
-                                                Some settings here
+                                                <br>
+                                                <a href="/myaccount/inventory/update/@product.getId"><button class="awesomebutton" style="width:250px">Update settings</button></a>
                                                 </section>
                                             </div>
                                         </div>
