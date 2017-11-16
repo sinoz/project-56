@@ -21,6 +21,7 @@ GET         /register                          controllers.RegistrationControlle
 POST        /register                          controllers.RegistrationController.register
 
 GET         /contact                           controllers.ContactController.index
+POST        /contact                           controllers.ContactController.mail
 
 GET         /myaccount                         controllers.MyAccountController.index
 

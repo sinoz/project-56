@@ -58,7 +58,8 @@ public final class AccountService {
 	}
 
 	/**
-	 * TODO
+	 * Attempts to update a exciting user and returns whether it has successfully updated the settings
+	 * using the given {@link PersonalSettingsForm}.
 	 */
 	public void updateSettings(String loggedInAs, PersonalSettingsForm form) {
 		database.withConnection(connection -> {
