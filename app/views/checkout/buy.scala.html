@@ -4,7 +4,7 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(product: Product, user: Optional[User], rating: Integer, session: play.mvc.Http.Session)
+@(product: Product, potentialDiscountedPrice: Double, user: Optional[User], rating: Int, session: play.mvc.Http.Session, token: String)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -64,36 +64,32 @@
 
                             <div class="col-md-9">
                                     <div class="payment-title"><h1>Checkout</h1></div>
-
                             </div>
 
                             <div class="col-md-3">
-                                <div class="product-price"><h1>@product.getBuyPriceText</h1></div>
-
-                            </div>
-
-                                <!-- Coupon Input -->
-                            <div class="form-group">
-                                <h2><label class="col-md-3 control-label" for="couponinput">Coupon Code:</label></h2>
-                                <div class="col-md-5">
-                                    <input id="couponinput" name="coupon" type="coupon" class="form-control input-md">
+                                <div class="product-price">
+                                    <h1>€ @{
+                                         new java.text.DecimalFormat("#.00").format(potentialDiscountedPrice)
+                                        }
+                                    </h1>
                                 </div>
                             </div>
 
+                                <!-- Coupon Input -->
+                            @helper.form(action = helper.CSRF(routes.ProductCheckoutBuyController.couponCode(token)), 'class -> "form-group") {
+                                <h2><label class="col-md-3 control-label" for="couponinput">Coupon Code:</label></h2>
+                                <div class="col-md-5">
+                                    <input id="couponinput" name="coupon" type="text" class="form-control input-md">
+                                </div>
+
                                 <!-- Submit Button -->
-                            @*TODO*@
-                            <div class="btn-group cart">
-                                <a href="/404">
-                                    <button type="button" class="awesomebutton">
-                                        Submit
-                                    </button>
-                                </a>
-                            </div>
+                                <div class="btn-group cart">
+                                    <button type="submit" class="btn btn-xl get">Submit</button>
+                                </div>
+                            }
 
                             <br>
-
                                 <!-- Payment Methods -->
-                            @*TODO*@
                             <div class="col-md-9">
                                 <h2>Payment Methods</h2>
                                 <div id="paypal-button-container"></div>
@@ -121,7 +117,7 @@
                                                     payment: {
                                                         transactions: [
                                                             {
-                                                                amount: { total: @product.getBuyPrice, currency: 'EUR' }
+                                                                amount: { total: @potentialDiscountedPrice, currency: 'EUR' }
                                                             }
                                                         ]
                                                     }

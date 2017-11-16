@@ -1,9 +1,10 @@
 package controllers;
 
-import models.GameCategory;
-import models.Product;
+import forms.CouponCodeForm;
+import models.CouponCode;
 import models.Review;
 import models.User;
+import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
 import play.mvc.Controller;
@@ -14,7 +15,7 @@ import services.UserViewService;
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,33 +41,94 @@ public class ProductCheckoutBuyController extends Controller {
      */
     private ProductService productService;
 
+    /**
+     * TODO
+     */
+    private final play.db.Database database;
+
     @Inject
-    public ProductCheckoutBuyController(FormFactory formFactory, UserViewService userViewService, ProductService productService){
+    public ProductCheckoutBuyController(Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService){
         this.formFactory = formFactory;
+        this.database = database;
         this.userViewService = userViewService;
         this.productService = productService;
     }
 
     public Result index(String token) {
-        try {
-            int id = Integer.valueOf(token);
-            Optional<Product> p = productService.fetchProduct(id);
-            if (p.isPresent()) {
-                Product product = p.get();
+        return productService
+            .fetchProduct(Integer.valueOf(token))
+            .map(product -> {
                 Optional<User> user = userViewService.fetchUser(product.getUserId());
 
-                List<Review> reviewsproduct = userViewService.fetchUserReviews(product.getUserId());
+                return ok(views.html.checkout.buy.render(product, product.getBuyPrice(), user, getRating(product.getUserId()), session(), token));
+            })
+            .orElse(redirect("/404"));
+    }
 
-                int totalRating = 0;
-                for (Review review : reviewsproduct)
-                    totalRating += review.getRating();
-                int rating = (int) (totalRating / (double) reviewsproduct.size());
+    public Result couponCode(String token) {
+        Form<CouponCodeForm> form = formFactory.form(CouponCodeForm.class).bindFromRequest();
+        if (form.hasErrors() || form.hasGlobalErrors()) {
+            return redirect("/404"); // TODO
+        } else {
+            CouponCodeForm couponCodeForm = form.get();
 
-                return ok(views.html.checkout.buy.render(product, user, rating, session()));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return productService
+                .fetchProduct(Integer.valueOf(token))
+                .map(product -> {
+                    Optional<User> user = userViewService.fetchUser(product.getUserId());
+                    Optional<CouponCode> couponCode = getCouponCode(couponCodeForm.coupon);
+                    if (!couponCode.isPresent()) {
+                        return ok(views.html.checkout.buy.render(product, product.getBuyPrice(), user, getRating(product.getUserId()), session(), token));
+                    } else {
+                        double regularPrice = product.getBuyPrice();
+                        double couponPercentage = couponCode.get().getPercentage();
+
+                        double amountToSubtract = (regularPrice / 100) * couponPercentage;
+                        double newPrice = regularPrice - amountToSubtract;
+
+                        // Paypal API only allows 7 digits after the comma
+                        double formattedNewPrice = Double.valueOf(new DecimalFormat("0.00").format(newPrice));
+
+                        return ok(views.html.checkout.buy.render(product, formattedNewPrice, user, getRating(product.getUserId()), session(), token));
+                    }
+                })
+                .orElse(redirect("/404"));
         }
-        return redirect("/404");
+    }
+
+    private Optional<CouponCode> getCouponCode(String code) { // TODO move to a service
+        return database.withConnection(connection -> {
+            Optional<CouponCode> couponCode = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM couponcodes WHERE code=?");
+            stmt.setString(1, code);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                double percentage = results.getDouble("percentage");
+
+                couponCode = Optional.of(new CouponCode(code, percentage));
+            }
+
+            return couponCode;
+        });
+    }
+
+    private int getRating(int userId) {
+        List<Review> reviewsproduct = userViewService.fetchUserReviews(userId);
+
+        int totalRating = reviewsproduct.stream().mapToInt(Review::getRating).sum();
+
+        return (int) (totalRating / (double) reviewsproduct.size());
+
+//        List<Review> reviewsproduct = userViewService.fetchUserReviews(userId);
+//
+//        int totalRating = 0;
+//        for (Review review : reviewsproduct) {
+//            totalRating += review.getRating();
+//        }
+//
+//        return (int) (totalRating / (double) reviewsproduct.size());
     }
 }
