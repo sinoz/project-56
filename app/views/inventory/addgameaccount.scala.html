@@ -28,15 +28,6 @@
                     <div class="col-md-8">
                         <div class="portlet">
                             <div class="container">
-                                @inventoryTitle()
-
-                                @if(list.isEmpty){
-                                    @if(activeSubMenuItem.equals("all")) {
-                                        <h3>You don't have any game accounts in your inventory yet!</h3>
-                                    } else {
-                                        <h3>You don't have any game accounts available for @activeSubMenuItem in your inventory yet!</h3>
-                                    }
-                                } else {
                                 <div class="row">
                                     <div class="col-md-8 col-sm-9">
                                         <h1 class="section-title">Games</h1>
@@ -45,7 +36,7 @@
                                             @for(gameCategory <- row) {
                                                 <div class="col-md-3 col-sm-6">
                                                     <div class="live-camera">
-                                                        <a href="/myaccount/inventory/game/@gameCategory.getId">
+                                                        <a href="/newproduct/@gameCategory.getId">
                                                             <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
                                                             <h3 class="location">@gameCategory.getName</h3>
                                                         </a>
@@ -56,7 +47,6 @@
                                         }
                                     </div>
                                 </div>
-                                }
                             </div>
                         </div>
                     </div>
