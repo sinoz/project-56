@@ -163,7 +163,11 @@ public class AddProductController extends Controller {
             product.setMailCurrent(formBinding.get().emailCurrent);
             product.setPasswordCurrent(formBinding.get().passwordCurrent);
 
-            return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+            myInventoryService.updateProduct(product);
+
+            //  return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+
+            return completedFuture(redirect("/myaccount/inventory"));
         }
     }
 }
