@@ -3,6 +3,7 @@ package controllers;
 import concurrent.DbExecContext;
 import forms.ProductForm;
 import models.Product;
+import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecution;
@@ -10,10 +11,12 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.MyInventoryService;
+import services.UserViewService;
 import views.html.addproduct.index;
 
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -33,14 +36,17 @@ public class AddProductController extends Controller {
 
     private final MyInventoryService myInventoryService;
 
+    private final UserViewService userViewService;
+
     private final DbExecContext dbEc;
 
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public AddProductController(FormFactory formFactory, MyInventoryService myInventoryService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public AddProductController(FormFactory formFactory, MyInventoryService myInventoryService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
         this.formFactory = formFactory;
         this.myInventoryService = myInventoryService;
+        this.userViewService = userViewService;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
@@ -49,19 +55,29 @@ public class AddProductController extends Controller {
         if(loggedInAs == null){
             return redirect("/login");
         } else {
-            return ok(index.render(formFactory.form(ProductForm.class), gameid, session()));
+            return ok(index.render(formFactory.form(ProductForm.class), gameid, session(), "addgameaccount"));
         }
     }
 
     public CompletionStage<Result> addProduct(String gameid){
         Form<ProductForm> formBinding = formFactory.form(ProductForm.class).bindFromRequest();
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
-            return completedFuture(badRequest(index.render(formBinding, gameid, session())));
+            return completedFuture(badRequest(index.render(formBinding, gameid, session(), "addgameaccount")));
         } else {
+            String loggedInAs = session().get("loggedInAs");
+            if (loggedInAs == null || loggedInAs.length() == 0) {
+                return completedFuture(redirect("/login"));
+            }
+
+            Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+            if (!user.isPresent()) {
+                return completedFuture(redirect("/login"));
+            }
+
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             Product product = new Product();
 
-            product.setUserId(Integer.valueOf(session().get("userId")));
+            product.setUserId(user.get().getId());
             product.setGameId(Integer.valueOf(gameid));
             product.setVisible(true);
             product.setDisabled(false);
