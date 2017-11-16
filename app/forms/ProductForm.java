@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Constraints.Validate
 public final class ProductForm implements Constraints.Validatable<List<ValidationError>> {
+    @Constraints.MaxLength(32)
     @Constraints.Required
     public String title;
 
@@ -27,9 +28,11 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
     public boolean canTrade;
 
     @Constraints.Email
+    @Constraints.MaxLength(128)
     @Constraints.Required
     public String emailCurrent;
 
+    @Constraints.MaxLength(64)
     @Constraints.Required
     public String passwordCurrent;
 
