@@ -29,6 +29,8 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
     @Constraints.Required
     public String passwordCurrent;
 
+    public String gameCategory;
+
     @Override
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();

@@ -45,19 +45,19 @@ public class AddProductController extends Controller {
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
-    public Result index(){
+    public Result index(String gameid){
         String loggedInAs = session().get("loggedInAs");
         if(loggedInAs == null){
             return redirect("/login");
         } else {
-            return ok(index.render(formFactory.form(ProductForm.class), session()));
+            return ok(index.render(formFactory.form(ProductForm.class), gameid, session()));
         }
     }
 
-    public CompletionStage<Result> addProduct(){
+    public CompletionStage<Result> addProduct(String gameid){
         Form<ProductForm> formBinding = formFactory.form(ProductForm.class).bindFromRequest();
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
-            return completedFuture(badRequest(index.render(formBinding, session())));
+            return completedFuture(badRequest(index.render(formBinding, gameid, session())));
         } else {
             return completedFuture(ok());
         }
