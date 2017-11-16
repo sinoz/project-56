@@ -207,7 +207,7 @@ public final class MyInventoryController extends Controller{
             return completedFuture(redirect("/login"));
         } else {
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-            return supplyAsync(productService::fetchGameCategories, dbExecutor).thenApplyAsync(gameCategories -> ok(views.html.inventory.addgameaccount.render(Lists.partition(gameCategories, 4), session(), "")), httpEc.current());
+            return supplyAsync(productService::fetchGameCategories, dbExecutor).thenApplyAsync(gameCategories -> ok(views.html.inventory.addgameaccount.render(Lists.partition(gameCategories, 4), session(), "addgameaccount")), httpEc.current());
         }
     }
 }
