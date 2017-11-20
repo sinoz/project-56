@@ -7,14 +7,11 @@ import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
-import play.mvc.Filter;
 import play.mvc.Result;
 import services.ProductService;
-import services.UserViewService;
+import services.SearchService;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +32,16 @@ public class ProductsController extends Controller {
      */
     private ProductService productService;
 
+    /**
+     * The {@link services.SearchService} to search products.
+     */
+    private SearchService searchService;
+
     @Inject
-    public ProductsController(FormFactory formFactory, ProductService productService) {
+    public ProductsController(FormFactory formFactory, ProductService productService, SearchService searchService) {
         this.formFactory = formFactory;
         this.productService = productService;
+        this.searchService = searchService;
     }
 
     public Result redirect() {
@@ -67,268 +70,47 @@ public class ProductsController extends Controller {
                 return redirect(token + "&" + filters);
         }
 
-        FilterPrices prices = filterToken(filters);
+        SearchService.FilterPrices prices = searchService.filterToken(filters);
         if (token.startsWith("game=")) {
-            token = token.replaceFirst("game=", "").replace("_", " ");
-            Optional<GameCategory> gameCategory = productService.fetchGameCategory(token);
-            if (gameCategory.isPresent()) {
-                List<Product> products = productService.fetchProducts(gameCategory.get());
-                try {
-                    products = filterProducts(products, filters, prices);
-                } catch (Exception e) {
-                    return redirect("/404");
-                }
-
-                if (products.size() > 0)
-                    return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
-                else
-                    return ok(views.html.products.gameError.render(gameCategory.get(), session()));
-            } else {
-                return redirect("/404");
-            }
+            return indexGame(token, filters, prices);
         } else if (token.startsWith("input=")) {
-            token = token.replaceFirst("input=", "");
-            return processInput(token, filters);
+            return indexInput(token, filters, prices);
         }
         return ok(views.html.selectedproduct.index.render(token, session()));
     }
 
-    public final class FilterPrices {
-        private final int min, max;
-
-        public FilterPrices(int min, int max) {
-            this.min = min;
-            this.max = max;
-        }
-
-        public int getMin() {
-            return min;
-        }
-
-        public int getMax() {
-            return max;
-        }
-    }
-
-    private FilterPrices filterToken(String token) {
-        if (token != null) {
-            token = token.replace("filter=", "");
-            String[] split = token.split(";");
-
-            int minPrice = 0;
-            int maxPrice = 150;
-            for (String s : split) {
-                String[] d = s.split(":");
-                String a = d[0];
-                String b = d[1];
-
-                switch (a) {
-                    case "minprice":
-                        minPrice = Integer.valueOf(b);
-                        break;
-                    case "maxprice":
-                        maxPrice = Integer.valueOf(b);
-                        break;
-                }
-            }
-            return new FilterPrices(minPrice, maxPrice);
-        }
-        return new FilterPrices(0, 150);
-    }
-
-    private List<Product> filterProducts(List<Product> products, String filters, FilterPrices prices) throws Exception {
-        List<Product> list = new ArrayList<>();
-
-        // TODO: change when more filters needed
-        if (filters != null) {
-
-            for (Product product : products) {
-                if (product.getBuyPrice() <= prices.getMax() && product.getBuyPrice() >= prices.getMin()) {
-                    list.add(product);
-                }
+    private Result indexGame(String token, String filters, SearchService.FilterPrices prices) {
+        token = token.replaceFirst("game=", "").replace("_", " ");
+        Optional<GameCategory> gameCategory = productService.fetchGameCategory(token);
+        if (gameCategory.isPresent()) {
+            List<Product> products = productService.fetchProducts(gameCategory.get());
+            try {
+                products = searchService.filterProducts(products, filters, prices);
+            } catch (Exception e) {
+                return redirect("/404");
             }
 
-            return list;
-        }
-
-        return products;
-    }
-
-    private Result processInput(String token, String filters) {
-        List<GameCategory> gameCategories = productService.fetchGameCategories();
-        List<Product> products = productService.fetchProducts();
-        GameCategory selectedGameCategory = null;
-
-        /**
-         * Search for game categories
-         */
-        if (gameCategories.size() > 0) {
-            HashMap<GameCategory, Integer> scores = new HashMap<>();
-            for (GameCategory gameCategory : gameCategories)
-                scores.put(gameCategory, 0);
-
-            String[] split = token.split(" ");
-            for (String s : split) {
-                StringBuilder search = new StringBuilder(s);
-                double scorePenalty = 1;
-                while (search.length() > 1) {
-                    for (GameCategory gameCategory : gameCategories) {
-                        int score = 0;
-
-                        String name = gameCategory.getName();
-                        if (search.toString().toLowerCase().equals(name.toLowerCase()))
-                            score += 100 / scorePenalty;
-                        if (name.toLowerCase().contains(search.toString().toLowerCase()))
-                            score += 100 / scorePenalty;
-
-                        scores.put(gameCategory, scores.get(gameCategory) + score);
-                    }
-                    scorePenalty++;
-                    search.delete(search.length() - 1, search.length());
-                }
-            }
-
-            HashMap<Product, Integer> productScores = processProductScores(token, products);
-            for (GameCategory gameCategory : gameCategories) {
-                int score = 0;
-                int cnt = 0;
-                for (Product product : products) {
-                    if (product.getGameId() == gameCategory.getId()) {
-                        if (productScores.get(product) > 0) {
-                            score += productScores.get(product);
-                            cnt++;
-                        }
-                    }
-                }
-                score = (int) (score * 10 / (double) cnt);
-                scores.put(gameCategory, scores.get(gameCategory) + score);
-            }
-
-            int max = 0;
-            for (GameCategory gameCategory : gameCategories) {
-                int score = scores.get(gameCategory);
-                if (max < score)
-                    max = score;
-            }
-
-            List<GameCategory> sortedGameCategories = new ArrayList<>();
-            List<Integer> sortedScores = new ArrayList<>();
-            while (scores.size() > 0 && max > 0) {
-                for (GameCategory gameCategory : gameCategories) {
-                    if (scores.containsKey(gameCategory) && scores.get(gameCategory) == max) {
-                        sortedGameCategories.add(gameCategory);
-                        sortedScores.add(max);
-                        scores.remove(gameCategory);
-                    }
-                }
-                max--;
-            }
-
-            if (sortedGameCategories.size() > 0) {
-                max = sortedScores.get(0);
-                List<GameCategory> selectedGameCategories = new ArrayList<>();
-                for (int i = 0; i < sortedGameCategories.size(); i++) {
-                    GameCategory gameCategory = sortedGameCategories.get(i);
-                    if (sortedScores.get(i) == max) {
-                        selectedGameCategories.add(gameCategory);
-                        continue;
-                    }
-                    break;
-                }
-
-                if (selectedGameCategories.size() == 1) {
-                    selectedGameCategory = selectedGameCategories.get(0);
-                    List<Product> selectedProducts = new ArrayList<>();
-                    for (Product product : products) {
-                        if (product.getGameId() == selectedGameCategory.getId()) {
-                            selectedProducts.add(product);
-                        }
-                    }
-                    products = selectedProducts;
-                } else {
-                    List<Product> selectedProducts = new ArrayList<>();
-                    for (GameCategory gameCategory : selectedGameCategories) {
-                        for (Product product : products) {
-                            if (product.getGameId() == gameCategory.getId()) {
-                                selectedProducts.add(product);
-                            }
-                        }
-                    }
-                    products = selectedProducts;
-                }
-            }
-        }
-
-        /**
-         * Search for products
-         */
-        if (products.size() > 0) {
-            HashMap<Product, Integer> scores = processProductScores(token, products);
-
-            int max = 0;
-            for (Product product : products) {
-                int score = scores.get(product);
-                if (max < score)
-                    max = score;
-            }
-
-            List<Product> sortedProducts = new ArrayList<>();
-            while (scores.size() > 0 && (selectedGameCategory != null ? max >= 0 : max >= 1)) {
-                for (Product product : products) {
-                    if (scores.containsKey(product) && scores.get(product) == max) {
-                        sortedProducts.add(product);
-                        scores.remove(product);
-                    }
-                }
-                max--;
-            }
-
-            products = sortedProducts;
-        }
-
-        FilterPrices prices = filterToken(filters);
-        try {
-            products = filterProducts(products, filters, prices);
-        } catch (Exception e) {
+            if (products.size() > 0)
+                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
+            else
+                return ok(views.html.products.gameError.render(gameCategory.get(), session()));
+        } else {
             return redirect("/404");
         }
-
-        if (products.size() > 0)
-            if (selectedGameCategory != null)
-                return ok(views.html.products.game.render(selectedGameCategory, Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
-            else
-                return ok(views.html.products.products.render(Lists.partition(products, 2), session(), prices.getMin(), prices.getMax()));
-        else if (selectedGameCategory != null)
-            return ok(views.html.products.gameError.render(selectedGameCategory, session()));
-        else
-            return ok(views.html.selectedproduct.index.render(token, session()));
     }
 
-    private HashMap<Product, Integer> processProductScores(String token, List<Product> products) {
-        HashMap<Product, Integer> scores = new HashMap<>();
-        for (Product product : products)
-            scores.put(product, 0);
+    private Result indexInput(String token, String filters, SearchService.FilterPrices prices) {
+        token = token.replaceFirst("input=", "");
+        SearchService.SearchResults searchResults = searchService.processInput(token, filters);
 
-        String[] split = token.split(" ");
-        for (String s : split) {
-            StringBuilder search = new StringBuilder(s);
-            double scorePenalty = 1;
-            while (search.length() > 1) {
-                for (Product product : products) {
-                    int score = 0;
-
-                    String title = product.getTitle();
-                    if (search.toString().toLowerCase().equals(title.toLowerCase()))
-                        score += 100 / scorePenalty;
-                    if (title.toLowerCase().contains(search.toString().toLowerCase()))
-                        score += 100 / scorePenalty;
-
-                    scores.put(product, scores.get(product) + score);
-                }
-                scorePenalty++;
-                search.delete(search.length() - 1, search.length());
-            }
-        }
-        return scores;
+        if (searchResults.getProducts().size() > 0)
+            if (searchResults.getSelectedGameCategory() != null)
+                return ok(views.html.products.game.render(searchResults.getSelectedGameCategory(), Lists.partition(searchResults.getProducts(), 2), session(), prices.getMin(), prices.getMax()));
+            else
+                return ok(views.html.products.products.render(Lists.partition(searchResults.getProducts(), 2), session(), prices.getMin(), prices.getMax()));
+        else if (searchResults.getSelectedGameCategory() != null)
+            return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), session()));
+        else
+            return ok(views.html.selectedproduct.index.render(token, session()));
     }
 }
