@@ -41,9 +41,13 @@ public class AddProductController extends Controller {
     private final ProductService productService;
 
     private final UserViewService userViewService;
-
+    /**
+     * The execution context used to asynchronously perform database operations.
+     */
     private final DbExecContext dbEc;
-
+    /**
+     * The execution context used to asynchronously perform operations.
+     */
     private final HttpExecutionContext httpEc;
 
     @Inject

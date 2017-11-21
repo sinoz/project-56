@@ -37,9 +37,13 @@ public final class MyInventoryController extends Controller{
     private final ProductService productService;
 
     private final FormFactory formFactory;
-
+    /**
+     * The execution context used to asynchronously perform database operations.
+     */
     private final DbExecContext dbEc;
-
+    /**
+     * The execution context used to asynchronously perform operations.
+     */
     private final HttpExecutionContext httpEc;
 
     @Inject
@@ -113,15 +117,14 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGameId(String id) {
+        String loggedInAs = session().get("loggedInAs");
+        if (loggedInAs == null || loggedInAs.length() == 0) {
+            return completedFuture(redirect("/login"));
+        }
         try {
             int ID = Integer.valueOf(id);
 
-            String loggedInAs = session().get("loggedInAs");
-            if (loggedInAs == null || loggedInAs.length() == 0) {
-                return completedFuture(redirect("/login"));
-            } else {
-                return completedFuture(ok(views.html.inventory.index.render(Lists.partition(getProductsPerGameCategory(loggedInAs, ID), 2), session(), "pergame")));
-            }
+            return completedFuture(ok(views.html.inventory.index.render(Lists.partition(getProductsPerGameCategory(loggedInAs, ID), 2), session(), "pergame")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,17 +149,16 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexProductDetails(String id) {
+        String loggedInAs = session().get("loggedInAs");
+        if (loggedInAs == null || loggedInAs.length() == 0) {
+            return completedFuture(redirect("/login"));
+        }
         try {
             int ID = Integer.valueOf(id);
 
-            String loggedInAs = session().get("loggedInAs");
-            if (loggedInAs == null || loggedInAs.length() == 0) {
-                return completedFuture(redirect("/login"));
-            } else {
-                Optional<Product> product = productService.fetchProduct(ID);
-                if (product.isPresent())
-                    return completedFuture(ok(views.html.inventory.details.render(product.get(), formFactory.form(GameAccountProductInfoForm.class), session(), "")));
-            }
+            Optional<Product> product = productService.fetchProduct(ID);
+            if (product.isPresent())
+                return completedFuture(ok(views.html.inventory.details.render(product.get(), formFactory.form(GameAccountProductInfoForm.class), session(), "")));
         } catch (Exception e) {
             e.printStackTrace();
         }

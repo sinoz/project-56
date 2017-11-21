@@ -34,17 +34,17 @@ public final class PersonalSettingsController extends Controller {
 	private final FormFactory formFactory;
 
 	/**
-	 * TODO
+	 * The {@link AccountService} required to authenticate ReStart accounts.
 	 */
 	private final AccountService accounts;
 
 	/**
-	 * TODO
+	 * The execution context used to asynchronously perform database operations.
 	 */
 	private final DbExecContext dbEc;
 
 	/**
-	 * TODO
+	 * The execution context used to asynchronously perform operations.
 	 */
 	private final HttpExecutionContext httpEc;
 
@@ -68,7 +68,7 @@ public final class PersonalSettingsController extends Controller {
 	public Result index() {
 		String loggedInAs = session().get("loggedInAs");
 		if (loggedInAs == null || loggedInAs.length() == 0) {
-			return redirect("/");
+			return redirect("/login");
 		} else {
 			return ok(views.html.personalsettings.index.render(formFactory.form(PersonalSettingsForm.class), session()));
 		}

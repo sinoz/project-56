@@ -14,7 +14,7 @@ public final class MyAccountController extends Controller {
 	public Result index() {
 		String loggedInAs = session().get("loggedInAs");
 		if (loggedInAs == null || loggedInAs.length() == 0) {
-			return redirect("/");
+			return redirect("/login");
 		} else {
 			return ok(index.render(session()));
 		}

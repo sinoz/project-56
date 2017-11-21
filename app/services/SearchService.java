@@ -23,24 +23,30 @@ public class SearchService {
      * Creates a {@link FilterPrices} object for storing minimum and maximum price values.
      */
     public FilterPrices filterToken(String token) {
-        if (token != null) {
+        if (token != null && token.contains("filter=")) {
             token = token.replace("filter=", "");
             String[] split = token.split(";");
 
             int minPrice = 0;
             int maxPrice = 150;
             for (String s : split) {
+                if (!s.contains(":"))
+                    continue;
                 String[] d = s.split(":");
                 String a = d[0];
                 String b = d[1];
 
-                switch (a) {
-                    case "minprice":
-                        minPrice = Integer.valueOf(b);
-                        break;
-                    case "maxprice":
-                        maxPrice = Integer.valueOf(b);
-                        break;
+                try {
+                    switch (a) {
+                        case "minprice":
+                            minPrice = Integer.valueOf(b);
+                            break;
+                        case "maxprice":
+                            maxPrice = Integer.valueOf(b);
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
             return new FilterPrices(minPrice, maxPrice);

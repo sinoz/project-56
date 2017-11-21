@@ -30,11 +30,23 @@ public final class AuthenticationService {
 		return database.withConnection(connection -> {
 			Optional<User> user = Optional.empty();
 
-			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
+			PreparedStatement stmt = connection.prepareStatement("SELECT passwordsalt FROM users WHERE username=?");
 			stmt.setString(1, username);
-			stmt.setString(2, password);
-
 			ResultSet results = stmt.executeQuery();
+
+			String salt;
+			if (results.next()) {
+				salt = results.getString("passwordsalt");
+			} else {
+				return user;
+			}
+			String pwd = SecurityService.encodePassword(password, salt);
+
+			stmt = connection.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
+			stmt.setString(1, username);
+			stmt.setString(2, pwd);
+
+			results = stmt.executeQuery();
 
 			if (results.next()) {
 				User u = new User();

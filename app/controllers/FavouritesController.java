@@ -31,9 +31,13 @@ public final class FavouritesController extends Controller{
     private final FormFactory formFactory;
 
     private final FavouritesService favouritesService;
-
+    /**
+     * The execution context used to asynchronously perform database operations.
+     */
     private final DbExecContext dbEc;
-
+    /**
+     * The execution context used to asynchronously perform operations.
+     */
     private final HttpExecutionContext httpEc;
 
     @Inject
