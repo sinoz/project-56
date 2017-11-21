@@ -235,8 +235,11 @@ public class SearchService {
 
         for (GameCategory gameCategory : gameCategories) {
             int id = gameCategory.getId();
-            int score = 0;
-            int cnt = 0;
+            int scoreStart = scores.get(id);
+            System.out.println(gameCategory.getName());
+            System.out.println(scoreStart);
+            int score = scoreStart;
+            int cnt = 1;
             for (Product product : products) {
                 if (product.getGameId() == gameCategory.getId()) {
                     if (productScores.get(product.getId()) > 0) {
@@ -245,8 +248,11 @@ public class SearchService {
                     }
                 }
             }
-            score = (int) (score * 10 / (double) cnt);
-            scores.put(id, scores.get(id) + score);
+            System.out.println(score);
+//            if (cnt > 0)
+            score = (int) (score * 4 / (double) cnt);
+            System.out.println(score);
+            scores.put(id, score);
         }
 
         return scores;
