@@ -249,7 +249,6 @@ public class SearchService {
                 }
             }
             System.out.println(score);
-//            if (cnt > 0)
             score = (int) (score * 4 / (double) cnt);
             System.out.println(score);
             scores.put(id, score);

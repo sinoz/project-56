@@ -217,7 +217,7 @@ html {
   font-size: 14px; }
 
 body {
-  color: #bfc1c8;
+  color: #bfc1c8; /* color: #bfc1c8*/
   font-family: "Roboto", "Open Sans", sans-serif;
   font-size: 14px;
   font-weight: 300;
@@ -226,6 +226,10 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
+}
+
+.b2 {
+  color: #000000;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -1755,7 +1759,7 @@ section#contact1 ::-webkit-input-placeholder {
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
-  color: #eeeeee;
+  color: #a0a0a0;
 
 }
 section#contact1 :-moz-placeholder {
@@ -1763,20 +1767,20 @@ section#contact1 :-moz-placeholder {
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
-  color: #eeeeee;
+  color: #a0a0a0;
 }
 section#contact1 ::-moz-placeholder {
   /* Firefox 19+ */
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
-  color: #eeeeee;
+  color: #a0a0a0;
 }
 section#contact1 :-ms-input-placeholder {
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-weight: 700;
-  color: #eeeeee;
+  color: #a0a0a0;
 }
 
 section#contact .text-danger {
@@ -4385,5 +4389,3 @@ section#contact .text-danger {
 .portlet.box.grey-cararra>.portlet-title>.actions .btn-default.active,
 .portlet.box.grey-cararra>.portlet-title>.actions .btn-default:active,
 .portlet.box.grey-cararra>.portlet-title>.actions .btn-default
-
-
