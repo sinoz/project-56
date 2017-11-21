@@ -22,6 +22,7 @@ import java.util.Optional;
  * @author Johan van der Hoeven
  */
 public class ProductsController extends Controller {
+
     /**
      * A {@link FormFactory} to use search forms.
      */
@@ -38,10 +39,10 @@ public class ProductsController extends Controller {
     private SearchService searchService;
 
     @Inject
-    public ProductsController(FormFactory formFactory, ProductService productService, SearchService searchService) {
+    public ProductsController(FormFactory formFactory, ProductService productService) {
         this.formFactory = formFactory;
         this.productService = productService;
-        this.searchService = searchService;
+        this.searchService = new SearchService(productService);
     }
 
     public Result redirect() {

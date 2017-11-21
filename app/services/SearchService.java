@@ -3,7 +3,6 @@ package services;
 import models.GameCategory;
 import models.Product;
 
-import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -16,11 +15,13 @@ public class SearchService {
      */
     private ProductService productService;
 
-    @Inject
     public SearchService(ProductService productService) {
         this.productService = productService;
     }
 
+    /**
+     * Creates a {@link FilterPrices} object for storing minimum and maximum price values.
+     */
     public FilterPrices filterToken(String token) {
         if (token != null) {
             token = token.replace("filter=", "");
@@ -47,6 +48,9 @@ public class SearchService {
         return new FilterPrices(0, 150);
     }
 
+    /**
+     * Filters products given {@link FilterPrices} with a minimum and maximum price.
+     */
     public List<Product> filterProducts(List<Product> products, String filters, FilterPrices prices) throws Exception {
         List<Product> list = new ArrayList<>();
 
@@ -62,6 +66,9 @@ public class SearchService {
         return products;
     }
 
+    /**
+     * Processes a given input with raw filter data.
+     */
     public SearchResults processInput(String token, String filters) {
         List<GameCategory> gameCategories = productService.fetchGameCategories();
         List<Product> products = productService.fetchProducts();
@@ -92,6 +99,9 @@ public class SearchService {
         return new SearchResults(products, selectedGameCategory);
     }
 
+    /**
+     * Returns a {@link SelectedGameCategoryProducts} which contains a selected game category and a list of products.
+     */
     private SelectedGameCategoryProducts getSelectedGameCategoryProducts(HashMap<Integer, Integer> scores, List<GameCategory> gameCategories, List<Product> products) {
         GameCategoriesSorted gcs = sortGameCategories(scores, gameCategories);
         List<GameCategory> sortedGameCategories = gcs.getSortedGameCategories();
@@ -118,6 +128,9 @@ public class SearchService {
         return new SelectedGameCategoryProducts(products, null);
     }
 
+    /**
+     * Returns a {@link SelectedGameCategoryProducts} which contains one selected game category and a list of products.
+     */
     private SelectedGameCategoryProducts getSelectedGameCategoryProductsOne(GameCategory selectedGameCategory, List<Product> products) {
         List<Product> selectedProducts = new ArrayList<>();
         for (Product product : products) {
@@ -128,6 +141,9 @@ public class SearchService {
         return new SelectedGameCategoryProducts(selectedProducts, selectedGameCategory);
     }
 
+    /**
+     * Returns a {@link SelectedGameCategoryProducts} which contains a list of products.
+     */
     private SelectedGameCategoryProducts getSelectedGameCategoryProductsMultiple(List<GameCategory> selectedGameCategories, List<Product> products) {
         List<Product> selectedProducts = new ArrayList<>();
         for (GameCategory gameCategory : selectedGameCategories) {
@@ -140,6 +156,9 @@ public class SearchService {
         return new SelectedGameCategoryProducts(selectedProducts, null);
     }
 
+    /**
+     * Sorts a {@link List<GameCategory>} with a given {@link HashMap} with scores.
+     */
     private GameCategoriesSorted sortGameCategories(HashMap<Integer, Integer> scores, List<GameCategory> gameCategories) {
         int max = getMaximumScore(scores);
 
@@ -159,6 +178,9 @@ public class SearchService {
         return new GameCategoriesSorted(sortedGameCategories, sortedScores);
     }
 
+    /**
+     * Sorts a {@link List<Product>} with a given {@link HashMap} with scores.
+     */
     private List<Product> sortProducts(HashMap<Integer, Integer> scores, List<Product> products, GameCategory selectedGameCategory) {
         int max = getMaximumScore(scores);
 
@@ -176,6 +198,9 @@ public class SearchService {
         return sortedProducts;
     }
 
+    /**
+     * Returns the maximum score in a {@link HashMap} of scores.
+     */
     private int getMaximumScore(HashMap<Integer, Integer> scores) {
         int max = 0;
         for (Map.Entry<Integer, Integer> o : scores.entrySet()) {
@@ -186,6 +211,10 @@ public class SearchService {
         return max;
     }
 
+    /**
+     * Processes {@link List<GameCategory>} and returns a {@link HashMap} of scores.
+     *
+     */
     private HashMap<Integer, Integer> processGameCategoryScores(String token, List<GameCategory> gameCategories, List<Product> products) {
         List<String> titles = new ArrayList<>();
         List<Integer> ids = new ArrayList<>();
@@ -199,6 +228,7 @@ public class SearchService {
         HashMap<Integer, Integer> productScores = processProductScores(token, products);
 
         for (GameCategory gameCategory : gameCategories) {
+            int id = gameCategory.getId();
             int score = 0;
             int cnt = 0;
             for (Product product : products) {
@@ -210,12 +240,15 @@ public class SearchService {
                 }
             }
             score = (int) (score * 10 / (double) cnt);
-            scores.put(gameCategory.getId(), scores.get(gameCategory.getId()) + score);
+            scores.put(id, scores.get(id) + score);
         }
 
         return scores;
     }
 
+    /**
+     * Processes {@link List<Product>} and returns a {@link HashMap} of scores.
+     */
     private HashMap<Integer, Integer> processProductScores(String token, List<Product> products) {
         List<String> titles = new ArrayList<>();
         List<Integer> ids = new ArrayList<>();
@@ -228,6 +261,9 @@ public class SearchService {
         return calculateScores(token, titles, ids);
     }
 
+    /**
+     * Calculates scores for titles matching the given token.
+     */
     private HashMap<Integer, Integer> calculateScores(String token, List<String> titles, List<Integer> ids) {
         HashMap<Integer, Integer> scores = new HashMap<>();
         for (int id : ids)
@@ -253,6 +289,10 @@ public class SearchService {
         return scores;
     }
 
+    /**
+     * Returns an int with the score of the search and name.
+     * ScorePenalty takes into account the weight of the score.
+     */
     private int getSearchScore(String search, String name, double scorePenalty) {
         int score = 0;
         if (search.toLowerCase().equals(name.toLowerCase()))
@@ -267,16 +307,16 @@ public class SearchService {
         private List<GameCategory> sortedGameCategories;
         private List<Integer> sortedScores;
 
-        public GameCategoriesSorted(List<GameCategory> sortedGameCategories, List<Integer> sortedScores) {
+        private GameCategoriesSorted(List<GameCategory> sortedGameCategories, List<Integer> sortedScores) {
             this.sortedGameCategories = sortedGameCategories;
             this.sortedScores = sortedScores;
         }
 
-        public List<GameCategory> getSortedGameCategories() {
+        private List<GameCategory> getSortedGameCategories() {
             return sortedGameCategories;
         }
 
-        public List<Integer> getSortedScores() {
+        private List<Integer> getSortedScores() {
             return sortedScores;
         }
     }
@@ -286,16 +326,16 @@ public class SearchService {
         private List<Product> products;
         private GameCategory selectedGameCategory;
 
-        public SelectedGameCategoryProducts(List<Product> products, GameCategory selectedGameCategory) {
+        private SelectedGameCategoryProducts(List<Product> products, GameCategory selectedGameCategory) {
             this.products = products;
             this.selectedGameCategory = selectedGameCategory;
         }
 
-        public List<Product> getProducts() {
+        private List<Product> getProducts() {
             return products;
         }
 
-        public GameCategory getSelectedGameCategory() {
+        private GameCategory getSelectedGameCategory() {
             return selectedGameCategory;
         }
     }
@@ -304,7 +344,7 @@ public class SearchService {
 
         private final int min, max;
 
-        public FilterPrices(int min, int max) {
+        private FilterPrices(int min, int max) {
             this.min = min;
             this.max = max;
         }
@@ -324,12 +364,12 @@ public class SearchService {
         private GameCategory selectedGameCategory;
         private boolean redirect;
 
-        public SearchResults(List<Product> products, GameCategory selectedGameCategory) {
+        private SearchResults(List<Product> products, GameCategory selectedGameCategory) {
             this.products = products;
             this.selectedGameCategory = selectedGameCategory;
         }
 
-        public SearchResults(List<Product> products, GameCategory selectedGameCategory, boolean redirect) {
+        private SearchResults(List<Product> products, GameCategory selectedGameCategory, boolean redirect) {
             this(products, selectedGameCategory);
             this.redirect = redirect;
         }
