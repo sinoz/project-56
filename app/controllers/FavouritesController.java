@@ -3,17 +3,17 @@ package controllers;
 import com.google.common.collect.Lists;
 import concurrent.DbExecContext;
 import forms.FavouriteForm;
-import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.FavouritesService;
+import services.SessionService;
 
 import javax.inject.Inject;
-import java.util.List;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
@@ -28,18 +28,27 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  */
 public final class FavouritesController extends Controller{
     /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+    /**
      * A {@link FormFactory} to use forms.
      */
     private final FormFactory formFactory;
 
     private final FavouritesService favouritesService;
-
+    /**
+     * The execution context used to asynchronously perform database operations.
+     */
     private final DbExecContext dbEc;
-
+    /**
+     * The execution context used to asynchronously perform operations.
+     */
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public FavouritesController(FormFactory formFactory, FavouritesService favouritesService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public FavouritesController(play.db.Database database, FormFactory formFactory, FavouritesService favouritesService, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.database = database;
         this.formFactory = formFactory;
         this.favouritesService = favouritesService;
         this.dbEc = dbEc;
@@ -47,10 +56,10 @@ public final class FavouritesController extends Controller{
     }
 
     public CompletionStage<Result> index() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             return supplyAsync(() -> favouritesService.getFavourites(loggedInAs), dbExecutor)
                     .thenApplyAsync(favouritesService::getProducts, dbExecutor)
@@ -71,7 +80,7 @@ public final class FavouritesController extends Controller{
             FavouriteForm form = formBinding.get();
             String prodId = form.getId();
 
-            return runAsync(() -> favouritesService.add(prodId, session().get("loggedInAs")), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
+            return runAsync(() -> favouritesService.add(prodId, SessionService.getLoggedInAs(session())), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
         }
     }
 }

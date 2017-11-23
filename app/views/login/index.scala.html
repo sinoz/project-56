@@ -8,7 +8,7 @@
 
             @banner()
 
-            <div id="login-overlay" class="modal-dialog">
+            <div id="login-overlay" class="modal-dialog b2">
                 <div class="modal-content">
 
                     <div class="modal-body">
@@ -20,7 +20,9 @@
                                 @helper.form(action = helper.CSRF(routes.LoginController.login()), 'style -> "margin: 0 auto;") {
                                     <div class="form-group">
                                         <label for="username" class="control-label">Username</label>
-                                        <input type="text" class="form-control" id="username" name="username" required="" title="Please enter you username" placeholder="username">
+                                        @defining(if (form("username").getValue.isPresent) form("username").getValue.get() else "") { text =>
+                                            <input type="text" class="form-control" id="username" name="username" required="" title="Please enter you username" value="@text" placeholder="username">
+                                        }
                                         @for(error <- form("username").errors) {
                                             <p>@error.format(messages())</p>
                                         }

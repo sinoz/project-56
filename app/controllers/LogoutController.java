@@ -2,6 +2,7 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.SessionService;
 
 /**
  * A {@link Controller} to log the user out, if logged in.
@@ -10,11 +11,7 @@ import play.mvc.Result;
  */
 public final class LogoutController extends Controller {
 	public Result index() {
-		String loggedInAs = session().get("loggedInAs");
-		if (loggedInAs != null) {
-			session().clear();
-		}
-
+		SessionService.logout(session());
 		return redirect("/");
 	}
 }

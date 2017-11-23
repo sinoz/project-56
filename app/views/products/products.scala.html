@@ -5,7 +5,7 @@
 * message to display.
 *@
 @import java.util
-@(list: util.List[util.List[Product]], session: play.mvc.Http.Session)
+@(list: util.List[util.List[Product]], session: play.mvc.Http.Session, input: String, minPrice:Integer, maxPrice:Integer)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -16,7 +16,7 @@
             <div class="site-content">
                 @header("Home", session)
 
-                @searchbar()
+                @searchbar(input)
 
                 <main class="main-content">
                     <div class="fullwidth-block">
@@ -27,7 +27,7 @@
                                 <div class="col-md-3 col-sm-6">
 
                                     <!-- filters -->
-                                    @filter()
+                                    @filter(minPrice, maxPrice)
                                 </div>
                                 <div class="col-md-9 col-sm-9">
                                     @for(row <- list) {

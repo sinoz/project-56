@@ -1,0 +1,136 @@
+@import forms.ProductForm
+@import components._
+
+@(form: play.data.Form[ProductForm], product: Product, session: play.mvc.Http.Session, activeSubMenuItem: String)
+@main("Restart"){
+    <body>
+        <div class="site-content">
+            @header("", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(session.get("profilePictureURL"))" alt=""></figure>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @profileUserMenu("inventory", activeSubMenuItem)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet dark bordered">
+                            <div class="container">
+                                <h2>Add Product</h2>
+
+                                @helper.form(action = helper.CSRF(routes.AddProductController.updateProduct(product.getId + "")), 'class -> "form-horizontal") {
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="title">Title:</label>
+                                        <div class="col-xs-4">
+                                            <input id="title" name="title" type="text" class="form-control input-md" value="@product.getTitle" placeholder="Title">
+                                            @for(error <- form("title").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="description">Description:</label>
+                                        <div class="col-xs-4">
+                                            <input id="description" name="description" type="text" class="form-control input-md" value="@product.getDescription" placeholder="Description">
+                                            @for(error <- form("description").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="buy">I want to sell this account:</label>
+                                        <div style="float: left; position: relative; width: 4%; padding-left: 15px">
+                                            @if(product.isCanBuy) {
+                                                <input id="buy" name="canBuy" type="checkbox" class="form-control input-md" checked>
+                                            } else {
+                                                <input id="buy" name="canBuy" type="checkbox" class="form-control input-md">
+                                            }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("canBuy").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="trade">I want to trade this account:</label>
+                                        <div style="float: left; position: relative; width: 4%; padding-left: 15px">
+                                            @if(product.isCanTrade) {
+                                                <input id="trade" name="canTrade" type="checkbox" class="form-control input-md" checked>
+                                            } else {
+                                                <input id="trade" name="canTrade" type="checkbox" class="form-control input-md">
+                                            }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("canTrade").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="buyprice">Selling price:</label>
+                                        <div class="col-xs-4">
+                                            <input id="buyprice" name="buyPrice" type="number" min="0" max="10000" step="0.01" value="@product.getBuyPrice" class="form-control input-md">
+                                            @for(error <- form("buyPrice").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="email">The current email for this account:</label>
+                                        <div class="col-xs-4">
+                                            <input id="email" name="emailCurrent" type="email" value="@product.getMailCurrent" placeholder="example@@restart.com" class="form-control input-md">
+                                            @for(error <- form("emailCurrent").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-3 control-label" for="password">The current password for this account:</label>
+                                        <div class="col-xs-4">
+                                            <input id="password" name="passwordCurrent" value="@product.getPasswordCurrent" type="password" class="form-control input-md">
+                                            @for(error <- form("passwordCurrent").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    @*<input type="hidden" name=@gameid>*@
+
+                                    <div class="form-group">
+                                        <div class="col-xs-8">
+                                            <input type="submit" name="Submit" value="Save">
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

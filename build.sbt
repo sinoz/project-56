@@ -21,7 +21,12 @@ libraryDependencies ++= {
     "org.awaitility" % "awaitility" % "2.0.0" % Test
   )
 
-  dbDeps ++ defaults ++ testDeps
+  val mailDeps = Seq(
+    "com.typesafe.play" %% "play-mailer" % "6.0.1",
+    "com.typesafe.play" %% "play-mailer-guice" % "6.0.1"
+  )
+
+  dbDeps ++ defaults ++ testDeps ++ mailDeps
 }
 libraryDependencies += javaJdbc
 

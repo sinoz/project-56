@@ -4,7 +4,7 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(token: String, session: play.mvc.Http.Session)
+@(token: String, input: String, session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -15,7 +15,7 @@
         <div class="site-content">
             @header("Home", session)
 
-            @searchbar()
+            @searchbar(input)
 
             <main class="main-content">
                 <div class="fullwidth-block">

@@ -1,13 +1,23 @@
-@()
+@(minPrice: Integer, maxPrice: Integer)
 
 <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/filter.css")">
 
 <div class="form">
     <form>
-        <div class="range">
-            <label for="range" class="label">Price Range</label>
-            <input type="range" name="range" min="0" max="150" step="1" value="150" class="slider">
-            <output for="range" class="output"></output>
+        @*<label for="range" class="label">Price Range</label>*@
+        @*<input type="range" name="range" min="0" max="150" step="1" value="150" class="slider">*@
+        @*<output for="range" class="output"></output>*@
+        <div class="min">
+            <div class="col-md-6 col-sm-6">
+                <p>Min Price</p>
+                <input type="text" class="form-control" id="min" value="@minPrice">
+            </div>
+        </div>
+        <div class="max">
+            <div class="col-md-6 col-sm-6">
+                <p>Max Price</p>
+                <input type="text" class="form-control" id="max" value="@maxPrice">
+            </div>
         </div>
     </form>
 </div>

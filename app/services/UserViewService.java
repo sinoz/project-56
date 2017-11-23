@@ -36,9 +36,10 @@ public final class UserViewService {
 
             if (results.next()) {
                 String username = results.getString("username");
+                String mail = results.getString("mail");
                 String profilepicture = results.getString("profilepicture");
                 Date memberSince = results.getDate("membersince");
-                ViewableUser u = new ViewableUser(id, username, profilepicture, memberSince);
+                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
 
                 user = Optional.of(u);
             }
@@ -61,9 +62,10 @@ public final class UserViewService {
 
             if (results.next()) {
                 int id = results.getInt("id");
+                String mail = results.getString("mail");
                 String profilepicture = results.getString("profilepicture");
                 Date memberSince = results.getDate("membersince");
-                ViewableUser u = new ViewableUser(id, username, profilepicture, memberSince);
+                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
 
                 user = Optional.of(u);
             }
@@ -87,7 +89,7 @@ public final class UserViewService {
             if (results.next()) {
                 User u = new User();
 
-                u.setId(results.getString("id"));
+                u.setId(results.getInt("id"));
                 u.setUsername(results.getString("username"));
                 u.setPassword(results.getString("password"));
                 u.setMail(results.getString("mail"));

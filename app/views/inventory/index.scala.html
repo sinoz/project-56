@@ -1,0 +1,86 @@
+@import java.util
+@import components._
+
+@(list: util.List[util.List[Product]], session: play.mvc.Http.Session, activeSubMenuItem: String)
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("MyAccount", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(session.get("profilePictureURL"))" alt=""></figure>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @profileUserMenu("inventory", activeSubMenuItem)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="container">
+                                @inventoryTitle()
+
+                                @if(list.isEmpty){
+                                    @if(activeSubMenuItem.equals("all")) {
+                                        <h3>You don't have any game accounts in your inventory yet!</h3>
+                                    } else if(activeSubMenuItem.equals("pergame")) {
+                                        <h3>You don't have any game accounts for this game yet!</h3>
+                                    } else {
+                                        <h3>You don't have any game accounts available for @activeSubMenuItem in your inventory yet!</h3>
+                                    }
+                                } else {
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-9">
+                                    @for(row <- list) {
+                                        <div class="row">
+                                        @for(product <- row) {
+                                            <div class="col-md-2 col-sm-2">
+                                                <div class="live-camera">
+                                                    <a href="/myaccount/inventory/details/@product.getId">
+                                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                            <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                        </figure>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 image">
+                                                <a href="/myaccount/inventory/details/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                                <a href="/myaccount/inventory/details/@product.getId"><button class="awesomebutton">Details</button></a>
+
+                                                <br><br>
+                                                <div class="profile-usertitle-membersince-white">
+                                                    <strong>Added Since:</strong>
+                                                    @product.getAddedSince.format("dd-MM-yyyy")
+                                                </div>
+                                            </div>
+                                        }
+                                        </div>
+                                    }
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
