@@ -1,4 +1,4 @@
-@(form: play.data.Form[forms.MailerForm], session: play.mvc.Http.Session)
+@(form: play.data.Form[forms.MailerForm], mail: String, session: play.mvc.Http.Session)
 
 @import components._
 
@@ -29,7 +29,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <input type="email" class="form-control" placeholder="Your Email *" name="email" required data-validation-required-message="Please enter your email address.">
+                                            <input type="email" class="form-control" value="@mail" placeholder="Your Email *" name="email" required data-validation-required-message="Please enter your email address.">
                                             @for(error <- form("email").errors) {
                                                 <p>@error.format(messages())</p>
                                             }

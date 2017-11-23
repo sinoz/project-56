@@ -171,14 +171,11 @@ public final class MyInventoryController extends Controller{
      * registration.
      */
     public Result updateProductInfo(String id) {
-        System.out.println("RANNN");
         Form<GameAccountProductInfoForm> formBinding = formFactory.form(GameAccountProductInfoForm.class).bindFromRequest();
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
             return redirect("/404");
         } else {
             GameAccountProductInfoForm form = formBinding.get();
-
-            System.out.println("RUN");
 
             // TODO: update description here
             System.out.println(form.getDescription());

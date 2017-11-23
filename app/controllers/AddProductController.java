@@ -108,19 +108,21 @@ public class AddProductController extends Controller {
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             Product product = new Product();
 
+            ProductForm productForm = formBinding.get();
+
             product.setUserId(user.get().getId());
             product.setGameId(Integer.valueOf(gameid));
             product.setVisible(true);
             product.setDisabled(false);
-            product.setTitle(formBinding.get().title);
-            product.setDescription(formBinding.get().description);
+            product.setTitle(productForm.title);
+            product.setDescription(productForm.description);
             product.setAddedSince(new Date());
-            product.setCanBuy(formBinding.get().canBuy);
-            product.setBuyPrice(formBinding.get().buyPrice);
-            product.setCanTrade(formBinding.get().canTrade);
-            product.setMailLast(formBinding.get().emailCurrent);
-            product.setMailCurrent(formBinding.get().emailCurrent);
-            product.setPasswordCurrent(formBinding.get().passwordCurrent);
+            product.setCanBuy(productForm.canBuy);
+            product.setBuyPrice(productForm.buyPrice);
+            product.setCanTrade(productForm.canTrade);
+            product.setMailLast(productForm.emailCurrent);
+            product.setMailCurrent(productForm.emailCurrent);
+            product.setPasswordCurrent(productForm.passwordCurrent);
 
             return runAsync(() -> myInventoryService.addProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
         }
@@ -156,16 +158,18 @@ public class AddProductController extends Controller {
                 Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
                 Product product = new Product();
 
+                ProductForm form = formBinding.get();
+
                 product.setId(id);
-                product.setTitle(formBinding.get().title);
-                product.setDescription(formBinding.get().description);
+                product.setTitle(form.title);
+                product.setDescription(form.description);
                 product.setAddedSince(new Date());
-                product.setCanBuy(formBinding.get().canBuy);
-                product.setBuyPrice(formBinding.get().buyPrice);
-                product.setCanTrade(formBinding.get().canTrade);
-                product.setMailLast(formBinding.get().emailCurrent);
-                product.setMailCurrent(formBinding.get().emailCurrent);
-                product.setPasswordCurrent(formBinding.get().passwordCurrent);
+                product.setCanBuy(form.canBuy);
+                product.setBuyPrice(form.buyPrice);
+                product.setCanTrade(form.canTrade);
+                product.setMailLast(form.emailCurrent);
+                product.setMailCurrent(form.emailCurrent);
+                product.setPasswordCurrent(form.passwordCurrent);
 
                 return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
             } catch (Exception e) {

@@ -1,14 +1,17 @@
 package controllers;
 
+import forms.MailerForm;
+import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.MailerService;
+import services.UserViewService;
 import views.html.contact.index;
-import forms.MailerForm;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * A {@link Controller} for the contact page.
@@ -23,18 +26,22 @@ public final class ContactController extends Controller {
 	 */
 	private final FormFactory formFactory;
 
+	private final UserViewService userViewService;
 	private final MailerService mails;
 
 	@Inject
-	public ContactController(FormFactory formFactory, MailerService mails) {
+	public ContactController(FormFactory formFactory, UserViewService userViewService, MailerService mails) {
 		this.formFactory = formFactory;
+		this.userViewService = userViewService;
 		this.mails = mails;
 	}
 
 	/**
 	 * Returns an OK result including the {@link views.html.contact.index} view.
 	 */
-	public Result index() { return ok(index.render(formFactory.form(MailerForm.class), session())); }
+	public Result index() {
+		return ok(index.render(formFactory.form(MailerForm.class), getMail(), session()));
+	}
 
 	/**
 	 * Attempts to send a mail. Returns either a {@link Controller#badRequest()} indicating
@@ -44,11 +51,25 @@ public final class ContactController extends Controller {
 	public Result mail() {
 		Form<MailerForm> formBinding = formFactory.form(MailerForm.class).bindFromRequest();
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-			return badRequest(index.render(formBinding, session()));
+			return badRequest(index.render(formBinding, getMail(), session()));
 		} else {
 			MailerForm form = formBinding.get();
 			mails.sendEmail(form);
 			return redirect("/");
 		}
 	}
+
+	private String getMail() {
+        String loggedInAs = session().get("loggedInAs");
+        if (loggedInAs == null || loggedInAs.length() == 0) {
+            return "";
+        } else {
+            Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+            if (user.isPresent()) {
+                return user.get().getMail();
+            } else {
+                return "";
+            }
+        }
+    }
 }

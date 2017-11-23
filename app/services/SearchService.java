@@ -235,10 +235,7 @@ public class SearchService {
 
         for (GameCategory gameCategory : gameCategories) {
             int id = gameCategory.getId();
-            int scoreStart = scores.get(id);
-            System.out.println(gameCategory.getName());
-            System.out.println(scoreStart);
-            int score = scoreStart;
+            int score = scores.get(id);
             int cnt = 1;
             for (Product product : products) {
                 if (product.getGameId() == gameCategory.getId()) {
@@ -248,9 +245,7 @@ public class SearchService {
                     }
                 }
             }
-            System.out.println(score);
             score = (int) (score * 4 / (double) cnt);
-            System.out.println(score);
             scores.put(id, score);
         }
 

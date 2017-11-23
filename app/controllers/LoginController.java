@@ -26,9 +26,6 @@ public final class LoginController extends Controller {
 	 */
 	private FormFactory formFactory;
 
-	/**
-	 * TODO
-	 */
 	private AuthenticationService auth;
 
 	/**

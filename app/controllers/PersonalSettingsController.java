@@ -5,12 +5,14 @@ import forms.PersonalSettingsForm;
 import models.User;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.AccountService;
 import services.AuthenticationService;
+import views.html.register.index;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -85,8 +87,12 @@ public final class PersonalSettingsController extends Controller {
 
 			String loggedInAs = session().get("loggedInAs");
 
-			// TODO add password check back in
             Optional<User> user = auth.fetchUser(loggedInAs, form.password);
+
+            if (accounts.userExists(form.usernameToChangeTo.toLowerCase()) && !loggedInAs.equals(form.usernameToChangeTo.toLowerCase())) {
+                formBinding = formBinding.withError(new ValidationError("usernameToChangeTo", "This username already exists."));
+                return completedFuture(badRequest(views.html.personalsettings.index.render(formBinding, session())));
+            }
 
             if (user.isPresent()) {
                 // runs the account update operation on the database pool of threads and then switches

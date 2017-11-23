@@ -16,21 +16,20 @@ public final class ViewableUser {
 	/** username displayed in the webshop / can be used for log in */
 	private String username;
 
+	/** mail of the user */
+	private String mail;
+
 	/** link to the image as profile picture for the user */
 	private String profilePicture;
 
 	/** date of when the user first joined, it is only set once */
 	private Date memberSince;
 
-	// TODO:
-//	/** inventory from this user */
-//	private List<String> inventory;
-
-	public ViewableUser(int id, String username, String profilePicture, Date memberSince) {
+	public ViewableUser(int id, String username, String mail, String profilePicture, Date memberSince) {
 		this.id = id;
 		this.username = username;
+		this.mail = mail;
 		this.profilePicture = profilePicture;
-//		this.inventory = inventory;
 		this.memberSince = memberSince;
 	}
 
@@ -42,6 +41,10 @@ public final class ViewableUser {
 		return username;
 	}
 
+	public String getMail() {
+		return mail;
+	}
+
 	public String getProfilePicture() {
 		return profilePicture;
 	}
@@ -49,8 +52,4 @@ public final class ViewableUser {
 	public Date getMemberSince() {
 		return memberSince;
 	}
-
-//	public List<String> getInventory() {
-//		return inventory;
-//	}
 }
