@@ -24,7 +24,7 @@ public class SessionService {
         session.put("usedPaymentMail", Optional.ofNullable(user.getPaymentMail()).orElse(""));
         session.put("sessionToken", token);
 
-        updateToken(database, user.getId(), token);
+        updateToken(database, user.getId(), SecurityService.secure(token));
     }
 
     public static void updateSession(Http.Session session, String usernameToChangeTo, String emailToChangeTo, String paymentMailToChangeTo) {
@@ -52,7 +52,7 @@ public class SessionService {
         String loggedInAs = getLoggedInAs(session);
         String sessionToken = getSessionToken(session);
         String databaseToken = fetchToken(database, loggedInAs);
-        boolean output = loggedInAs == null || loggedInAs.length() == 0 || !sessionToken.equals(databaseToken);
+        boolean output = loggedInAs == null || loggedInAs.length() == 0 || !SecurityService.secure(sessionToken).equals(databaseToken);
         if (output)
             clearSession(session);
         return output;

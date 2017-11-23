@@ -172,24 +172,6 @@ public final class MyInventoryController extends Controller{
         return completedFuture(redirect("/404"));
     }
 
-    /**
-     * Attempts to register a user. Returns either a {@link Controller#badRequest()} indicating
-     * a failure in registering the user or a {@link Controller#ok()} result, indicating a successful
-     * registration.
-     */
-    public Result updateProductInfo(String id) {
-        Form<GameAccountProductInfoForm> formBinding = formFactory.form(GameAccountProductInfoForm.class).bindFromRequest();
-        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-            return redirect("/404");
-        } else {
-            GameAccountProductInfoForm form = formBinding.get();
-
-            // TODO: update description here
-            System.out.println(form.getDescription());
-            return redirect("/myaccount/inventory/details/" + id);
-        }
-    }
-
     public CompletionStage<Result> indexAddGameAccount() {
         if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));

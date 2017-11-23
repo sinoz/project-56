@@ -21,6 +21,10 @@ public final class SecurityService {
         return encrypt(salt(password, salt), PRIVATE_KEY);
     }
 
+    public static String secure(String text) {
+        return encrypt(text, PRIVATE_KEY);
+    }
+
     private static String hash(String text) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
