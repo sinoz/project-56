@@ -14,9 +14,6 @@ import java.sql.Timestamp;
  * @author Maurice van Veen
  */
 public final class AccountService {
-	/**
-	 * TODO
-	 */
 	private final play.db.Database database;
 
 	/**
@@ -34,7 +31,7 @@ public final class AccountService {
 		return database.withConnection(connection -> {
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
 
-			stmt.setString(1, username);
+			stmt.setString(1, username.toLowerCase());
 
 			return stmt.executeQuery().next();
 		});
@@ -46,19 +43,23 @@ public final class AccountService {
 	 */
 	public void registered(RegistrationForm form) {
 		database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, mail, paymentmail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?, ?)");
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, passwordsalt, mail, paymentmail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?, ?, ?)");
+			String salt = SecurityService.createSalt();
+			String pwd = SecurityService.encodePassword(form.password, salt);
 			stmt.setString(1, form.name.toLowerCase());
-			stmt.setString(2, form.password);
-			stmt.setString(3, form.email);
-			stmt.setString(4, form.paymentmail);
-			stmt.setString(5, "images/default_profile_pic.png");
-			stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+			stmt.setString(2, pwd);
+			stmt.setString(3, salt);
+			stmt.setString(4, form.email);
+			stmt.setString(5, form.paymentmail);
+			stmt.setString(6, "images/default_profile_pic.png");
+			stmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 			stmt.execute();
 		});
 	}
 
 	/**
-	 * TODO
+	 * Attempts to update a exciting user and returns whether it has successfully updated the settings
+	 * using the given {@link PersonalSettingsForm}.
 	 */
 	public void updateSettings(String loggedInAs, PersonalSettingsForm form) {
 		database.withConnection(connection -> {

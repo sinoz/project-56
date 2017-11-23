@@ -42,12 +42,12 @@ public class ProductCheckoutBuyController extends Controller {
     private ProductService productService;
 
     /**
-     * TODO
+     * The required {@link Database} dependency to fetch database connections.
      */
     private final play.db.Database database;
 
     @Inject
-    public ProductCheckoutBuyController(Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService){
+    public ProductCheckoutBuyController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService){
         this.formFactory = formFactory;
         this.database = database;
         this.userViewService = userViewService;
@@ -55,14 +55,20 @@ public class ProductCheckoutBuyController extends Controller {
     }
 
     public Result index(String token) {
-        return productService
-            .fetchProduct(Integer.valueOf(token))
-            .map(product -> {
-                Optional<User> user = userViewService.fetchUser(product.getUserId());
+        try {
+            int t = Integer.valueOf(token);
+            return productService
+                    .fetchProduct(t)
+                    .map(product -> {
+                        Optional<User> user = userViewService.fetchUser(product.getUserId());
 
-                return ok(views.html.checkout.buy.render(product, product.getBuyPrice(), user, getRating(product.getUserId()), session(), token));
-            })
-            .orElse(redirect("/404"));
+                        return ok(views.html.checkout.buy.render(product, product.getBuyPrice(), user, getRating(product.getUserId()), session(), token));
+                    })
+                    .orElse(redirect("/404"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return redirect("/404");
     }
 
     public Result couponCode(String token) {

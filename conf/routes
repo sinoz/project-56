@@ -26,7 +26,8 @@ GET         /faq                                 controllers.FAQController.index
 GET         /register                            controllers.RegistrationController.index
 POST        /register                            controllers.RegistrationController.register
 
-GET         /contact                             controllers.ContactController.index
+GET         /contact                           controllers.ContactController.index
+POST        /contact                           controllers.ContactController.mail
 
 GET         /myaccount                           controllers.MyAccountController.index
 
@@ -45,7 +46,6 @@ GET         /myaccount/inventory/trading         controllers.MyInventoryControll
 GET         /myaccount/inventory/game            controllers.MyInventoryController.indexGame
 GET         /myaccount/inventory/game/:id        controllers.MyInventoryController.indexGameId(id: String)
 GET         /myaccount/inventory/details/:id     controllers.MyInventoryController.indexProductDetails(id: String)
-POST        /myaccount/inventory/details/:id     controllers.MyInventoryController.updateProductInfo(id: String)
 GET         /myaccount/addgameaccount            controllers.MyInventoryController.indexAddGameAccount
 
 GET         /logout                              controllers.LogoutController.index

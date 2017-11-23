@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Constraints.Validate
 public final class RegistrationForm implements Constraints.Validatable<List<ValidationError>> {
+
 	@Constraints.Required
 	public String name;
 
@@ -86,9 +87,5 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 
 	public String getPassword() {
 		return password;
-	}
-
-	public String getRepeatPassword() {
-		return repeatPassword;
 	}
 }

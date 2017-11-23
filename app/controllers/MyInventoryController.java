@@ -9,12 +9,14 @@ import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
+import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.MyInventoryService;
 import services.ProductService;
+import services.SessionService;
 import views.html.register.index;
 
 import javax.inject.Inject;
@@ -33,17 +35,27 @@ import static java.util.concurrent.CompletableFuture.*;
  */
 public final class MyInventoryController extends Controller{
 
+    /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+
     private final MyInventoryService myInventoryService;
     private final ProductService productService;
 
     private final FormFactory formFactory;
-
+    /**
+     * The execution context used to asynchronously perform database operations.
+     */
     private final DbExecContext dbEc;
-
+    /**
+     * The execution context used to asynchronously perform operations.
+     */
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public MyInventoryController(MyInventoryService myInventoryService, ProductService productService, FormFactory formFactory, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public MyInventoryController(play.db.Database database, MyInventoryService myInventoryService, ProductService productService, FormFactory formFactory, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.database = database;
         this.myInventoryService = myInventoryService;
         this.productService = productService;
         this.formFactory = formFactory;
@@ -52,10 +64,10 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> index(String activeSubMenuItem) {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             return supplyAsync(() -> myInventoryService.getInventory(loggedInAs), dbExecutor)
                     .thenApplyAsync(ids -> myInventoryService.getProducts(ids, activeSubMenuItem), dbExecutor)
@@ -76,10 +88,10 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGame() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             return supplyAsync(productService::fetchGameCategories, dbExecutor).thenApplyAsync(gameCategories -> ok(views.html.inventory.game.render(Lists.partition(filterGameCategories(loggedInAs, gameCategories), 4), session(), "pergame")), httpEc.current());
         }
@@ -113,15 +125,14 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGameId(String id) {
+        if (SessionService.redirect(session(), database)) {
+            return completedFuture(redirect("/login"));
+        }
         try {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             int ID = Integer.valueOf(id);
 
-            String loggedInAs = session().get("loggedInAs");
-            if (loggedInAs == null || loggedInAs.length() == 0) {
-                return completedFuture(redirect("/login"));
-            } else {
-                return completedFuture(ok(views.html.inventory.index.render(Lists.partition(getProductsPerGameCategory(loggedInAs, ID), 2), session(), "pergame")));
-            }
+            return completedFuture(ok(views.html.inventory.index.render(Lists.partition(getProductsPerGameCategory(loggedInAs, ID), 2), session(), "pergame")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,64 +157,23 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexProductDetails(String id) {
+        if (SessionService.redirect(session(), database)) {
+            return completedFuture(redirect("/login"));
+        }
         try {
             int ID = Integer.valueOf(id);
 
-            String loggedInAs = session().get("loggedInAs");
-            if (loggedInAs == null || loggedInAs.length() == 0) {
-                return completedFuture(redirect("/login"));
-            } else {
-                Optional<Product> product = productService.fetchProduct(ID);
-                if (product.isPresent())
-                    return completedFuture(ok(views.html.inventory.details.render(product.get(), formFactory.form(GameAccountProductInfoForm.class), session(), "")));
-            }
+            Optional<Product> product = productService.fetchProduct(ID);
+            if (product.isPresent())
+                return completedFuture(ok(views.html.inventory.details.render(product.get(), formFactory.form(GameAccountProductInfoForm.class), session(), "")));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return completedFuture(redirect("/404"));
     }
 
-    /**
-     * Attempts to register a user. Returns either a {@link Controller#badRequest()} indicating
-     * a failure in registering the user or a {@link Controller#ok()} result, indicating a successful
-     * registration.
-     */
-    public Result updateProductInfo(String id) {
-        System.out.println("RANNN");
-        Form<GameAccountProductInfoForm> formBinding = formFactory.form(GameAccountProductInfoForm.class).bindFromRequest();
-        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-            return redirect("/404");
-        } else {
-            GameAccountProductInfoForm form = formBinding.get();
-
-            System.out.println("RUN");
-
-            // TODO: update description here
-            System.out.println(form.getDescription());
-            return redirect("/myaccount/inventory/details/" + id);
-        }
-    }
-
-//    /**
-//     * The method that adds/deletes a game to a users favourites
-//     */
-//    public CompletionStage<Result> addFavourite() {
-//        Form<FavouriteForm> formBinding = formFactory.form(FavouriteForm.class).bindFromRequest();
-//
-//        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-//            return completedFuture(badRequest());
-//        } else {
-//            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-//            FavouriteForm form = formBinding.get();
-//            String prodId = form.getId();
-//
-//            return runAsync(() -> myInventoryService.add(prodId, session().get("loggedInAs")), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
-//        }
-//    }
-
     public CompletionStage<Result> indexAddGameAccount() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);

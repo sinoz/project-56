@@ -1,6 +1,5 @@
 package forms;
 
-import models.Product;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 
@@ -18,6 +17,7 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
     @Constraints.Required
     public String title;
 
+    @Constraints.Required
     public String description;
 
     @Constraints.Required
@@ -52,5 +52,29 @@ public final class ProductForm implements Constraints.Validatable<List<Validatio
             errors.add(new ValidationError("canTrade", "You must at least select \"For Sale\" or \"Tradeable\""));
         }
         return errors;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isCanBuy() {
+        return canBuy;
+    }
+
+    public boolean isCanTrade() {
+        return canTrade;
+    }
+
+    public String getEmailCurrent() {
+        return emailCurrent;
+    }
+
+    public String getPasswordCurrent() {
+        return passwordCurrent;
     }
 }

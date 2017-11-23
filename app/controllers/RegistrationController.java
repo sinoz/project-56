@@ -53,11 +53,11 @@ public final class RegistrationController extends Controller {
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
 			return badRequest(index.render(formBinding, session()));
 		} else {
-			RegistrationForm form = formBinding.get();
+            RegistrationForm form = formBinding.get();
 
 			// TODO thread this
 			if (accounts.userExists(form.getName().toLowerCase())) {
-				formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
+				formBinding = formBinding.withError(new ValidationError("name", "This username already exists."));
 
 				return badRequest(index.render(formBinding, session()));
 			} else {

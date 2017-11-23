@@ -17,7 +17,7 @@ import java.util.List;
 @Entity(name = "user")
 public final class User extends Model {
 	@Id
-	private String id;
+	private int id;
 
 	/** username displayed in the webshop / can be used for log in */
 	@Constraints.Required
@@ -58,11 +58,11 @@ public final class User extends Model {
 	private Date memberSince;
 
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

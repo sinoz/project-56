@@ -21,14 +21,14 @@ public final class MyInventoryService {
     /**
      * The required {@link Database} dependency to fetch database connections.
      */
-    private final Database database;
+    private final play.db.Database database;
 
     private final ProductService productService;
 
     private final UserViewService userViewService;
 
     @Inject
-    public MyInventoryService(Database database, ProductService productService, UserViewService userViewService){
+    public MyInventoryService(play.db.Database database, ProductService productService, UserViewService userViewService){
         this.database = database;
         this.productService = productService;
         this.userViewService = userViewService;
@@ -187,9 +187,6 @@ public final class MyInventoryService {
         database.withConnection(connection -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE gameaccounts SET title=?,description=?,canbuy=?,buyprice=?,cantrade=?,maillast=?,mailcurrent=?,passwordcurrent=? WHERE id=?;");
 
-            System.out.println("RANN!!!");
-            System.out.println(product.getTitle());
-            System.out.println(product.getDescription());
             stmt.setString(1, product.getTitle());
             stmt.setString(2, product.getDescription());
             stmt.setBoolean(3, product.isCanBuy());

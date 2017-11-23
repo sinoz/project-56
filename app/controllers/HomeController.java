@@ -32,7 +32,7 @@ public final class HomeController extends Controller {
 	 */
 	private final DbExecContext dbEc;
 	/**
-	 * TODO
+	 * The execution context used to asynchronously perform operations.
 	 */
 	private final HttpExecutionContext httpEc;
 	/**

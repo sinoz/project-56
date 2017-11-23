@@ -1,4 +1,5 @@
 -- @Author: Maurice van Veen
+-- @Author: Ilyas Baas
 
 # --- !Ups
 
@@ -20,7 +21,7 @@ CREATE TABLE gamecategories (
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   username VARCHAR(16),
-  password VARCHAR(64),
+  password VARCHAR(256),
   passwordsalt VARCHAR(256),
   mail VARCHAR(128),
   profilepicture VARCHAR(256),  -- url to profile picture
@@ -29,6 +30,7 @@ CREATE TABLE users (
   favorites INTEGER[],     -- list of product ids
   orderhistory INTEGER[],  -- list of order ids
   membersince TIMESTAMP,
+  sessionToken TEXT,       -- token for session
   isadmin BOOLEAN
 );
 
@@ -76,15 +78,15 @@ CREATE TABLE couponcodes(
 
 INSERT INTO couponcodes(code, percentage) VALUES ('dank', 19);
 INSERT INTO couponcodes(code, percentage) VALUES ('johan', -1);
-INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
+-- INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
 INSERT INTO couponcodes(code, percentage) VALUES ('maurice', 99);
 INSERT INTO couponcodes(code, percentage) VALUES ('ilyas', 100);
 
 INSERT INTO users (username, password, passwordsalt, mail, profilepicture, paymentmail, inventory, favorites, orderhistory, membersince, isadmin) VALUES
   (
     'admin', -- username
-    'admin', -- password
-    'salt', -- password salt
+    'u7+UejmS48mFKzGIiB1+U10r7u5GB6K7zwF2ryZf9e0lFU/7Ww/7YkAB9aa0PzWkfGtBrPcxPrXQYf6Ycz7kX8ZPB0ye7MQSRQNWBq17kro=', -- password (admin)
+    '032aee72a91f745f6a94bbc7fda17f09c5b65d0bd2046c3bba62724e15439ea2', -- password salt
     'contact@ReStart.com', -- mail
     'images/dankadmin.gif', -- profile picture
     'payment@ReStart.com', -- payment mail
@@ -96,8 +98,8 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
   ),
   (
     'default', -- username
-    'default', -- password
-    'salt', -- password salt
+    'HdbKZo6GXoopL8H3ug+CjQQTylK9yDA6uiX/bikFGQ12mLvwEDIkqqmYq1GNMLlu/pHq5IPC8KXjFLiqNCGdhsZPB0ye7MQSRQNWBq17kro=', -- password (default)
+    '5f0571f13aa8d39be462ecabd825090e7aeaf19e18cd464221866b8532a37271', -- password salt
     'test@example.com', -- mail
     'images/default_profile_pic.png', -- profile picture
     'payment@example.com', -- payment mail
