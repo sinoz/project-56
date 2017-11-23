@@ -191,7 +191,7 @@ public class SearchService {
         int max = getMaximumScore(scores);
 
         List<Product> sortedProducts = new ArrayList<>();
-        while (scores.size() > 0 && (selectedGameCategory != null ? max >= 0 : max >= 1)) {
+        while (scores.size() > 0 && (selectedGameCategory != null || max == 0 ? max >= 0 : max >= 1)) {
             for (Product product : products) {
                 if (scores.containsKey(product.getId()) && scores.get(product.getId()) == max) {
                     sortedProducts.add(product);
