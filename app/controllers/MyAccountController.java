@@ -2,6 +2,7 @@ package controllers;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.SessionService;
 import views.html.myaccount.index;
 
 /**
@@ -12,8 +13,7 @@ import views.html.myaccount.index;
  */
 public final class MyAccountController extends Controller {
 	public Result index() {
-		String loggedInAs = session().get("loggedInAs");
-		if (loggedInAs == null || loggedInAs.length() == 0) {
+		if (SessionService.redirect(session())) {
 			return redirect("/login");
 		} else {
 			return ok(index.render(session()));

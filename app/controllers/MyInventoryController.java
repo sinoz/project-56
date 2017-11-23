@@ -15,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.MyInventoryService;
 import services.ProductService;
+import services.SessionService;
 import views.html.register.index;
 
 import javax.inject.Inject;
@@ -56,10 +57,10 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> index(String activeSubMenuItem) {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return completedFuture(redirect("/login"));
         } else {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             return supplyAsync(() -> myInventoryService.getInventory(loggedInAs), dbExecutor)
                     .thenApplyAsync(ids -> myInventoryService.getProducts(ids, activeSubMenuItem), dbExecutor)
@@ -80,10 +81,10 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGame() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return completedFuture(redirect("/login"));
         } else {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             return supplyAsync(productService::fetchGameCategories, dbExecutor).thenApplyAsync(gameCategories -> ok(views.html.inventory.game.render(Lists.partition(filterGameCategories(loggedInAs, gameCategories), 4), session(), "pergame")), httpEc.current());
         }
@@ -117,11 +118,11 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGameId(String id) {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return completedFuture(redirect("/login"));
         }
         try {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             int ID = Integer.valueOf(id);
 
             return completedFuture(ok(views.html.inventory.index.render(Lists.partition(getProductsPerGameCategory(loggedInAs, ID), 2), session(), "pergame")));
@@ -149,8 +150,7 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexProductDetails(String id) {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return completedFuture(redirect("/login"));
         }
         try {
@@ -183,26 +183,8 @@ public final class MyInventoryController extends Controller{
         }
     }
 
-//    /**
-//     * The method that adds/deletes a game to a users favourites
-//     */
-//    public CompletionStage<Result> addFavourite() {
-//        Form<FavouriteForm> formBinding = formFactory.form(FavouriteForm.class).bindFromRequest();
-//
-//        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-//            return completedFuture(badRequest());
-//        } else {
-//            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-//            FavouriteForm form = formBinding.get();
-//            String prodId = form.getId();
-//
-//            return runAsync(() -> myInventoryService.add(prodId, session().get("loggedInAs")), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
-//        }
-//    }
-
     public CompletionStage<Result> indexAddGameAccount() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return completedFuture(redirect("/login"));
         } else {
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);

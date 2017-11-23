@@ -12,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.MyInventoryService;
 import services.ProductService;
+import services.SessionService;
 import services.UserViewService;
 import views.html.addproduct.index;
 import views.html.addproduct.update;
@@ -61,8 +62,7 @@ public class AddProductController extends Controller {
     }
 
     public Result index(String gameid){
-        String loggedInAs = session().get("loggedInAs");
-        if(loggedInAs == null){
+        if (SessionService.redirect(session())) {
             return redirect("/login");
         } else {
             return ok(index.render(formFactory.form(ProductForm.class), gameid, session(), "addgameaccount"));
@@ -70,8 +70,7 @@ public class AddProductController extends Controller {
     }
 
     public Result indexUpdateProduct(String gameid){
-        String loggedInAs = session().get("loggedInAs");
-        if(loggedInAs == null){
+        if (SessionService.redirect(session())) {
             return redirect("/login");
         } else {
             try {
@@ -95,11 +94,11 @@ public class AddProductController extends Controller {
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
             return completedFuture(badRequest(index.render(formBinding, gameid, session(), "addgameaccount")));
         } else {
-            String loggedInAs = session().get("loggedInAs");
-            if (loggedInAs == null || loggedInAs.length() == 0) {
+            if (SessionService.redirect(session())) {
                 return completedFuture(redirect("/login"));
             }
 
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
             if (!user.isPresent()) {
                 return completedFuture(redirect("/login"));
@@ -142,11 +141,11 @@ public class AddProductController extends Controller {
             }
             return completedFuture(redirect("/404"));
         } else {
-            String loggedInAs = session().get("loggedInAs");
-            if (loggedInAs == null || loggedInAs.length() == 0) {
+            if (SessionService.redirect(session())) {
                 return completedFuture(redirect("/login"));
             }
 
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
             if (!user.isPresent()) {
                 return completedFuture(redirect("/login"));

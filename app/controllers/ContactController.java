@@ -7,6 +7,7 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.MailerService;
+import services.SessionService;
 import services.UserViewService;
 import views.html.contact.index;
 
@@ -60,10 +61,10 @@ public final class ContactController extends Controller {
 	}
 
 	private String getMail() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return "";
         } else {
+			String loggedInAs = SessionService.getLoggedInAs(session());
             Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
             if (user.isPresent()) {
                 return user.get().getMail();

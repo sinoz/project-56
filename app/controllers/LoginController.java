@@ -9,6 +9,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Results;
 import services.AuthenticationService;
+import services.SessionService;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -57,14 +58,7 @@ public final class LoginController extends Controller {
 
 			Optional<User> user = auth.fetchUser(form.getUsername().toLowerCase(), form.getPassword());
 			if (user.isPresent()) {
-				session().clear();
-
-				session().put("loggedInAs", user.get().getUsername());
-				session().put("profilePictureURL", Optional.ofNullable(user.get().getProfilePicture()).orElse("images/default_profile_pic.png"));
-				session().put("usedMail", user.get().getMail());
-				session().put("usedPaymentMail", Optional.ofNullable(user.get().getPaymentMail()).orElse(""));
-
-
+				SessionService.initSession(session(), user.get());
 				return redirect("/");
 			} else {
 				formBinding = formBinding.withGlobalError("Invalid username/password combination.");

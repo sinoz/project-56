@@ -10,6 +10,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.FavouritesService;
+import services.SessionService;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletionStage;
@@ -49,10 +50,10 @@ public final class FavouritesController extends Controller{
     }
 
     public CompletionStage<Result> index() {
-        String loggedInAs = session().get("loggedInAs");
-        if (loggedInAs == null || loggedInAs.length() == 0) {
+        if (SessionService.redirect(session())) {
             return completedFuture(redirect("/login"));
         } else {
+            String loggedInAs = SessionService.getLoggedInAs(session());
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             return supplyAsync(() -> favouritesService.getFavourites(loggedInAs), dbExecutor)
                     .thenApplyAsync(favouritesService::getProducts, dbExecutor)
@@ -73,7 +74,7 @@ public final class FavouritesController extends Controller{
             FavouriteForm form = formBinding.get();
             String prodId = form.getId();
 
-            return runAsync(() -> favouritesService.add(prodId, session().get("loggedInAs")), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
+            return runAsync(() -> favouritesService.add(prodId, SessionService.getLoggedInAs(session())), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
         }
     }
 }

@@ -12,6 +12,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import services.AccountService;
 import services.AuthenticationService;
+import services.SessionService;
 import views.html.register.index;
 
 import javax.inject.Inject;
@@ -68,8 +69,7 @@ public final class PersonalSettingsController extends Controller {
 	}
 
 	public Result index() {
-		String loggedInAs = session().get("loggedInAs");
-		if (loggedInAs == null || loggedInAs.length() == 0) {
+		if (SessionService.redirect(session())) {
 			return redirect("/login");
 		} else {
 			return ok(views.html.personalsettings.index.render(formFactory.form(PersonalSettingsForm.class), session()));
@@ -85,7 +85,7 @@ public final class PersonalSettingsController extends Controller {
 
 			Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-			String loggedInAs = session().get("loggedInAs");
+			String loggedInAs = SessionService.getLoggedInAs(session());
 
             Optional<User> user = auth.fetchUser(loggedInAs, form.password);
 
@@ -98,9 +98,7 @@ public final class PersonalSettingsController extends Controller {
                 // runs the account update operation on the database pool of threads and then switches
                 // to the internal HTTP pool of threads to safely update the session and returning the view
                 return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor).thenApplyAsync(i -> {
-                    session().put("loggedInAs", form.usernameToChangeTo);
-                    session().put("usedMail", form.emailToChangeTo);
-                    session().put("usedPaymentMail", form.paymentMailToChangeTo);
+					SessionService.updateSession(session(), form.usernameToChangeTo, form.emailToChangeTo, form.paymentMailToChangeTo);
                     return redirect("/myaccount/personalsettings");
                 }, httpEc.current());
             } else {
