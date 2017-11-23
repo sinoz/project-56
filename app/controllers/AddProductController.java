@@ -6,6 +6,7 @@ import models.Product;
 import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -33,6 +34,11 @@ import static java.util.concurrent.CompletableFuture.runAsync;
  */
 public class AddProductController extends Controller {
     /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+
+    /**
      * A {@link FormFactory} to use forms.
      */
     private final FormFactory formFactory;
@@ -52,7 +58,8 @@ public class AddProductController extends Controller {
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public AddProductController(FormFactory formFactory, MyInventoryService myInventoryService, ProductService productService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public AddProductController(play.db.Database database, FormFactory formFactory, MyInventoryService myInventoryService, ProductService productService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.database = database;
         this.formFactory = formFactory;
         this.myInventoryService = myInventoryService;
         this.productService = productService;
@@ -62,7 +69,7 @@ public class AddProductController extends Controller {
     }
 
     public Result index(String gameid){
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return redirect("/login");
         } else {
             return ok(index.render(formFactory.form(ProductForm.class), gameid, session(), "addgameaccount"));
@@ -70,7 +77,7 @@ public class AddProductController extends Controller {
     }
 
     public Result indexUpdateProduct(String gameid){
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return redirect("/login");
         } else {
             try {
@@ -94,7 +101,7 @@ public class AddProductController extends Controller {
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
             return completedFuture(badRequest(index.render(formBinding, gameid, session(), "addgameaccount")));
         } else {
-            if (SessionService.redirect(session())) {
+            if (SessionService.redirect(session(), database)) {
                 return completedFuture(redirect("/login"));
             }
 
@@ -141,7 +148,7 @@ public class AddProductController extends Controller {
             }
             return completedFuture(redirect("/404"));
         } else {
-            if (SessionService.redirect(session())) {
+            if (SessionService.redirect(session(), database)) {
                 return completedFuture(redirect("/login"));
             }
 

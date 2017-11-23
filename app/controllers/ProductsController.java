@@ -6,6 +6,7 @@ import models.GameCategory;
 import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ProductService;

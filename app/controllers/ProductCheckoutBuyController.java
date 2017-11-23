@@ -42,12 +42,12 @@ public class ProductCheckoutBuyController extends Controller {
     private ProductService productService;
 
     /**
-     * TODO
+     * The required {@link Database} dependency to fetch database connections.
      */
     private final play.db.Database database;
 
     @Inject
-    public ProductCheckoutBuyController(Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService){
+    public ProductCheckoutBuyController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService){
         this.formFactory = formFactory;
         this.database = database;
         this.userViewService = userViewService;

@@ -4,6 +4,7 @@ import forms.LoginForm;
 import models.User;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.Database;
 import play.mvc.Call;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -23,6 +24,11 @@ import java.util.Optional;
  */
 public final class LoginController extends Controller {
 	/**
+	 * The required {@link Database} dependency to fetch database connections.
+	 */
+	private final play.db.Database database;
+
+	/**
 	 * A {@link FormFactory} to produce login forms.
 	 */
 	private FormFactory formFactory;
@@ -33,7 +39,8 @@ public final class LoginController extends Controller {
 	 * Creates a new {@link LoginController}.
 	 */
 	@Inject
-	public LoginController(FormFactory formFactory, AuthenticationService auth) {
+	public LoginController(play.db.Database database, FormFactory formFactory, AuthenticationService auth) {
+		this.database = database;
 		this.formFactory = formFactory;
 		this.auth = auth;
 	}
@@ -58,7 +65,7 @@ public final class LoginController extends Controller {
 
 			Optional<User> user = auth.fetchUser(form.getUsername().toLowerCase(), form.getPassword());
 			if (user.isPresent()) {
-				SessionService.initSession(session(), user.get());
+				SessionService.initSession(session(), user.get(), database);
 				return redirect("/");
 			} else {
 				formBinding = formBinding.withGlobalError("Invalid username/password combination.");

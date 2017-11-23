@@ -14,7 +14,7 @@ import java.util.List;
  * @author Johan van der Hoeven
  */
 public final class SearchBarService {
-    @Inject private static Database database;
+    @Inject private static play.db.Database database;
 
     public static List<String> fetchGameCategoryNames(){
         return database.withConnection(connection -> {

@@ -9,6 +9,7 @@ import models.Product;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
+import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -34,6 +35,11 @@ import static java.util.concurrent.CompletableFuture.*;
  */
 public final class MyInventoryController extends Controller{
 
+    /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+
     private final MyInventoryService myInventoryService;
     private final ProductService productService;
 
@@ -48,7 +54,8 @@ public final class MyInventoryController extends Controller{
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public MyInventoryController(MyInventoryService myInventoryService, ProductService productService, FormFactory formFactory, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public MyInventoryController(play.db.Database database, MyInventoryService myInventoryService, ProductService productService, FormFactory formFactory, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.database = database;
         this.myInventoryService = myInventoryService;
         this.productService = productService;
         this.formFactory = formFactory;
@@ -57,7 +64,7 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> index(String activeSubMenuItem) {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
             String loggedInAs = SessionService.getLoggedInAs(session());
@@ -81,7 +88,7 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGame() {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
             String loggedInAs = SessionService.getLoggedInAs(session());
@@ -118,7 +125,7 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexGameId(String id) {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         }
         try {
@@ -150,7 +157,7 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexProductDetails(String id) {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         }
         try {
@@ -184,7 +191,7 @@ public final class MyInventoryController extends Controller{
     }
 
     public CompletionStage<Result> indexAddGameAccount() {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);

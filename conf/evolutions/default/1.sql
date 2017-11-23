@@ -30,6 +30,7 @@ CREATE TABLE users (
   favorites INTEGER[],     -- list of product ids
   orderhistory INTEGER[],  -- list of order ids
   membersince TIMESTAMP,
+  sessionToken TEXT,       -- token for session
   isadmin BOOLEAN
 );
 

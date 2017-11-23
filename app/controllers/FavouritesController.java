@@ -5,6 +5,7 @@ import concurrent.DbExecContext;
 import forms.FavouriteForm;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -27,6 +28,10 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  */
 public final class FavouritesController extends Controller{
     /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+    /**
      * A {@link FormFactory} to use forms.
      */
     private final FormFactory formFactory;
@@ -42,7 +47,8 @@ public final class FavouritesController extends Controller{
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public FavouritesController(FormFactory formFactory, FavouritesService favouritesService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public FavouritesController(play.db.Database database, FormFactory formFactory, FavouritesService favouritesService, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.database = database;
         this.formFactory = formFactory;
         this.favouritesService = favouritesService;
         this.dbEc = dbEc;
@@ -50,7 +56,7 @@ public final class FavouritesController extends Controller{
     }
 
     public CompletionStage<Result> index() {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return completedFuture(redirect("/login"));
         } else {
             String loggedInAs = SessionService.getLoggedInAs(session());

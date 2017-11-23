@@ -51,7 +51,7 @@ public final class AuthenticationService {
 			if (results.next()) {
 				User u = new User();
 
-				u.setId(results.getString("id"));
+				u.setId(results.getInt("id"));
 				u.setUsername(results.getString("username"));
 				u.setPassword(results.getString("password"));
 				u.setMail(results.getString("mail"));

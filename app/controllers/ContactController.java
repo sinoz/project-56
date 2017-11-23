@@ -4,6 +4,7 @@ import forms.MailerForm;
 import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
+import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.MailerService;
@@ -22,6 +23,11 @@ import java.util.Optional;
  * @author Joris Stander
  */
 public final class ContactController extends Controller {
+    /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+
 	/**
 	 * A {@link FormFactory} to produce registration forms.
 	 */
@@ -31,7 +37,8 @@ public final class ContactController extends Controller {
 	private final MailerService mails;
 
 	@Inject
-	public ContactController(FormFactory formFactory, UserViewService userViewService, MailerService mails) {
+	public ContactController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, MailerService mails) {
+	    this.database = database;
 		this.formFactory = formFactory;
 		this.userViewService = userViewService;
 		this.mails = mails;
@@ -61,7 +68,7 @@ public final class ContactController extends Controller {
 	}
 
 	private String getMail() {
-        if (SessionService.redirect(session())) {
+        if (SessionService.redirect(session(), database)) {
             return "";
         } else {
 			String loggedInAs = SessionService.getLoggedInAs(session());

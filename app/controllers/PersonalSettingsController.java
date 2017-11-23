@@ -6,6 +6,7 @@ import models.User;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
+import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -31,6 +32,11 @@ import static java.util.concurrent.CompletableFuture.runAsync;
  * @author I.A
  */
 public final class PersonalSettingsController extends Controller {
+    /**
+     * The required {@link Database} dependency to fetch database connections.
+     */
+    private final play.db.Database database;
+
 	/**
 	 * The required {@link FormFactory} to produce forms for modifying a user's personal settings.
 	 */
@@ -60,7 +66,8 @@ public final class PersonalSettingsController extends Controller {
 	 * Creates a new {@link PersonalSettingsController}.
 	 */
 	@Inject
-	public PersonalSettingsController(FormFactory formFactory, AccountService accounts, DbExecContext dbEc, HttpExecutionContext httpEc, AuthenticationService auth) {
+	public PersonalSettingsController(play.db.Database database, FormFactory formFactory, AccountService accounts, DbExecContext dbEc, HttpExecutionContext httpEc, AuthenticationService auth) {
+	    this.database = database;
 		this.formFactory = formFactory;
 		this.accounts = accounts;
 		this.dbEc = dbEc;
@@ -69,7 +76,7 @@ public final class PersonalSettingsController extends Controller {
 	}
 
 	public Result index() {
-		if (SessionService.redirect(session())) {
+		if (SessionService.redirect(session(), database)) {
 			return redirect("/login");
 		} else {
 			return ok(views.html.personalsettings.index.render(formFactory.form(PersonalSettingsForm.class), session()));
