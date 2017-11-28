@@ -89,20 +89,37 @@ public class SearchService {
             selectedGameCategory = gcp.getSelectedGameCategory();
         }
 
+        String message = "Couldn't find results for: " + token;
+        boolean change = !(token != null && token.length() > 0);
+
         // Search for products
         if (products.size() > 0) {
             HashMap<Integer, Integer> scores = processProductScores(token, products);
+
+            for (Product p : products) {
+                if (scores.get(p.getId()) > 0) {
+                    change = true;
+                    break;
+                }
+            }
+
             products = sortProducts(scores, products, selectedGameCategory);
         }
+
+        if (!change)
+            products = productService.fetchProducts();
 
         FilterPrices prices = filterToken(filters);
         try {
             products = filterProducts(products, filters, prices);
+
+            if (change || products.size() == 0)
+                message = null;
         } catch (Exception e) {
-            return new SearchResults(null, null, true);
+            return new SearchResults(null, null, message, true);
         }
 
-        return new SearchResults(products, selectedGameCategory);
+        return new SearchResults(products, selectedGameCategory, message);
     }
 
     /**
@@ -279,7 +296,7 @@ public class SearchService {
         for (String s : split) {
             StringBuilder search = new StringBuilder(s);
             double scorePenalty = 1;
-            while (search.length() > 1) {
+            while (search.length() > 2) {
                 for (int i = 0; i < titles.size(); i++) {
                     String title = titles.get(i);
                     int id = ids.get(i);
@@ -368,15 +385,17 @@ public class SearchService {
 
         private List<Product> products;
         private GameCategory selectedGameCategory;
+        private String message;
         private boolean redirect;
 
-        private SearchResults(List<Product> products, GameCategory selectedGameCategory) {
+        private SearchResults(List<Product> products, GameCategory selectedGameCategory, String message) {
             this.products = products;
             this.selectedGameCategory = selectedGameCategory;
+            this.message = message;
         }
 
-        private SearchResults(List<Product> products, GameCategory selectedGameCategory, boolean redirect) {
-            this(products, selectedGameCategory);
+        private SearchResults(List<Product> products, GameCategory selectedGameCategory, String message, boolean redirect) {
+            this(products, selectedGameCategory, message);
             this.redirect = redirect;
         }
 
@@ -386,6 +405,10 @@ public class SearchService {
 
         public GameCategory getSelectedGameCategory() {
             return selectedGameCategory;
+        }
+
+        public String getMessage() {
+            return message;
         }
 
         public boolean redirect() {

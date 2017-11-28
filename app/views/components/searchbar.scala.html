@@ -1,6 +1,6 @@
 @import services.SearchBarService
 
-@(input: String)
+@(input: String, message: String)
 
 <div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
     <div class="container">
@@ -16,4 +16,14 @@
         }
         </div>
     </div>
+</div>
+
+<div class="container">
+    @if(message != null && message.length > 0) {
+        <div>
+            <span>
+                <h1 style="color: white;">@message</h1>
+            </span>
+        </div>
+    }
 </div>

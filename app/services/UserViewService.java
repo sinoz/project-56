@@ -23,6 +23,32 @@ public final class UserViewService {
     }
 
     /**
+     * Attempts to find all {@link ViewableUser}.
+     */
+    public List<ViewableUser> fetchViewableUsers() {
+        return database.withConnection(connection -> {
+            List<ViewableUser> users = new ArrayList<>();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
+
+            ResultSet results = stmt.executeQuery();
+
+            while (results.next()) {
+                int id = results.getInt("id");
+                String username = results.getString("username");
+                String mail = results.getString("mail");
+                String profilepicture = results.getString("profilepicture");
+                Date memberSince = results.getDate("membersince");
+                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
+
+                users.add(u);
+            }
+
+            return users;
+        });
+    }
+
+    /**
      * Attempts to find a {@link ViewableUser} that matches the given id.
      */
     public Optional<ViewableUser> fetchViewableUser(int id) {

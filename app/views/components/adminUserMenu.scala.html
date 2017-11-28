@@ -1,0 +1,48 @@
+@(activeMenuItem: String, activeSubMenuItem: String)
+
+<div class="profile-usermenu">
+    <ul class="nav">
+        @if(activeMenuItem.equals("users")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/admin/users">
+                <i class="icon-home"></i> Users </a>
+        </li>
+
+        @if(activeMenuItem.equals("gamecategories")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/admin/gamecategories">
+                <i class="icon-settings"></i> Game Categories </a>
+        </li>
+
+        @if(activeMenuItem.equals("products")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/admin/products">
+                <i class="icon-settings"></i> Products </a>
+        </li>
+
+        @if(activeMenuItem.equals("statistics")) {
+            <li class="active">
+        } else {
+            <li>
+        }
+            <a href="/admin/statistics">
+                <i class="icon-info"></i> Statistics </a>
+        </li>
+
+        <br><br>
+
+        <li>
+            <a href="/logout">
+                <i class="icon-info"></i> Log Out </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,38 @@
+@(session: play.mvc.Http.Session)
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

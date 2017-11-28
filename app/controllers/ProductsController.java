@@ -94,9 +94,9 @@ public class ProductsController extends Controller {
             String input = gameCategory.get().getName();
 
             if (products.size() > 0)
-                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session(), input, prices.getMin(), prices.getMax()));
+                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session(), input, null, prices.getMin(), prices.getMax()));
             else
-                return ok(views.html.products.gameError.render(gameCategory.get(), input, session()));
+                return ok(views.html.products.gameError.render(gameCategory.get(), input, null, session()));
         } else {
             return redirect("/404");
         }
@@ -110,11 +110,11 @@ public class ProductsController extends Controller {
 
         if (searchResults.getProducts().size() > 0)
             if (searchResults.getSelectedGameCategory() != null)
-                return ok(views.html.products.game.render(searchResults.getSelectedGameCategory(), Lists.partition(searchResults.getProducts(), 2), session(), input, prices.getMin(), prices.getMax()));
+                return ok(views.html.products.game.render(searchResults.getSelectedGameCategory(), Lists.partition(searchResults.getProducts(), 2), session(), input, searchResults.getMessage(), prices.getMin(), prices.getMax()));
             else
-                return ok(views.html.products.products.render(Lists.partition(searchResults.getProducts(), 2), session(), input, prices.getMin(), prices.getMax()));
+                return ok(views.html.products.products.render(Lists.partition(searchResults.getProducts(), 2), session(), input, searchResults.getMessage(), prices.getMin(), prices.getMax()));
         else if (searchResults.getSelectedGameCategory() != null)
-            return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), input, session()));
+            return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), input, searchResults.getMessage(), session()));
         else
             return ok(views.html.selectedproduct.index.render(token, input, session()));
     }

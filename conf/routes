@@ -26,8 +26,8 @@ GET         /faq                                 controllers.FAQController.index
 GET         /register                            controllers.RegistrationController.index
 POST        /register                            controllers.RegistrationController.register
 
-GET         /contact                           controllers.ContactController.index
-POST        /contact                           controllers.ContactController.mail
+GET         /contact                             controllers.ContactController.index
+POST        /contact                             controllers.ContactController.mail
 
 GET         /myaccount                           controllers.MyAccountController.index
 
@@ -54,3 +54,11 @@ GET         /user/:username                      controllers.UserAccountControll
 
 GET         /orderconfirmed/:token               controllers.OrderConfirmedController.index(token: String)
 GET         /orderfailed                         controllers.OrderFailedController.index
+
+GET         /trackorder                          controllers.TrackOrderController.index
+
+GET         /admin                               controllers.AdminController.index
+GET         /admin/users                         controllers.AdminController.indexUsers
+GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
+GET         /admin/products                      controllers.AdminController.indexProducts
+GET         /admin/statistics                    controllers.AdminController.indexStatistics
