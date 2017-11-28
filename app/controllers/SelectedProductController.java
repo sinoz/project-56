@@ -70,6 +70,6 @@ public class SelectedProductController extends Controller {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ok(views.html.selectedproduct.index.render(token, "", session()));
+        return ok(views.html.selectedproduct.index.render(token, token, session()));
     }
 }
