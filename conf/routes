@@ -54,3 +54,4 @@ GET         /user/:username                      controllers.UserAccountControll
 
 GET         /orderconfirmed/:token               controllers.OrderConfirmedController.index(token: String)
 GET         /orderfailed                         controllers.OrderFailedController.index
+GET         /trackorder                          controllers.TrackOrderController.index
