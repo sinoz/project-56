@@ -6,6 +6,7 @@ import models.User;
 import play.db.Database;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -17,6 +18,7 @@ import static java.lang.System.currentTimeMillis;
  *
  * @author Maurice van Veen
  */
+@Singleton
 public final class MyInventoryService {
     /**
      * The required {@link Database} dependency to fetch database connections.

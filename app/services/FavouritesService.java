@@ -6,6 +6,7 @@ import models.User;
 import play.db.Database;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +20,8 @@ import java.util.Optional;
  *
  * @author Johan van der Hoeven
  */
-public final class FavouritesService{
+@Singleton
+public final class FavouritesService {
     /**
      * The required {@link Database} dependency to fetch database connections.
      */

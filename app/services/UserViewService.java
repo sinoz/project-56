@@ -3,6 +3,7 @@ package services;
 import models.*;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.util.*;
  * @author Johan van der Hoeven
  * @author Maurice van Veen
  */
+@Singleton
 public final class UserViewService {
     private final play.db.Database database;
 

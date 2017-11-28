@@ -5,6 +5,7 @@ import play.libs.mailer.Email;
 import play.libs.mailer.MailerClient;
 
 import javax.inject.Inject;
+
 /**
  * TODO
  *

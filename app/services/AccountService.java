@@ -4,6 +4,7 @@ import forms.PersonalSettingsForm;
 import forms.RegistrationForm;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
  * @author I.A
  * @author Maurice van Veen
  */
+@Singleton
 public final class AccountService {
 	private final play.db.Database database;
 

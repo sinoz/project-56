@@ -4,6 +4,7 @@ import models.User;
 import play.db.Database;
 import play.mvc.Http;
 
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * @author Maurice van Veen
  */
+@Singleton
 public class SessionService {
 
     public static void initSession(Http.Session session, User user, play.db.Database database) {

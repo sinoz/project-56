@@ -3,18 +3,21 @@ package services;
 import models.GameCategory;
 import models.Product;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
 /**
  * @author Maurice van Veen
  */
+@Singleton
 public class SearchService {
-
     /**
      * The {@link services.ProductService} to obtain product data from.
      */
     private ProductService productService;
 
+    @Inject
     public SearchService(ProductService productService) {
         this.productService = productService;
     }

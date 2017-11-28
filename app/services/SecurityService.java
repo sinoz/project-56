@@ -2,6 +2,7 @@ package services;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Singleton;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
 
+@Singleton
 public final class SecurityService {
 
     private static final String PRIVATE_KEY = "72a8d4de91b660ae3c8bbd5f689772eb14948c6e84a95addd149cf2759b3d160";

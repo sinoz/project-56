@@ -6,6 +6,7 @@ import models.Product;
 import models.User;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * @author I.A
  * @author Maurice van Veen
  */
+@Singleton
 public final class ProductService {
 	private final play.db.Database database;
 
