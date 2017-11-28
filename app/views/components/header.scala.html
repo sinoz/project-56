@@ -38,7 +38,11 @@
                         <li class="menu-item"><a href="/login">Login</a></li>
                     }
                 } else {
-                    <li class="menu-item"><a href="/myaccount">My Account</a></li>
+                    @if(activeMenuItem.equals("MyAccount")) {
+                        <li class="menu-item current-menu-item"><a href="/myaccount">My Account</a></li>
+                    } else {
+                        <li class="menu-item"><a href="/myaccount">My Account</a></li>
+                    }
                 }
             </ul>
                 <!-- .menu -->

@@ -58,6 +58,14 @@ public class SessionService {
         return output;
     }
 
+    public static boolean redirectAdmin(Http.Session session, play.db.Database database) {
+        if (redirect(session, database))
+            return true;
+
+        String loggedInAs = getLoggedInAs(session);
+        String sessionToken = getSessionToken(session);
+        return !isAdmin(database, loggedInAs, SecurityService.secure(sessionToken));
+    }
 
     private static void clearSession(Http.Session session) {
         session.clear();
@@ -82,6 +90,17 @@ public class SessionService {
                 return result.getString("sessionToken");
             }
             return null;
+        });
+    }
+
+    private static boolean isAdmin(play.db.Database database, String username, String sessionToken) {
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT isadmin FROM users WHERE username=? AND sessiontoken=?");
+            stmt.setString(1, username);
+            stmt.setString(2, sessionToken);
+
+            ResultSet result = stmt.executeQuery();
+            return result.next() && result.getBoolean("isadmin");
         });
     }
 }
