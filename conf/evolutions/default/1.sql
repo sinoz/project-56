@@ -193,6 +193,22 @@ INSERT INTO gamecategories (name, image, description) VALUES
   );
 
 INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description, addedsince, canbuy, buyprice, cantrade, maillast, mailcurrent, passwordcurrent) VALUES
+  -- This gameaccount has been bought by admin and sold by default
+  (
+    2, -- userid
+    1, -- gameid
+    FALSE , -- visible
+    TRUE, -- disabled
+    'CSGO: Pro Player', -- title,
+    'This game has been bought by the admin', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    105.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'password' -- passwordcurrent
+  ),
   (
     1, -- userid
     1, -- gameid
@@ -447,6 +463,15 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
+  );
+
+INSERT INTO orders (userid, productid, price, couponcode, status) VALUES
+  (
+    1, -- userid
+    1, -- productid
+    105.00, -- price
+    '', -- couponcode
+    0 -- status
   );
 
 INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES

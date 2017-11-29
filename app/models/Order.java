@@ -15,15 +15,15 @@ import javax.persistence.Id;
 public final class Order extends Model {
 	/** The primary key of an order. */
 	@Id
-	private String id;
+	private int id;
 
 	/** id of the user, can be used for searching for user. */
 	@Constraints.Required
-	private String userId;
+	private int userId;
 
 	/** The id of the product, can be used for searching for product */
 	@Constraints.Required
-	private String productId;
+	private int productId;
 
 	/** price of the order (total price) */
 	@Constraints.Required
@@ -46,27 +46,27 @@ public final class Order extends Model {
 	private int status;
 
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
-	public String getProductId() {
+	public int getProductId() {
 		return productId;
 	}
 
-	public void setProductId(String productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 

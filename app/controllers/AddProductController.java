@@ -130,7 +130,8 @@ public class AddProductController extends Controller {
             product.setMailCurrent(productForm.emailCurrent);
             product.setPasswordCurrent(productForm.passwordCurrent);
 
-            return runAsync(() -> myInventoryService.addProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+            return runAsync(() -> myInventoryService.addProduct(product), dbExecutor)
+                    .thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
         }
     }
 
@@ -177,7 +178,8 @@ public class AddProductController extends Controller {
                 product.setMailCurrent(form.emailCurrent);
                 product.setPasswordCurrent(form.passwordCurrent);
 
-                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor)
+                        .thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
             } catch (Exception e) {
                 e.printStackTrace();
             }
