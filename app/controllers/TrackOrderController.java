@@ -12,6 +12,8 @@ import services.OrderService;
 import services.SessionService;
 import services.UserViewService;
 import views.html.trackorder.index;
+import views.html.trackorder.error;
+
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -49,6 +51,7 @@ public final class TrackOrderController extends Controller {
      * The execution context used to asynchronously perform database operations.
      */
     private final DbExecContext dbEc;
+
     /**
      * The execution context used to asynchronously perform operations.
      */
@@ -67,24 +70,19 @@ public final class TrackOrderController extends Controller {
         // If the user is not logged in redirect to login page
         if(SessionService.redirect(session(), database)){
             return completedFuture(redirect("/login"));
-        } else { // Otherwise check if order exists and belongs to loggedin user
-            Optional<ViewableUser> optionalLoggedInUser = userViewService.fetchViewableUser(session().get("loggedInAs"));
-            int loggedInUserId = optionalLoggedInUser.get().getId();
+        } else {
             Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-            boolean x = false;
+            CompletableFuture<Optional<Order>> optionalOrder = supplyAsync(() -> orderService.getOrderById(Integer.valueOf(trackingId)), dbExecutor);
+            CompletableFuture<Optional<ViewableUser>> optionalViewableUser = supplyAsync(() -> userViewService.fetchViewableUser(session().get("loggedInAs")), dbExecutor);
 
-//            return supplyAsync(() -> orderService.getOrderById(Integer.valueOf(trackingId)), dbExecutor)
-//                    .thenApplyAsync((optionalOrder) -> {
-//                        if(!optionalOrder.isPresent() || optionalOrder.get().getUserId() != loggedInUserId){
-//                            x = true;
-//                        } else {
-//                            return ok(index.render(session()));
-//                        }
-//                    }, dbExecutor)
-//                    .thenApplyAsync(() -> x ? ok(error.render(session()) : index.render(session())), httpEc.current());
-            //TODO
-
-            return completedFuture(ok(index.render(session())));
+            // Otherwise check if order exists and belongs to loggedin user
+            return optionalOrder.thenCombineAsync(optionalViewableUser, (order, user) -> {
+                if(!order.isPresent() || order.get().getUserId() != user.get().getId()){
+                    return ok(error.render(session()));
+                } else {
+                    return ok(index.render(order.get(), session()));
+                }
+            }, httpEc.current());
         }
     }
 }
