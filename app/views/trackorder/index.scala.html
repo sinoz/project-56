@@ -22,17 +22,35 @@
             <div class="container">
                 <div class="col-md-12">
                     <div>
-                        <h3>THIS TRACKER IS JUST A PLACEHOLDER FOR THE REAL ORDERTRACKER</h3>
+                        <h2>Order Status</h2>
                     </div>
                     <ol class="progtrckr" data-progtrckr-steps="5">
-                        <li class="progtrckr-done">Order Processing</li><!--
-                    --><li class="progtrckr-done">Pre-Production</li><!--
-                    --><li class="progtrckr-done">In Production</li><!--
-                    --><li class="progtrckr-todo">Shipped</li><!--
-                    --><li class="progtrckr-todo">Delivered</li>
+                        @if(order.getStatus < 1) {
+                            <li class="progtrckr-todo">Order Processing</li>
+                        } else {
+                            <li class="progtrckr-done">Order Processing</li>
+                        }
+                        @if(order.getStatus < 2) {
+                            <li class="progtrckr-todo">Pre-Production</li>
+                        } else {
+                            <li class="progtrckr-done">Pre-Production</li>
+                        }
+                        @if(order.getStatus < 3) {
+                            <li class="progtrckr-todo">In Production</li>
+                        } else {
+                            <li class="progtrckr-done">In Production</li>
+                        }
+                        @if(order.getStatus < 4) {
+                            <li class="progtrckr-todo">Shipped</li>
+                        } else {
+                            <li class="progtrckr-done">Shipped</li>
+                        }
+                        @if(order.getStatus < 5) {
+                            <li class="progtrckr-todo">Delivered</li>
+                        } else {
+                            <li class="progtrckr-done">Delivered</li>
+                        }
                     </ol>
-                    <br>
-                    <a href="/"><button class="button">Home</button></a>
                 </div>
             </div>
 
