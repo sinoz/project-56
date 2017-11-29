@@ -3,7 +3,6 @@ package controllers;
 import com.google.common.collect.Lists;
 import models.GameCategory;
 import models.Product;
-import models.User;
 import models.ViewableUser;
 import play.db.Database;
 import play.mvc.Controller;
