@@ -85,8 +85,11 @@ public class AddProductController extends Controller {
 
                 Form<ProductForm> form = formFactory.form(ProductForm.class);
 
+                String loggedInAs = SessionService.getLoggedInAs(session());
+                Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
                 Optional<Product> product = productService.fetchProduct(id);
-                if (product.isPresent()) {
+
+                if (product.isPresent() && user.isPresent() && product.get().getUserId() == user.get().getId()) {
                     return ok(update.render(form, product.get(), session(), "updategameaccount"));
                 }
             } catch (Exception e) {
