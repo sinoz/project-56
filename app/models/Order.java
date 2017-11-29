@@ -17,6 +17,13 @@ public final class Order extends Model {
 	@Id
 	private int id;
 
+	/** track id of the order, used by the user for searching. */
+	@Constraints.Required
+	private String trackId;
+
+	@Constraints.Required
+	private boolean hasuser;
+
 	/** id of the user, can be used for searching for user. */
 	@Constraints.Required
 	private int userId;
@@ -52,6 +59,22 @@ public final class Order extends Model {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getTrackId() {
+		return trackId;
+	}
+
+	public void setTrackId(String trackId) {
+		this.trackId = trackId;
+	}
+
+	public boolean hasUser() {
+		return hasuser;
+	}
+
+	public void hasUser(boolean hasuser) {
+		this.hasuser = hasuser;
 	}
 
 	public int getUserId() {

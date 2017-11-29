@@ -53,6 +53,8 @@ CREATE TABLE gameaccounts (
 
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
+  trackid VARCHAR(36),
+  hasuser BOOLEAN,
   userid INTEGER REFERENCES users(id), -- buying user id
   productid INTEGER REFERENCES gameaccounts(id), -- associated bought game account
   price DOUBLE PRECISION,
@@ -69,7 +71,7 @@ CREATE TABLE reviews (
   rating INTEGER
 );
 
-CREATE TABLE couponcodes(
+CREATE TABLE couponcodes (
   id SERIAL PRIMARY KEY,
   code VARCHAR(128),
   percentage DOUBLE PRECISION,
@@ -465,8 +467,10 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   );
 
-INSERT INTO orders (userid, productid, price, couponcode, status) VALUES
+INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status) VALUES
   (
+    '54947df8-0e9e-4471-a2f9-9af509fb5889', -- trackid
+    TRUE, -- hasuser
     1, -- userid
     1, -- productid
     105.00, -- price

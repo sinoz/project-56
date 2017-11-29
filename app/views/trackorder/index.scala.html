@@ -1,4 +1,4 @@
-@(order: models.Order, session: play.mvc.Http.Session)
+@(session: play.mvc.Http.Session, input: String)
 @import components._
 
 @*
@@ -13,44 +13,15 @@
 @main("ReStart") {
     <body>
         <div class="site-content">
-            @header("MyAccount", session)
+            @header("TrackOrder", session)
 
-            @banner()
-
-            <br>
+            @trackordersearchbar(input)
 
             <div class="container">
                 <div class="col-md-12">
-                    <div>
-                        <h2>Order Status</h2>
-                    </div>
-                    <ol class="progtrckr" data-progtrckr-steps="5">
-                        @if(order.getStatus < 1) {
-                            <li class="progtrckr-todo">Order Processing</li>
-                        } else {
-                            <li class="progtrckr-done">Order Processing</li>
-                        }
-                        @if(order.getStatus < 2) {
-                            <li class="progtrckr-todo">Pre-Production</li>
-                        } else {
-                            <li class="progtrckr-done">Pre-Production</li>
-                        }
-                        @if(order.getStatus < 3) {
-                            <li class="progtrckr-todo">In Production</li>
-                        } else {
-                            <li class="progtrckr-done">In Production</li>
-                        }
-                        @if(order.getStatus < 4) {
-                            <li class="progtrckr-todo">Shipped</li>
-                        } else {
-                            <li class="progtrckr-done">Shipped</li>
-                        }
-                        @if(order.getStatus < 5) {
-                            <li class="progtrckr-todo">Delivered</li>
-                        } else {
-                            <li class="progtrckr-done">Delivered</li>
-                        }
-                    </ol>
+                    <h2>Fill in a tracking ID for an order.</h2>
+                    <br>
+                    <h3>Example: 01234567-abcd-0123-0123456789abcdefg</h3>
                 </div>
             </div>
 

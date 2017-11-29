@@ -29,12 +29,12 @@ public final class OrderService {
     /**
      * Attempts to find an {@link Order} by id
      */
-    public Optional<Order> getOrderById(int id){
+    public Optional<Order> getOrderByTrackId(String trackid){
         return database.withConnection(connection -> {
             Optional<Order> result = Optional.empty();
 
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE id=?");
-            stmt.setInt(1, id);
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE trackid=?");
+            stmt.setString(1, trackid);
 
             ResultSet queryResult = stmt.executeQuery();
 
@@ -42,6 +42,8 @@ public final class OrderService {
                 Order order = new Order();
 
                 order.setId(queryResult.getInt("id"));
+                order.setTrackId(trackid);
+                order.hasUser(queryResult.getBoolean("hasuser"));
                 order.setUserId(queryResult.getInt("userid"));
                 order.setProductId(queryResult.getInt("productid"));
                 order.setPrice(queryResult.getFloat("price"));

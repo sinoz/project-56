@@ -31,6 +31,12 @@
                     <li class="menu-item"><a href="/contact">Contact</a></li>
                 }
 
+                @if(activeMenuItem.equals("TrackOrder")) {
+                    <li class="menu-item current-menu-item"><a href="/trackorder">Track Order</a></li>
+                } else {
+                    <li class="menu-item"><a href="/trackorder">Track Order</a></li>
+                }
+
                 @if(!session.containsKey("loggedInAs")) {
                     @if(activeMenuItem.equals("Login")) {
                         <li class="menu-item current-menu-item"><a href="/login">Login</a></li>

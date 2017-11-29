@@ -1,4 +1,4 @@
-@(session: play.mvc.Http.Session)
+@(session: play.mvc.Http.Session, input: String)
 @import components._
 
 @*
@@ -13,9 +13,9 @@
 @main("ReStart") {
     <body>
         <div class="site-content">
-            @header("MyAccount", session)
+            @header("TrackOrder", session)
 
-            @banner()
+            @trackordersearchbar(input)
 
             <div class="container">
                 <div class="col-md-12">

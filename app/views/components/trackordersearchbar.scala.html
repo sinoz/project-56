@@ -1,0 +1,12 @@
+@(input: String)
+
+<div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
+    <div class="container">
+        <div class="find-location">
+        @helper.form(action = helper.CSRF(routes.TrackOrderController.redirect())) {
+            <input type="text" id="searchinput" name="input" placeholder="Tracking ID..." value="@input" list="games">
+            <input type="submit" value="Track">
+        }
+        </div>
+    </div>
+</div>
