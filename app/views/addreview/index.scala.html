@@ -1,0 +1,78 @@
+@(session: play.mvc.Http.Session)
+@import components._
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Home", session)
+
+            @banner()
+
+            <br>
+            <div class="container">
+                <div class="col-md-4">
+                    <div><h1>Write a review!</h1></div>
+                    <div class="container">
+                        <div class="row" style="margin-top:20px;">
+                            <div class="col-md-6">
+                                <div class="well well-sm">
+                                    <div class="text-right">
+                                        <a class="btn btn-success btn-green" href="#reviewbox" id="open-review-box">Leave a Review</a>
+                                    </div>
+
+                                    <div class="row" id="post-review-box" style="display:none;">
+                                        <div class="col-md-12">
+                                            <form accept-charset="UTF-8" action="" method="post">
+                                                <input id="ratings-hidden" name="rating" type="hidden">
+                                                <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
+
+                                                <div class="text-right">
+                                                    <div class="stars starrr" data-rating="0"></div>
+                                                    <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
+                                                        <span class="glyphicon glyphicon-remove"></span>Cancel</a>
+                                                    <button class="btn btn-success btn-lg" type="submit">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="/"><button class="button">Home</button></a>
+
+                </div>
+            </div>
+
+            <br>
+
+            @footer()
+
+        </div>
+
+
+
+
+
+
+            <!-- Required for the banner -->
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/reviewbox.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+}
