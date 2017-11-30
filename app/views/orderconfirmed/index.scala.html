@@ -1,4 +1,4 @@
-@(session: play.mvc.Http.Session)
+@(session: play.mvc.Http.Session, trackingId: String, mail : String)
 @import components._
 
 @*
@@ -19,10 +19,16 @@
 
             <br>
             <div class="container">
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <div><h1>Order Confirmed</h1></div>
-                <div><h3>Tracking ID:</h3></div>
-                <div><h3>E-mail:</h3></div>
+                <div><h3>Tracking ID: @trackingId</h3></div>
+                <a href="/trackorder/@trackingId"><button class="button">Track Order</button></a>
+
+                <br><br>
+
+                <div><h3>E-mail: @mail</h3></div>
+
+                <br>
 
                 <a href="/"><button class="button">Home</button></a>
 
@@ -34,11 +40,6 @@
             @footer()
 
         </div>
-
-
-
-
-
 
             <!-- Required for the banner -->
         <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>

@@ -1,0 +1,70 @@
+@(order: models.Order, session: play.mvc.Http.Session, input: String)
+@import components._
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("TrackOrder", session)
+
+            @trackordersearchbar(input)
+
+            <br>
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div>
+                        <h2>Order Status</h2>
+                    </div>
+                    <ol class="progtrckr" data-progtrckr-steps="5">
+                        @if(order.getStatus < 1) {
+                            <li class="progtrckr-todo">Order Processing</li>
+                        } else {
+                            <li class="progtrckr-done">Order Processing</li>
+                        }
+                        @if(order.getStatus < 2) {
+                            <li class="progtrckr-todo">Pre-Production</li>
+                        } else {
+                            <li class="progtrckr-done">Pre-Production</li>
+                        }
+                        @if(order.getStatus < 3) {
+                            <li class="progtrckr-todo">In Production</li>
+                        } else {
+                            <li class="progtrckr-done">In Production</li>
+                        }
+                        @if(order.getStatus < 4) {
+                            <li class="progtrckr-todo">Shipped</li>
+                        } else {
+                            <li class="progtrckr-done">Shipped</li>
+                        }
+                        @if(order.getStatus < 5) {
+                            <li class="progtrckr-todo">Delivered</li>
+                        } else {
+                            <li class="progtrckr-done">Delivered</li>
+                        }
+                    </ol>
+                    <br><br>
+                </div>
+            </div>
+
+            <br>
+
+            @footer()
+
+        </div>
+
+            <!-- Required for the banner -->
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}

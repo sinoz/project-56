@@ -1,9 +1,11 @@
 package controllers;
 
 import concurrent.DbExecContext;
+import forms.SearchForm;
 import models.Order;
 import models.ViewableUser;
-import play.db.Database;
+import play.data.Form;
+import play.data.FormFactory;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
@@ -11,8 +13,7 @@ import play.mvc.Result;
 import services.OrderService;
 import services.SessionService;
 import services.UserViewService;
-import views.html.trackorder.index;
-import views.html.trackorder.error;
+import views.html.trackorder.*;
 
 
 import javax.inject.Inject;
@@ -32,10 +33,11 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  * @author I.A
  */
 public final class TrackOrderController extends Controller {
+
     /**
-     * The required {@link Database} dependency to fetch database connections.
+     * A {@link FormFactory} to use search forms.
      */
-    private final play.db.Database database;
+    private FormFactory formFactory;
 
     /**
      * The {@link OrderService} used for accessing orders in de database
@@ -58,31 +60,49 @@ public final class TrackOrderController extends Controller {
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public TrackOrderController(play.db.Database database, OrderService orderService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
-        this.database = database;
+    public TrackOrderController(FormFactory formFactory, OrderService orderService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.formFactory = formFactory;
         this.orderService = orderService;
         this.userViewService = userViewService;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
 
-    public CompletionStage<Result> index(String trackingId) {
-        // If the user is not logged in redirect to login page
-        if(SessionService.redirect(session(), database)){
-            return completedFuture(redirect("/login"));
-        } else {
-            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-            CompletableFuture<Optional<Order>> optionalOrder = supplyAsync(() -> orderService.getOrderById(Integer.valueOf(trackingId)), dbExecutor);
-            CompletableFuture<Optional<ViewableUser>> optionalViewableUser = supplyAsync(() -> userViewService.fetchViewableUser(session().get("loggedInAs")), dbExecutor);
+    public CompletionStage<Result> index() {
+        return completedFuture(ok(index.render(session(), "")));
+    }
 
-            // Otherwise check if order exists and belongs to loggedin user
-            return optionalOrder.thenCombineAsync(optionalViewableUser, (order, user) -> {
-                if(!order.isPresent() || order.get().getUserId() != user.get().getId()){
-                    return ok(error.render(session()));
+    public CompletionStage<Result> indexOrder(String trackingId) {
+        Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+        CompletableFuture<Optional<Order>> optionalOrder = supplyAsync(() -> orderService.getOrderByTrackId(trackingId), dbExecutor);
+        CompletableFuture<Optional<ViewableUser>> optionalViewableUser = supplyAsync(() -> userViewService.fetchViewableUser(SessionService.getLoggedInAs(session())), dbExecutor);
+
+        return optionalOrder.thenCombineAsync(optionalViewableUser, (ord, user) -> {
+            if (!ord.isPresent())
+                return ok(error.render(session(), trackingId));
+
+            Order o = ord.get();
+
+            if (o.hasUser()) {
+                if (!user.isPresent() || o.getUserId() != user.get().getId()) {
+                    return ok(error.render(session(), trackingId));
                 } else {
-                    return ok(index.render(order.get(), session()));
+                    return ok(order.render(o, session(), trackingId));
                 }
-            }, httpEc.current());
+            } else {
+                return ok(order.render(o, session(), trackingId));
+            }
+        }, httpEc.current());
+    }
+
+    public Result redirect() {
+        Form<SearchForm> formBinding = formFactory.form(SearchForm.class).bindFromRequest();
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return badRequest();
+        } else {
+            SearchForm form = formBinding.get();
+            String formInput = form.getInput();
+            return redirect("/trackorder/" + formInput);
         }
     }
 }

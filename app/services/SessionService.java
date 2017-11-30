@@ -43,18 +43,21 @@ public class SessionService {
     }
 
     public static String getLoggedInAs(Http.Session session) {
-        return session.get("loggedInAs");
+        return session.getOrDefault("loggedInAs", null);
     }
 
     public static String getSessionToken(Http.Session session) {
-        return session.get("sessionToken");
+        return session.getOrDefault("sessionToken", null);
+    }
+
+    public static String getMail(Http.Session session) {
+        return session.getOrDefault("usedMail", null);
     }
 
     public static boolean redirect(Http.Session session, play.db.Database database) {
         String loggedInAs = getLoggedInAs(session);
         String sessionToken = getSessionToken(session);
-        String databaseToken = fetchToken(database, loggedInAs);
-        boolean output = loggedInAs == null || loggedInAs.length() == 0 || !SecurityService.secure(sessionToken).equals(databaseToken);
+        boolean output = loggedInAs == null || loggedInAs.length() == 0 || !checkSessionToken(database, loggedInAs, sessionToken);
         if (output)
             clearSession(session);
         return output;
@@ -67,6 +70,11 @@ public class SessionService {
         String loggedInAs = getLoggedInAs(session);
         String sessionToken = getSessionToken(session);
         return !isAdmin(database, loggedInAs, SecurityService.secure(sessionToken));
+    }
+
+    public static boolean checkSessionToken(play.db.Database database, String loggedInAs, String sessionToken) {
+        String databaseToken = fetchToken(database, loggedInAs);
+        return SecurityService.secure(sessionToken).equals(databaseToken);
     }
 
     private static void clearSession(Http.Session session) {
