@@ -55,7 +55,7 @@ CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
   trackid VARCHAR(36),
   hasuser BOOLEAN,
-  userid INTEGER REFERENCES users(id), -- buying user id
+  userid INTEGER, -- buying user id
   productid INTEGER REFERENCES gameaccounts(id), -- associated bought game account
   price DOUBLE PRECISION,
   couponcode VARCHAR(128),

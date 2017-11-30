@@ -68,7 +68,7 @@ public class ProductCheckoutBuyController extends Controller {
                     .map(product -> {
                         Optional<User> user = userViewService.fetchUser(product.getUserId());
 
-                        return open(product, product.getBuyPrice(), user, token);
+                        return open(product, product.getBuyPrice(), user, token, "null");
                     })
                     .orElse(redirect("/404"));
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class ProductCheckoutBuyController extends Controller {
         return redirect("/404");
     }
 
-    public Result open(Product product, double price, Optional<User> user, String token) {
+    public Result open(Product product, double price, Optional<User> user, String token, String couponCode) {
         // TODO:
         Optional<ViewableUser> buyer = userViewService.fetchViewableUser(SessionService.getLoggedInAs(session()));
         String userId = buyer.map(viewableUser -> viewableUser.getId() + "").orElse("null");
@@ -86,10 +86,11 @@ public class ProductCheckoutBuyController extends Controller {
         String trackingId = orderService.getNewTrackingId();
         String mail = SessionService.getMail(session());
         if (mail == null) mail = "null";
+        if (couponCode == null) couponCode = "null";
 
-        String verification = orderService.createVerification(token, userId, sessionToken, trackingId, mail);
+        String verification = orderService.createVerification(token, userId, sessionToken, price + "", trackingId, couponCode, mail);
 
-        return ok(views.html.checkout.buy.render(product, price, user, getRating(product.getUserId()), session(), verification, token, userId, sessionToken, trackingId, mail));
+        return ok(views.html.checkout.buy.render(product, price, user, getRating(product.getUserId()), session(), verification, token, userId, sessionToken, trackingId, couponCode, mail));
     }
 
     public Result couponCode(String token) {
@@ -106,7 +107,7 @@ public class ProductCheckoutBuyController extends Controller {
                     Optional<CouponCode> couponCode = getCouponCode(couponCodeForm.coupon);
 
                     if (!couponCode.isPresent()) {
-                        return open(product, product.getBuyPrice(), user, token);
+                        return open(product, product.getBuyPrice(), user, token, "null");
                     } else {
                         double regularPrice = product.getBuyPrice();
                         double couponPercentage = couponCode.get().getPercentage();
@@ -117,7 +118,7 @@ public class ProductCheckoutBuyController extends Controller {
                         // Paypal API only allows 7 digits after the comma
                         double formattedNewPrice = Double.valueOf(new DecimalFormat("0.00").format(newPrice));
 
-                        return open(product, formattedNewPrice, user, token);
+                        return open(product, formattedNewPrice, user, token, couponCode.get().getCode());
                     }
                 })
                 .orElse(redirect("/404"));
