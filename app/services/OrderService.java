@@ -62,12 +62,12 @@ public final class OrderService {
         return UUID.randomUUID().toString();
     }
 
-    public static String createVerification(String token, String userId, String sessionToken, String p, String trackingId, String couponCode, String mail) {
+    public String createVerification(String token, String userId, String sessionToken, String p, String trackingId, String couponCode, String mail) {
         String[] s = new String[] { token, userId, sessionToken, p, trackingId, couponCode, mail };
         return SecurityService.hash(split(s, 0));
     }
 
-    private static String split(String[] s, int i) {
+    private String split(String[] s, int i) {
         if (i < s.length) {
             String a = s[i];
             return merge(a, split(s, i + 1));
@@ -75,7 +75,7 @@ public final class OrderService {
         return "";
     }
 
-    private static String merge(String a, String b) {
+    private String merge(String a, String b) {
         return SecurityService.encodePassword(a, b);
     }
 }

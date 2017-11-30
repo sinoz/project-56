@@ -7,6 +7,7 @@ import services.*;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Optional;
 
 /**
@@ -48,24 +49,25 @@ public final class PlaceOrderController extends Controller {
                 try {
                     int id = Integer.valueOf(userId);
 
-                    Optional<ViewableUser> user = userViewService.fetchViewableUser(userId);
+                    Optional<ViewableUser> user = userViewService.fetchViewableUser(id);
 
                     if (user.isPresent()) {
-                        if (SessionService.checkSessionToken(database, user.get().getUsername(), sessionToken)) {
-                            placeOrder(t, id, price, trackingId, couponCode, mail);
+                        boolean result = placeOrder(t, id, price, trackingId, couponCode, mail);
+                        if (result)
                             return redirect("/orderconfirmed/" + trackingId + "/" + mail);
-                        } else {
+                        else
                             return redirect("/orderfailed");
-                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 // user does not exist or an error happened with user information
-                placeOrder(t, -1, price, trackingId, couponCode, mail);
-
-                return redirect("/orderconfirmed/" + trackingId + "/" + mail);
+                boolean result = placeOrder(t, -1, price, trackingId, couponCode, mail);
+                if (result)
+                    return redirect("/orderconfirmed/" + trackingId + "/" + mail);
+                else
+                    return redirect("/orderfailed");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -75,13 +77,29 @@ public final class PlaceOrderController extends Controller {
         return redirect("/orderfailed");
     }
 
-    private void placeOrder(int token, int userId, double price, String trackingId, String couponCode, String mail) {
+    private boolean placeOrder(int token, int userId, double price, String trackingId, String couponCode, String mail) {
+        if (orderExists(trackingId))
+            return false;
+
         saveToDatabase(token, userId, price, trackingId, couponCode);
 
         sendEmail(mail, trackingId);
 
 
         // taskService.tell();
+
+        return true;
+    }
+
+    private boolean orderExists(String trackingId) {
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE trackid=?");
+            stmt.setString(1, trackingId);
+
+            ResultSet result = stmt.executeQuery();
+
+            return result.next();
+        });
     }
 
     private void saveToDatabase(int token, int userId, double price, String trackingId, String couponCode) {
@@ -99,7 +117,7 @@ public final class PlaceOrderController extends Controller {
     }
 
     private void sendEmail(String mail, String trackingId) {
-        if (!mail.contains("@"))
+        if (mail == null || !mail.contains("@"))
             return;
 
         String title = "ReStart - Order Placed";

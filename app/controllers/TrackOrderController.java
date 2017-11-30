@@ -34,6 +34,8 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  */
 public final class TrackOrderController extends Controller {
 
+    private final play.db.Database database;
+
     /**
      * A {@link FormFactory} to use search forms.
      */
@@ -60,7 +62,8 @@ public final class TrackOrderController extends Controller {
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public TrackOrderController(FormFactory formFactory, OrderService orderService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public TrackOrderController(play.db.Database database, FormFactory formFactory, OrderService orderService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+        this.database = database;
         this.formFactory = formFactory;
         this.orderService = orderService;
         this.userViewService = userViewService;
@@ -84,7 +87,15 @@ public final class TrackOrderController extends Controller {
             Order o = ord.get();
 
             if (o.hasUser()) {
-                if (!user.isPresent() || o.getUserId() != user.get().getId()) {
+                boolean loggedIn = false;
+                String loggedInAs = SessionService.getLoggedInAs(session());
+                if (loggedInAs != null) {
+                    String sessionToken = SessionService.getSessionToken(session());
+                    if (SessionService.checkSessionToken(database, loggedInAs, sessionToken))
+                        loggedIn = true;
+                }
+
+                if (!user.isPresent() || o.getUserId() != user.get().getId() || !loggedIn) {
                     return ok(error.render(session(), trackingId));
                 } else {
                     return ok(order.render(o, session(), trackingId));

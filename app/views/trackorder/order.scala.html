@@ -25,27 +25,27 @@
                         <h2>Order Status</h2>
                     </div>
                     <ol class="progtrckr" data-progtrckr-steps="5">
-                        @if(order.getStatus < 1) {
+                        @if(order.getStatus < 0) {
                             <li class="progtrckr-todo">Order Processing</li>
                         } else {
                             <li class="progtrckr-done">Order Processing</li>
                         }
-                        @if(order.getStatus < 2) {
-                            <li class="progtrckr-todo">Pre-Production</li>
+                        @if(order.getStatus < 1) {
+                            <li class="progtrckr-todo">Initializing</li>
                         } else {
-                            <li class="progtrckr-done">Pre-Production</li>
+                            <li class="progtrckr-done">Initializing</li>
+                        }
+                        @if(order.getStatus < 2) {
+                            <li class="progtrckr-todo">Updating Details</li>
+                        } else {
+                            <li class="progtrckr-done">Updating Details</li>
                         }
                         @if(order.getStatus < 3) {
-                            <li class="progtrckr-todo">In Production</li>
+                            <li class="progtrckr-todo">Finishing</li>
                         } else {
-                            <li class="progtrckr-done">In Production</li>
+                            <li class="progtrckr-done">Finishing</li>
                         }
                         @if(order.getStatus < 4) {
-                            <li class="progtrckr-todo">Shipped</li>
-                        } else {
-                            <li class="progtrckr-done">Shipped</li>
-                        }
-                        @if(order.getStatus < 5) {
                             <li class="progtrckr-todo">Delivered</li>
                         } else {
                             <li class="progtrckr-done">Delivered</li>
