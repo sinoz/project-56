@@ -1,4 +1,4 @@
-@(session: play.mvc.Http.Session)
+@(form: play.data.Form[forms.ReviewForm], session: play.mvc.Http.Session)
 @import components._
 
 @*
@@ -20,9 +20,11 @@
             <br>
             <div class="container">
                 <div class="col-md-4">
-                    <div><h1>Write a review!</h1></div>
+                    <div><h1>Leave a review</h1></div>
                     <div class="container">
-                        <div class="row" style="margin-top:20px;">
+                        <p>You bought the product: Pro Player account CSGO </p>
+                        <p>From the seller: Admin</p>
+                        <div class="row" style="margin-top:0px;">
                             <div class="col-md-6">
                                 <div class="well well-sm">
                                     <div class="text-right">
@@ -33,7 +35,9 @@
                                         <div class="col-md-12">
                                             <form accept-charset="UTF-8" action="" method="post">
                                                 <input id="ratings-hidden" name="rating" type="hidden">
-                                                <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
+                                                <textarea class="form-control animated" cols="50" id="new-Title" name="Title" placeholder="Enter your title here..." rows="5" style="margin-bottom: 10px"></textarea>
+
+                                                <textarea class="form-control animated" cols="50" id="new-review" name="description" placeholder="Enter your review here..." rows="5"></textarea>
 
                                                 <div class="text-right">
                                                     <div class="stars starrr" data-rating="0"></div>

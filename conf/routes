@@ -55,6 +55,8 @@ GET         /user/:username                      controllers.UserAccountControll
 GET         /placeorder/buy/:verification/:token/:userId/:sessionToken/:p/:trackingId/:couponCode/:mail    controllers.PlaceOrderController.index(verification: String, token: String, userId: String, sessionToken: String, p: String, trackingId: String, couponCode: String, mail: String)
 
 GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedController.index(trackingId: String, mail: String)
+
+
 GET         /review                              controllers.AddReviewController.index
 
 GET         /orderfailed                         controllers.OrderFailedController.index
