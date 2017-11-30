@@ -10,12 +10,13 @@ import java.util.List;
  * A blue print of a filled in ReStart review form.
  *
  * @author Joris Stander
+ * @author D.Bakhuis
  */
 @Constraints.Validate
 public final class ReviewForm implements Constraints.Validatable<List<ValidationError>> {
 
     @Constraints.Required
-    public String Title;
+    public String title;
 
     @Constraints.Required
     public String description;
@@ -27,10 +28,10 @@ public final class ReviewForm implements Constraints.Validatable<List<Validation
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (Title.length() > 64) {
+        if (title.length() > 64) {
             errors.add(new ValidationError("title", "Title is too long. pls make it shorter"));
         }
-        if (Title.length() < 2) {
+        if (title.length() < 2) {
             errors.add(new ValidationError("name", "Please fill in a normal title"));
         }
 
@@ -55,7 +56,7 @@ public final class ReviewForm implements Constraints.Validatable<List<Validation
 
     public String getTitle()
     {
-        return Title;
+        return title;
     }
 
     public String getDescription()

@@ -1,6 +1,6 @@
 package services;
 
-import forms.ReviewForm;
+import models.Review;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
  * TODO
  *
  * @author Joris Stander
+ * @author D.Bakhuis 
  */
 public final class ReviewService {
 
@@ -26,14 +27,14 @@ public final class ReviewService {
      * Attempts to update a exciting user and returns whether it has successfully updated the settings
      * using the given {@link forms.ReviewForm}.
      */
-    public void addReview(ReviewForm form) {
+    public void addReview(Review review) {
         database.withConnection(connection -> {
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES(?, ?, ?, ?, ?)");
-            stmt.setString(1, "1");
-            stmt.setString(2, "2");
-            stmt.setString(3, form.Title);
-            stmt.setString(4, form.description);
-            stmt.setString(5, Integer.toString(form.rating));
+            stmt.setInt(1, 1);
+            stmt.setInt(2, 2);
+            stmt.setString(3, review.getTitle());
+            stmt.setString(4, review.getDescription());
+            stmt.setInt(5, 4);
             stmt.execute();
         });
     }

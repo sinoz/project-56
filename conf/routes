@@ -58,6 +58,7 @@ GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedContr
 
 
 GET         /review                              controllers.AddReviewController.index
+POST        /review                              controllers.AddReviewController.addReview()
 
 GET         /orderfailed                         controllers.OrderFailedController.index
 

@@ -1,5 +1,7 @@
-@(form: play.data.Form[forms.ReviewForm], session: play.mvc.Http.Session)
 @import components._
+@import forms.ReviewForm
+
+@(form: play.data.Form[forms.ReviewForm], session: play.mvc.Http.Session)
 
 @*
 * This template takes a single argument, a String containing a
@@ -22,36 +24,76 @@
                 <div class="col-md-4">
                     <div><h1>Leave a review</h1></div>
                     <div class="container">
-                        <p>You bought the product: Pro Player account CSGO </p>
-                        <p>From the seller: Admin</p>
-                        <div class="row" style="margin-top:0px;">
-                            <div class="col-md-6">
-                                <div class="well well-sm">
-                                    <div class="text-right">
-                                        <a class="btn btn-success btn-green" href="#reviewbox" id="open-review-box">Leave a Review</a>
-                                    </div>
+                        @*<p>You bought the product: Pro Player account CSGO </p>*@
+                        @*<p>From the seller: Admin</p>*@
+                        @*<div class="row" style="margin-top:0px;">*@
+                            @*<div class="col-md-6">*@
+                                @*<div class="well well-sm">*@
+                                    @*<div class="text-right">*@
+                                        @*<a class="btn btn-success btn-green" href="#reviewbox" id="open-review-box">Leave a Review</a>*@
+                                    @*</div>*@
 
-                                    <div class="row" id="post-review-box" style="display:none;">
-                                        <div class="col-md-12">
-                                            <form accept-charset="UTF-8" action="" method="post">
-                                                <input id="ratings-hidden" name="rating" type="hidden">
-                                                <textarea class="form-control animated" cols="50" id="new-Title" name="Title" placeholder="Enter your title here..." rows="5" style="margin-bottom: 10px"></textarea>
+                                    @*<div class="row" id="post-review-box" style="display:none;">*@
+                                        @*<div class="col-md-12">*@
+                                            @*<form accept-charset="UTF-8" action="" method="post">*@
+                                                @*<input id="ratings-hidden" name="rating" type="hidden">*@
+                                                @*<textarea class="form-control animated" cols="50" id="new-Title" name="Title" placeholder="Enter your title here..." rows="5" style="margin-bottom: 10px"></textarea>*@
 
-                                                <textarea class="form-control animated" cols="50" id="new-review" name="description" placeholder="Enter your review here..." rows="5"></textarea>
+                                                @*<textarea class="form-control animated" cols="50" id="new-review" name="description" placeholder="Enter your review here..." rows="5"></textarea>*@
 
-                                                <div class="text-right">
-                                                    <div class="stars starrr" data-rating="0"></div>
-                                                    <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">
-                                                        <span class="glyphicon glyphicon-remove"></span>Cancel</a>
-                                                    <button class="btn btn-success btn-lg" type="submit">Save</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                                @*<div class="text-right">*@
+                                                    @*<div class="stars starrr" data-rating="0"></div>*@
+                                                    @*<a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">*@
+                                                        @*<span class="glyphicon glyphicon-remove"></span>Cancel</a>*@
+                                                    @*<button class="btn btn-success btn-lg" type="submit">Save</button>*@
+                                                @*</div>*@
+                                            @*</form>*@
+
+                                        @*</div>*@
+                                    @*</div>*@
+                                @*</div>*@
+                            @*</div>*@
+                        @*</div>*@
+
+                        @helper.form(action = helper.CSRF(routes.AddReviewController.addReview()), 'class -> "form-horizontal") {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="title">Title</label>
+                                @defining(if (form("title").getValue.isPresent) form("title").getValue.get() else "") { text =>
+                                    <input id="title" name="title" type="text" class="form-control input-md">
+                                }
+                                @for(error <- form("title").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
 
                             </div>
-                        </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="description">Description</label>
+                                @defining(if (form("description").getValue.isPresent) form("description").getValue.get() else "") { text =>
+                                    <input id="description" name="description" type="text" class="form-control input-md">
+                                }
+                                @for(error <- form("description").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="rating">Rating</label>
+                                @defining(if (form("rating").getValue.isPresent) form("rating").getValue.get() else 1) { text =>
+                                    <input id="rating" name="rating" type="number" class="form-control input-md">
+                                }
+                                @for(error <- form("rating").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-xs-8">
+                                    <input type="submit" name="submit" value="Save">
+                                </div>
+                            </div>
+                        }
+
                     </div>
 
                     <a href="/"><button class="button">Home</button></a>
