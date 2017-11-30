@@ -82,7 +82,7 @@ public final class AddReviewController extends Controller {
             review.setUserSenderId(2);
             review.setTitle(form.title);
             review.setDescription(form.description);
-            review.setRating(4);
+            review.setRating(form.rating);
 
 
             return runAsync(() -> reviews.addReview(review), dbExecutor)
