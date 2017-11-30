@@ -1,15 +1,15 @@
 package controllers;
 
 import forms.CouponCodeForm;
-import models.CouponCode;
-import models.Review;
-import models.User;
+import models.*;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
+import services.OrderService;
 import services.ProductService;
+import services.SessionService;
 import services.UserViewService;
 
 import javax.inject.Inject;
@@ -42,16 +42,22 @@ public class ProductCheckoutBuyController extends Controller {
     private ProductService productService;
 
     /**
+     * The {@link OrderService} used for accessing orders in de database
+     */
+    private final OrderService orderService;
+
+    /**
      * The required {@link Database} dependency to fetch database connections.
      */
     private final play.db.Database database;
 
     @Inject
-    public ProductCheckoutBuyController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService){
+    public ProductCheckoutBuyController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService, OrderService orderService){
         this.formFactory = formFactory;
         this.database = database;
         this.userViewService = userViewService;
         this.productService = productService;
+        this.orderService = orderService;
     }
 
     public Result index(String token) {
@@ -62,13 +68,28 @@ public class ProductCheckoutBuyController extends Controller {
                     .map(product -> {
                         Optional<User> user = userViewService.fetchUser(product.getUserId());
 
-                        return ok(views.html.checkout.buy.render(product, product.getBuyPrice(), user, getRating(product.getUserId()), session(), token));
+                        return open(product, product.getBuyPrice(), user, token);
                     })
                     .orElse(redirect("/404"));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return redirect("/404");
+    }
+
+    public Result open(Product product, double price, Optional<User> user, String token) {
+        // TODO:
+        Optional<ViewableUser> buyer = userViewService.fetchViewableUser(SessionService.getLoggedInAs(session()));
+        String userId = buyer.map(viewableUser -> viewableUser.getId() + "").orElse("null");
+        String sessionToken = SessionService.getSessionToken(session());
+        if (sessionToken == null) sessionToken = "null";
+        String trackingId = orderService.getNewTrackingId();
+        String mail = SessionService.getMail(session());
+        if (mail == null) mail = "null";
+
+        String verification = orderService.createVerification(token, userId, sessionToken, trackingId, mail);
+
+        return ok(views.html.checkout.buy.render(product, price, user, getRating(product.getUserId()), session(), verification, token, userId, sessionToken, trackingId, mail));
     }
 
     public Result couponCode(String token) {
@@ -83,8 +104,9 @@ public class ProductCheckoutBuyController extends Controller {
                 .map(product -> {
                     Optional<User> user = userViewService.fetchUser(product.getUserId());
                     Optional<CouponCode> couponCode = getCouponCode(couponCodeForm.coupon);
+
                     if (!couponCode.isPresent()) {
-                        return ok(views.html.checkout.buy.render(product, product.getBuyPrice(), user, getRating(product.getUserId()), session(), token));
+                        return open(product, product.getBuyPrice(), user, token);
                     } else {
                         double regularPrice = product.getBuyPrice();
                         double couponPercentage = couponCode.get().getPercentage();
@@ -95,7 +117,7 @@ public class ProductCheckoutBuyController extends Controller {
                         // Paypal API only allows 7 digits after the comma
                         double formattedNewPrice = Double.valueOf(new DecimalFormat("0.00").format(newPrice));
 
-                        return ok(views.html.checkout.buy.render(product, formattedNewPrice, user, getRating(product.getUserId()), session(), token));
+                        return open(product, formattedNewPrice, user, token);
                     }
                 })
                 .orElse(redirect("/404"));

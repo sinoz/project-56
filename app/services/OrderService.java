@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * The OrderService that handles orders in the database
@@ -55,5 +56,13 @@ public final class OrderService {
 
             return result;
         });
+    }
+
+    public String getNewTrackingId() {
+        return UUID.randomUUID().toString();
+    }
+
+    public String createVerification(String token, String userId, String sessionToken, String trackingId, String mail) {
+        return SecurityService.hash(SecurityService.encodePassword(SecurityService.encodePassword(SecurityService.encodePassword(token, userId), SecurityService.encodePassword(sessionToken, trackingId)), mail));
     }
 }

@@ -52,7 +52,9 @@ GET         /logout                              controllers.LogoutController.in
 
 GET         /user/:username                      controllers.UserAccountController.index(username: String)
 
-GET         /orderconfirmed/:token               controllers.OrderConfirmedController.index(token: String)
+GET         /placeorder/buy/:verification/:token/:userId/:sessionToken/:trackingId/:mail    controllers.PlaceOrderController.index(verification: String, token: String, userId: String, sessionToken: String, trackingId: String, mail: String)
+
+GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedController.index(trackingId: String, mail: String)
 GET         /orderfailed                         controllers.OrderFailedController.index
 
 GET         /trackorder                          controllers.TrackOrderController.index
