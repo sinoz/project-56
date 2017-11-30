@@ -9,7 +9,7 @@ import java.sql.PreparedStatement;
  * TODO
  *
  * @author Joris Stander
- * @author D.Bakhuis 
+ * @author D.Bakhuis
  */
 public final class ReviewService {
 
@@ -34,7 +34,7 @@ public final class ReviewService {
             stmt.setInt(2, 2);
             stmt.setString(3, review.getTitle());
             stmt.setString(4, review.getDescription());
-            stmt.setInt(5, 4);
+            stmt.setInt(5, review.getRating());
             stmt.execute();
         });
     }
