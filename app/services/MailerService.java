@@ -31,4 +31,14 @@ public final class MailerService {
                 .setBodyText(form.content + "\n" + "\n" + form.email + "\n" +form.phone);
         mailerClient.send(email);
     }
+
+    public void sendEmail(String title, String to, String message) {
+        Email email = new Email()
+                .setSubject(title)
+                .setFrom("noreply <restartcontactus@gmail.com>")
+                .addTo(to + " <" + to + ">")
+                // sends text, HTML or both...
+                .setBodyText(message);
+        mailerClient.send(email);
+    }
 }
