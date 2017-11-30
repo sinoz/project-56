@@ -3,12 +3,9 @@ package controllers;
 import com.google.common.collect.Lists;
 import concurrent.DbExecContext;
 import forms.GameAccountProductInfoForm;
-import forms.RegistrationForm;
 import models.GameCategory;
 import models.Product;
-import play.data.Form;
 import play.data.FormFactory;
-import play.data.validation.ValidationError;
 import play.db.Database;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
@@ -17,7 +14,6 @@ import play.mvc.Result;
 import services.MyInventoryService;
 import services.ProductService;
 import services.SessionService;
-import views.html.register.index;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -163,7 +159,7 @@ public final class MyInventoryController extends Controller{
         try {
             int ID = Integer.valueOf(id);
 
-            Optional<Product> product = productService.fetchProduct(ID);
+            Optional<Product> product = productService.fetchVisibleProduct(ID);
             if (product.isPresent())
                 return completedFuture(ok(views.html.inventory.details.render(product.get(), formFactory.form(GameAccountProductInfoForm.class), session(), "")));
         } catch (Exception e) {

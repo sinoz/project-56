@@ -11,8 +11,6 @@ import services.ProductService;
 import services.UserViewService;
 
 import javax.inject.Inject;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +48,7 @@ public class SelectedProductController extends Controller {
     public Result index(String token) {
         try {
             int productId = Integer.valueOf(token);
-            Optional<Product> product = productService.fetchProduct(productId);
+            Optional<Product> product = productService.fetchVisibleProduct(productId);
             List<Review> reviewsproduct;
             if (product.isPresent()) {
                 Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.get().getGameId());

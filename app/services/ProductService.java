@@ -203,11 +203,54 @@ public final class ProductService {
 	/**
 	 * Attempts to find a {@link Product} by an id.
 	 */
-	public Optional<Product> fetchProduct(int id) {
+	public Optional<Product> fetchVisibleProduct(int id) {
 		return database.withConnection(connection -> {
 			Optional<Product> product = Optional.empty();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=? AND visible=TRUE AND disabled=FALSE;");
+			stmt.setInt(1, id);
+
+			ResultSet results = stmt.executeQuery();
+
+			if (results.next()) {
+				Product p = new Product();
+
+				p.setId(results.getInt("id"));
+				p.setUserId(results.getInt("userid"));
+				p.setGameId(results.getInt("gameid"));
+				p.setVisible(results.getBoolean("visible"));
+				p.setDisabled(results.getBoolean("disabled"));
+				p.setTitle(results.getString("title"));
+				p.setDescription(results.getString("description"));
+				p.setAddedSince(results.getDate("addedsince"));
+				p.setCanBuy(results.getBoolean("canbuy"));
+				p.setBuyPrice(results.getDouble("buyprice"));
+				p.setCanTrade(results.getBoolean("cantrade"));
+				p.setMailLast(results.getString("maillast"));
+				p.setMailCurrent(results.getString("mailcurrent"));
+				p.setPasswordCurrent(results.getString("passwordcurrent"));
+
+				Optional<User> user = userViewService.fetchUser(p.getUserId());
+				user.ifPresent(p::setUser);
+
+				Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
+				gameCategory.ifPresent(p::setGameCategory);
+
+				product = Optional.of(p);
+			}
+
+			return product;
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link Product} by an id.
+	 */
+	public Optional<Product> fetchProduct(int id) {
+		return database.withConnection(connection -> {
+			Optional<Product> product = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=?;");
 			stmt.setInt(1, id);
 
 			ResultSet results = stmt.executeQuery();

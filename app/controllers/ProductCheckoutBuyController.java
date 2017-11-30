@@ -64,7 +64,7 @@ public class ProductCheckoutBuyController extends Controller {
         try {
             int t = Integer.valueOf(token);
             return productService
-                    .fetchProduct(t)
+                    .fetchVisibleProduct(t)
                     .map(product -> {
                         Optional<User> user = userViewService.fetchUser(product.getUserId());
 
@@ -101,7 +101,7 @@ public class ProductCheckoutBuyController extends Controller {
             CouponCodeForm couponCodeForm = form.get();
 
             return productService
-                .fetchProduct(Integer.valueOf(token))
+                .fetchVisibleProduct(Integer.valueOf(token))
                 .map(product -> {
                     Optional<User> user = userViewService.fetchUser(product.getUserId());
                     Optional<CouponCode> couponCode = getCouponCode(couponCodeForm.coupon);

@@ -3,6 +3,7 @@ package controllers;
 import concurrent.DbExecContext;
 import forms.SearchForm;
 import models.Order;
+import models.Product;
 import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
@@ -11,6 +12,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.OrderService;
+import services.ProductService;
 import services.SessionService;
 import services.UserViewService;
 import views.html.trackorder.*;
@@ -51,6 +53,8 @@ public final class TrackOrderController extends Controller {
      */
     private final UserViewService userViewService;
 
+    private final ProductService productService;
+
     /**
      * The execution context used to asynchronously perform database operations.
      */
@@ -62,11 +66,12 @@ public final class TrackOrderController extends Controller {
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public TrackOrderController(play.db.Database database, FormFactory formFactory, OrderService orderService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public TrackOrderController(play.db.Database database, FormFactory formFactory, OrderService orderService, UserViewService userViewService, ProductService productService, DbExecContext dbEc, HttpExecutionContext httpEc){
         this.database = database;
         this.formFactory = formFactory;
         this.orderService = orderService;
         this.userViewService = userViewService;
+        this.productService = productService;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
@@ -86,22 +91,29 @@ public final class TrackOrderController extends Controller {
 
             Order o = ord.get();
 
-            if (o.hasUser()) {
-                boolean loggedIn = false;
-                String loggedInAs = SessionService.getLoggedInAs(session());
-                if (loggedInAs != null) {
-                    String sessionToken = SessionService.getSessionToken(session());
-                    if (SessionService.checkSessionToken(database, loggedInAs, sessionToken))
-                        loggedIn = true;
-                }
+            // TODO: can break if product is removed // fix by creating separate table..
+            Optional<Product> product = productService.fetchProduct(o.getProductId());
+            
+            if (product.isPresent()) {
+                if (o.hasUser()) {
+                    boolean loggedIn = false;
+                    String loggedInAs = SessionService.getLoggedInAs(session());
+                    if (loggedInAs != null) {
+                        String sessionToken = SessionService.getSessionToken(session());
+                        if (SessionService.checkSessionToken(database, loggedInAs, sessionToken))
+                            loggedIn = true;
+                    }
 
-                if (!user.isPresent() || o.getUserId() != user.get().getId() || !loggedIn) {
-                    return ok(error.render(session(), trackingId));
+                    if (!user.isPresent() || o.getUserId() != user.get().getId() || !loggedIn) {
+                        return ok(error.render(session(), trackingId));
+                    } else {
+                        return ok(order.render(o, product.get(), session(), trackingId));
+                    }
                 } else {
-                    return ok(order.render(o, session(), trackingId));
+                    return ok(order.render(o, product.get(), session(), trackingId));
                 }
             } else {
-                return ok(order.render(o, session(), trackingId));
+                return ok(error.render(session(), trackingId));
             }
         }, httpEc.current());
     }

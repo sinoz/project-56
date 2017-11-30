@@ -87,7 +87,7 @@ public class AddProductController extends Controller {
 
                 String loggedInAs = SessionService.getLoggedInAs(session());
                 Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
-                Optional<Product> product = productService.fetchProduct(id);
+                Optional<Product> product = productService.fetchVisibleProduct(id);
 
                 if (product.isPresent() && user.isPresent() && product.get().getUserId() == user.get().getId()) {
                     return ok(update.render(form, product.get(), session(), "updategameaccount"));
@@ -143,7 +143,7 @@ public class AddProductController extends Controller {
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
             try {
                 int id = Integer.valueOf(productid);
-                Optional<Product> product = productService.fetchProduct(id);
+                Optional<Product> product = productService.fetchVisibleProduct(id);
                 if (product.isPresent()) {
                     return completedFuture(badRequest(update.render(formBinding, product.get(), session(), "updategameaccount")));
                 }
