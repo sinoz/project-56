@@ -105,6 +105,45 @@ public final class UserViewService {
     /**
      * Attempts to find a {@link User} that matches the given username and password combination.
      */
+    public Optional<User> fetchUser(String username) {
+        return database.withConnection(connection -> {
+            Optional<User> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
+            stmt.setString(1, username);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                User u = new User();
+
+                u.setId(results.getInt("id"));
+                u.setUsername(results.getString("username"));
+                u.setPassword(results.getString("password"));
+                u.setMail(results.getString("mail"));
+                u.setPaymentMail(results.getString("paymentmail"));
+                u.setProfilePicture(results.getString("profilepicture"));
+                u.setMemberSince(results.getDate("membersince"));
+
+                Array favorites_array = results.getArray("favorites");
+                // TODO: improve
+                if (favorites_array != null) {
+                    Integer[] f1 = (Integer[]) favorites_array.getArray();
+                    ArrayList<Integer> f2 = new ArrayList<>();
+                    f2.addAll(Arrays.asList(f1));
+                    u.setFavorites(f2);
+                }
+
+                user = Optional.of(u);
+            }
+
+            return user;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link User} that matches the given username and password combination.
+     */
     public Optional<User> fetchUser(int id) {
         return database.withConnection(connection -> {
             Optional<User> user = Optional.empty();

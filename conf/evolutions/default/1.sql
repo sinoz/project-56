@@ -80,7 +80,7 @@ CREATE TABLE couponcodes (
 
 INSERT INTO couponcodes(code, percentage) VALUES ('dank', 19);
 INSERT INTO couponcodes(code, percentage) VALUES ('johan', -1);
-INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
+-- INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
 INSERT INTO couponcodes(code, percentage) VALUES ('maurice', 99);
 INSERT INTO couponcodes(code, percentage) VALUES ('ilyas', 100);
 
