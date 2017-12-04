@@ -2,6 +2,7 @@ package controllers;
 
 import forms.LoginForm;
 import models.User;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
@@ -11,6 +12,7 @@ import play.mvc.Result;
 import play.mvc.Results;
 import services.AuthenticationService;
 import services.SessionService;
+import util.RecaptchaUtils;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -35,12 +37,15 @@ public final class LoginController extends Controller {
 
 	private AuthenticationService auth;
 
+	private RecaptchaUtils recaptcha;
+
 	/**
 	 * Creates a new {@link LoginController}.
 	 */
 	@Inject
-	public LoginController(play.db.Database database, FormFactory formFactory, AuthenticationService auth) {
+	public LoginController(RecaptchaUtils recaptcha, play.db.Database database, FormFactory formFactory, AuthenticationService auth) {
 		this.database = database;
+		this.recaptcha = recaptcha;
 		this.formFactory = formFactory;
 		this.auth = auth;
 	}
@@ -61,16 +66,22 @@ public final class LoginController extends Controller {
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
 			return badRequest(views.html.login.index.render(formBinding, session()));
 		} else {
-			LoginForm form = formBinding.get();
-
-			Optional<User> user = auth.fetchUser(form.getUsername().toLowerCase(), form.getPassword());
-			if (user.isPresent()) {
-				SessionService.initSession(session(), user.get(), database);
-				return redirect("/");
-			} else {
-				formBinding = formBinding.withGlobalError("Invalid username/password combination.");
-
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+			String recaptchaResponse = requestData.get("g-recaptcha-response");
+			if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
 				return badRequest(views.html.login.index.render(formBinding, session()));
+			} else {
+				LoginForm form = formBinding.get();
+
+				Optional<User> user = auth.fetchUser(form.getUsername().toLowerCase(), form.getPassword());
+				if (user.isPresent()) {
+					SessionService.initSession(session(), user.get(), database);
+					return redirect("/");
+				} else {
+					formBinding = formBinding.withGlobalError("Invalid username/password combination.");
+
+					return badRequest(views.html.login.index.render(formBinding, session()));
+				}
 			}
 		}
 	}
