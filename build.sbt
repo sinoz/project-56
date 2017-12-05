@@ -13,7 +13,8 @@ libraryDependencies ++= {
   )
 
   val defaults = Seq(
-    guice
+    guice,
+    ws
   )
 
   val testDeps = Seq(
