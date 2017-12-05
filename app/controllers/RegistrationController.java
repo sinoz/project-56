@@ -1,12 +1,14 @@
 package controllers;
 
 import forms.RegistrationForm;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.AccountService;
+import util.RecaptchaUtils;
 import views.html.register.index;
 
 import javax.inject.Inject;
@@ -27,13 +29,17 @@ public final class RegistrationController extends Controller {
 	 */
 	private final AccountService accounts;
 
+	private RecaptchaUtils recaptcha;
+
 	/**
 	 * Creates a new {@link RegistrationController}.
 	 */
 	@Inject
-	public RegistrationController(FormFactory formFactory, AccountService accounts) {
+	public RegistrationController(FormFactory formFactory, AccountService accounts, RecaptchaUtils recaptcha) {
 		this.formFactory = formFactory;
 		this.accounts = accounts;
+		this.recaptcha = recaptcha;
+
 	}
 
 	/**
@@ -53,16 +59,22 @@ public final class RegistrationController extends Controller {
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
 			return badRequest(index.render(formBinding, session()));
 		} else {
-            RegistrationForm form = formBinding.get();
-
-			// TODO thread this
-			if (accounts.userExists(form.getName().toLowerCase())) {
-				formBinding = formBinding.withError(new ValidationError("name", "This username already exists."));
-
-				return badRequest(index.render(formBinding, session()));
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+			String recaptchaResponse = requestData.get("g-recaptcha-response");
+			if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+				return badRequest(views.html.register.index.render(formBinding, session()));
 			} else {
-				accounts.registered(form);
-				return redirect("/login");
+				RegistrationForm form = formBinding.get();
+
+				// TODO thread this
+				if (accounts.userExists(form.getName().toLowerCase())) {
+					formBinding = formBinding.withError(new ValidationError("name", "This username already exists."));
+
+					return badRequest(index.render(formBinding, session()));
+				} else {
+					accounts.registered(form);
+					return redirect("/login");
+				}
 			}
 		}
 	}
