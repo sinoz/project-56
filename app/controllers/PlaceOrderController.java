@@ -1,6 +1,7 @@
 package controllers;
 
 import akka.actor.ActorSystem;
+import models.Product;
 import models.ViewableUser;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -30,6 +31,7 @@ public final class PlaceOrderController extends Controller {
      */
     private final OrderService orderService;
 
+    private final ProductService productService;
     private final UserViewService userViewService;
 
     private final MailerService mails;
@@ -38,9 +40,10 @@ public final class PlaceOrderController extends Controller {
     private final ExecutionContext context;
 
     @Inject
-    public PlaceOrderController(play.db.Database database, OrderService orderService, UserViewService userViewService, MailerService mailerService, ActorSystem actorSystem, ExecutionContext context) {
+    public PlaceOrderController(play.db.Database database, OrderService orderService, ProductService productService, UserViewService userViewService, MailerService mailerService, ActorSystem actorSystem, ExecutionContext context) {
         this.database = database;
         this.orderService = orderService;
+        this.productService = productService;
         this.userViewService = userViewService;
         this.mails = mailerService;
         this.actorSystem = actorSystem;
@@ -52,31 +55,37 @@ public final class PlaceOrderController extends Controller {
         if (verification.equals(verification2)) {
             try {
                 int t = Integer.valueOf(token);
-                double price = Double.valueOf(p);
+                Optional<Product> prod = productService.fetchProduct(t);
+                if (prod.isPresent()) {
+                    Product product = prod.get();
 
-                try {
-                    int id = Integer.valueOf(userId);
+                    double price = Double.valueOf(p);
 
-                    Optional<ViewableUser> user = userViewService.fetchViewableUser(id);
+                    try {
+                        int id = Integer.valueOf(userId);
 
-                    if (user.isPresent()) {
-                        boolean result = placeOrder(t, id, price, trackingId, couponCode, mail);
-                        if (result)
-                            return redirect("/orderconfirmed/" + trackingId + "/" + mail);
-                        else
-                            return redirect("/orderfailed");
+                        Optional<ViewableUser> user = userViewService.fetchViewableUser(id);
+
+                        if (user.isPresent()) {
+                            boolean result = placeOrder(t, product, id, price, trackingId, couponCode, mail);
+                            if (result)
+                                return redirect("/orderconfirmed/" + trackingId + "/" + mail);
+                            else
+                                return redirect("/orderfailed");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-                // user does not exist or an error happened with user information
-                boolean result = placeOrder(t, -1, price, trackingId, couponCode, mail);
-                if (result)
-                    return redirect("/orderconfirmed/" + trackingId + "/" + mail);
-                else
+                    // user does not exist or an error happened with user information
+                    boolean result = placeOrder(t, product, -1, price, trackingId, couponCode, mail);
+                    if (result)
+                        return redirect("/orderconfirmed/" + trackingId + "/" + mail);
+                    else
+                        return redirect("/orderfailed");
+                } else {
                     return redirect("/orderfailed");
-
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -85,13 +94,13 @@ public final class PlaceOrderController extends Controller {
         return redirect("/orderfailed");
     }
 
-    private boolean placeOrder(int token, int userId, double price, String trackingId, String couponCode, String mail) {
+    private boolean placeOrder(int token, Product product, int userId, double price, String trackingId, String couponCode, String mail) {
         if (orderExists(trackingId))
             return false;
 
         saveToDatabase(token, userId, price, trackingId, couponCode);
 
-        sendOrderPlacedMail(mail, trackingId);
+        sendOrderPlacedMail(mail, trackingId, product);
 
         scheduleTask(trackingId, mail);
 
@@ -150,19 +159,19 @@ public final class PlaceOrderController extends Controller {
         });
     }
 
-    private void sendOrderPlacedMail(String mail, String trackingId) {
+    private void sendOrderPlacedMail(String mail, String trackingId, Product product) {
         if (!checkMail(mail))
             return;
 
-        String title = "ReStart - Order Placed";
-        mails.sendEmail(title, mail, "Your order has tracking ID: " + trackingId + "");
+        String title = "ReStart - Order Placed - " + trackingId;
+        mails.sendEmail(title, mail, "Your order has tracking ID: " + trackingId);
     }
 
-    private void sendOrderFinishedMail(String mail, String trackingId) {
+    private void sendOrderFinishedMail(String mail, String trackingId, Product product) {
         if (!checkMail(mail))
             return;
 
-        String title = "ReStart - Product Delivered";
+        String title = "ReStart - Product Delivered - " + trackingId;
         mails.sendEmail(title, mail, "Your order with tracking ID: " + trackingId + ". Has been delivered. You can use these details to log in: ...");
     }
 
