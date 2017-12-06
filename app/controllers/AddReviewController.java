@@ -3,6 +3,7 @@ package controllers;
 import concurrent.DbExecContext;
 import forms.ReviewForm;
 import models.Review;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
@@ -11,6 +12,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ReviewService;
+import util.RecaptchaUtils;
 import views.html.addreview.index;
 
 import javax.inject.Inject;
@@ -52,14 +54,17 @@ public final class AddReviewController extends Controller {
      */
     private final HttpExecutionContext httpEc;
 
+    private RecaptchaUtils recaptcha;
+
 
     @Inject
-    public AddReviewController(FormFactory formFactory, ReviewService reviews, Database database, DbExecContext dbEc, HttpExecutionContext httpEc) {
+    public AddReviewController(FormFactory formFactory, ReviewService reviews, Database database, DbExecContext dbEc, HttpExecutionContext httpEc, RecaptchaUtils recaptcha) {
         this.formFactory = formFactory;
         this.reviews = reviews;
         this.database = database;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
+        this.recaptcha = recaptcha;
     }
 
     public Result index() {
@@ -71,22 +76,29 @@ public final class AddReviewController extends Controller {
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
             return completedFuture(badRequest(views.html.addreview.index.render(formBinding, session())));
         } else {
-            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+            DynamicForm requestData = formFactory.form().bindFromRequest();
+            String recaptchaResponse = requestData.get("g-recaptcha-response");
+            if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+                return completedFuture(badRequest(views.html.addreview.index.render(formBinding, session())));
+            } else {
 
-            ReviewForm form = formBinding.get();
-            Review review = new Review();
+                Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-            // TODO: Change userreceiver, usersender based on product
-            // TODO: Add rating based on form
-            review.setUserReceiverId(1);
-            review.setUserSenderId(2);
-            review.setTitle(form.title);
-            review.setDescription(form.description);
-            review.setRating(form.rating);
+                ReviewForm form = formBinding.get();
+                Review review = new Review();
+
+                // TODO: Change userreceiver, usersender based on product
+                // TODO: Add rating based on form
+                review.setUserReceiverId(1);
+                review.setUserSenderId(2);
+                review.setTitle(form.title);
+                review.setDescription(form.description);
+                review.setRating(form.rating);
 
 
-            return runAsync(() -> reviews.addReview(review), dbExecutor)
-                    .thenApplyAsync(i -> redirect("/"), httpEc.current());
+                return runAsync(() -> reviews.addReview(review), dbExecutor)
+                        .thenApplyAsync(i -> redirect("/"), httpEc.current());
+            }
         }
     }
 }
