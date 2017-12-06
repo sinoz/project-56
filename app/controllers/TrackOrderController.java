@@ -93,8 +93,30 @@ public final class TrackOrderController extends Controller {
 
             // TODO: can break if product is removed // fix by creating separate table..
             Optional<Product> product = productService.fetchProduct(o.getProductId());
-            
-            if (product.isPresent()) {
+
+            if (o.getOrderType() == 0) {
+                if (product.isPresent()) {
+                    if (o.hasUser()) {
+                        boolean loggedIn = false;
+                        String loggedInAs = SessionService.getLoggedInAs(session());
+                        if (loggedInAs != null) {
+                            String sessionToken = SessionService.getSessionToken(session());
+                            if (SessionService.checkSessionToken(database, loggedInAs, sessionToken))
+                                loggedIn = true;
+                        }
+
+                        if (!user.isPresent() || o.getUserId() != user.get().getId() || !loggedIn) {
+                            return ok(error.render(session(), trackingId));
+                        } else {
+                            return ok(order.render(o, product.get(), session(), trackingId));
+                        }
+                    } else {
+                        return ok(order.render(o, product.get(), session(), trackingId));
+                    }
+                } else {
+                    return ok(error.render(session(), trackingId));
+                }
+            } else {
                 if (o.hasUser()) {
                     boolean loggedIn = false;
                     String loggedInAs = SessionService.getLoggedInAs(session());
@@ -107,13 +129,11 @@ public final class TrackOrderController extends Controller {
                     if (!user.isPresent() || o.getUserId() != user.get().getId() || !loggedIn) {
                         return ok(error.render(session(), trackingId));
                     } else {
-                        return ok(order.render(o, product.get(), session(), trackingId));
+                        return ok(order.render(o, null, session(), trackingId));
                     }
                 } else {
-                    return ok(order.render(o, product.get(), session(), trackingId));
+                    return ok(order.render(o, null, session(), trackingId));
                 }
-            } else {
-                return ok(error.render(session(), trackingId));
             }
         }, httpEc.current());
     }

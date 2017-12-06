@@ -56,9 +56,10 @@ CREATE TABLE orders (
   trackid VARCHAR(36),
   hasuser BOOLEAN,
   userid INTEGER, -- buying user id
-  productid INTEGER REFERENCES gameaccounts(id), -- associated bought game account
+  productid INTEGER, -- associated bought/added game account
   price DOUBLE PRECISION,
   couponcode VARCHAR(128),
+  ordertype INT, -- type of order
   status INT -- TODO: change to enum, status of the order
 );
 

@@ -18,8 +18,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A {@link Controller} for the contact page.
- *
  * @author Maurice van Veen
  */
 public final class PlaceOrderController extends Controller {
@@ -102,25 +100,25 @@ public final class PlaceOrderController extends Controller {
 
         sendOrderPlacedMail(mail, trackingId, product);
 
-        scheduleTask(trackingId, mail);
+        scheduleTask(trackingId, mail, product);
 
         return true;
     }
 
-    private void scheduleTask(String trackingId, String mail) {
+    private void scheduleTask(String trackingId, String mail, Product product) {
         int status = 1;
-        schedule(trackingId, mail, status);
+        schedule(trackingId, mail, status, product);
     }
 
-    private void schedule(String trackingId, String mail, int status) {
+    private void schedule(String trackingId, String mail, int status, Product product) {
         FiniteDuration d = Duration.create(30 + new Random().nextInt(15), TimeUnit.SECONDS);
         actorSystem.scheduler().scheduleOnce(d, () ->
         {
             updateDatabase(trackingId, status);
             if (status < 5) {
-                schedule(trackingId, mail, status + 1);
+                schedule(trackingId, mail, status + 1, product);
             } else {
-                sendOrderFinishedMail(mail, trackingId);
+                sendOrderFinishedMail(mail, trackingId, product);
             }
         }, context);
     }
@@ -138,7 +136,7 @@ public final class PlaceOrderController extends Controller {
 
     private void saveToDatabase(int token, int userId, double price, String trackingId, String couponCode) {
         database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status, ordertype) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             stmt.setString(1, trackingId);
             stmt.setBoolean(2, userId != -1);
             stmt.setInt(3, userId);
@@ -146,6 +144,7 @@ public final class PlaceOrderController extends Controller {
             stmt.setDouble(5, price);
             stmt.setString(6, couponCode);
             stmt.setInt(7, 0);
+            stmt.setInt(8, 0);
             stmt.execute();
         });
     }

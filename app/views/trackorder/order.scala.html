@@ -24,39 +24,71 @@
                     <div>
                         <h2>Order Status</h2>
                     </div>
-                    <ol class="progtrckr" data-progtrckr-steps="5">
-                        @if(order.getStatus < 0) {
-                            <li class="progtrckr-todo">Order Processing</li>
-                        } else {
-                            <li class="progtrckr-done">Order Processing</li>
-                        }
-                        @if(order.getStatus < 1) {
-                            <li class="progtrckr-todo">Initializing</li>
-                        } else {
-                            <li class="progtrckr-done">Initializing</li>
-                        }
-                        @if(order.getStatus < 2) {
-                            <li class="progtrckr-todo">Updating Details</li>
-                        } else {
-                            <li class="progtrckr-done">Updating Details</li>
-                        }
-                        @if(order.getStatus < 3) {
-                            <li class="progtrckr-todo">Finishing</li>
-                        } else {
-                            <li class="progtrckr-done">Finishing</li>
-                        }
-                        @if(order.getStatus < 4) {
-                            <li class="progtrckr-todo">Delivered</li>
-                        } else {
-                            <li class="progtrckr-done">Delivered</li>
-                        }
-                    </ol>
+
+                    @if(order.getOrderType == 0) {
+                        <ol class="progtrckr" data-progtrckr-steps="5">
+                            @if(order.getStatus < 0) {
+                                <li class="progtrckr-todo">Order Processing</li>
+                            } else {
+                                <li class="progtrckr-done">Order Processing</li>
+                            }
+                            @if(order.getStatus < 1) {
+                                <li class="progtrckr-todo">Initializing</li>
+                            } else {
+                                <li class="progtrckr-done">Initializing</li>
+                            }
+                            @if(order.getStatus < 2) {
+                                <li class="progtrckr-todo">Updating Details</li>
+                            } else {
+                                <li class="progtrckr-done">Updating Details</li>
+                            }
+                            @if(order.getStatus < 3) {
+                                <li class="progtrckr-todo">Finishing</li>
+                            } else {
+                                <li class="progtrckr-done">Finishing</li>
+                            }
+                            @if(order.getStatus < 4) {
+                                <li class="progtrckr-todo">Delivered</li>
+                            } else {
+                                <li class="progtrckr-done">Delivered</li>
+                            }
+                        </ol>
+                    } else {
+                        <ol class="progtrckr" data-progtrckr-steps="5">
+                            @if(order.getStatus < 0) {
+                                <li class="progtrckr-todo">Processing</li>
+                            } else {
+                                <li class="progtrckr-done">Processing</li>
+                            }
+                            @if(order.getStatus < 1) {
+                                <li class="progtrckr-todo">Initializing</li>
+                            } else {
+                                <li class="progtrckr-done">Initializing</li>
+                            }
+                            @if(order.getStatus < 2) {
+                                <li class="progtrckr-todo">Updating Details</li>
+                            } else {
+                                <li class="progtrckr-done">Updating Details</li>
+                            }
+                            @if(order.getStatus < 3) {
+                                <li class="progtrckr-todo">Finishing</li>
+                            } else {
+                                <li class="progtrckr-done">Finishing</li>
+                            }
+                            @if(order.getStatus < 4) {
+                                <li class="progtrckr-todo">Added to Inventory</li>
+                            } else {
+                                <li class="progtrckr-done">Added to Inventory</li>
+                            }
+                        </ol>
+                    }
                     <br><br>
                 </div>
             </div>
 
             <br>
 
+            @if(product != null) {
             <div class="container">
                 <div class="col-md-9">
                     <div class="container-fluid">
@@ -116,7 +148,7 @@
                     </div>
                 </div>
             </div>
-
+            }
             <br>
 
             @footer()
