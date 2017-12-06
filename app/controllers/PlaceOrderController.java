@@ -1,14 +1,20 @@
 package controllers;
 
+import akka.actor.ActorSystem;
 import models.ViewableUser;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.concurrent.ExecutionContext;
+import scala.concurrent.duration.Duration;
+import scala.concurrent.duration.FiniteDuration;
 import services.*;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A {@link Controller} for the contact page.
@@ -28,15 +34,17 @@ public final class PlaceOrderController extends Controller {
 
     private final MailerService mails;
 
-    private final TaskService taskService;
+    private final ActorSystem actorSystem;
+    private final ExecutionContext context;
 
     @Inject
-    public PlaceOrderController(play.db.Database database, OrderService orderService, UserViewService userViewService, MailerService mailerService, TaskService taskService) {
+    public PlaceOrderController(play.db.Database database, OrderService orderService, UserViewService userViewService, MailerService mailerService, ActorSystem actorSystem, ExecutionContext context) {
         this.database = database;
         this.orderService = orderService;
         this.userViewService = userViewService;
         this.mails = mailerService;
-        this.taskService = taskService;
+        this.actorSystem = actorSystem;
+        this.context = context;
     }
 
     public Result index(String verification, String token, String userId, String sessionToken, String p, String trackingId, String couponCode, String mail) {
@@ -83,12 +91,29 @@ public final class PlaceOrderController extends Controller {
 
         saveToDatabase(token, userId, price, trackingId, couponCode);
 
-        sendEmail(mail, trackingId);
+        sendOrderPlacedMail(mail, trackingId);
 
-
-        // taskService.tell();
+        scheduleTask(trackingId, mail);
 
         return true;
+    }
+
+    private void scheduleTask(String trackingId, String mail) {
+        int status = 1;
+        schedule(trackingId, mail, status);
+    }
+
+    private void schedule(String trackingId, String mail, int status) {
+        FiniteDuration d = Duration.create(30 + new Random().nextInt(15), TimeUnit.SECONDS);
+        actorSystem.scheduler().scheduleOnce(d, () ->
+        {
+            updateDatabase(trackingId, status);
+            if (status < 5) {
+                schedule(trackingId, mail, status + 1);
+            } else {
+                sendOrderFinishedMail(mail, trackingId);
+            }
+        }, context);
     }
 
     private boolean orderExists(String trackingId) {
@@ -116,11 +141,32 @@ public final class PlaceOrderController extends Controller {
         });
     }
 
-    private void sendEmail(String mail, String trackingId) {
-        if (mail == null || !mail.contains("@"))
+    private void updateDatabase(String trackingId, int status) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE orders SET status=? WHERE trackid=?");
+            stmt.setInt(1, status);
+            stmt.setString(2, trackingId);
+            stmt.execute();
+        });
+    }
+
+    private void sendOrderPlacedMail(String mail, String trackingId) {
+        if (!checkMail(mail))
             return;
 
         String title = "ReStart - Order Placed";
         mails.sendEmail(title, mail, "Your order has tracking ID: " + trackingId + "");
+    }
+
+    private void sendOrderFinishedMail(String mail, String trackingId) {
+        if (!checkMail(mail))
+            return;
+
+        String title = "ReStart - Product Delivered";
+        mails.sendEmail(title, mail, "Your order with tracking ID: " + trackingId + ". Has been delivered. You can use these details to log in: ...");
+    }
+
+    private boolean checkMail(String mail) {
+        return mail != null && mail.contains("@");
     }
 }
