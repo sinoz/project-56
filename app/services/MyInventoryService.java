@@ -205,7 +205,7 @@ public final class MyInventoryService {
         actorSystem.scheduler().scheduleOnce(d, () ->
         {
             updateDatabase(trackingId, status);
-            if (status < 5) {
+            if (status < 4) {
                 schedule(trackingId, mail, status + 1, product);
             } else {
                 addProduct(product);

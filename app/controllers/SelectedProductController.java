@@ -4,10 +4,12 @@ import forms.FavouriteForm;
 import models.GameCategory;
 import models.Product;
 import models.Review;
+import models.ViewableUser;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ProductService;
+import services.SessionService;
 import services.UserViewService;
 
 import javax.inject.Inject;
@@ -60,9 +62,16 @@ public class SelectedProductController extends Controller {
                         totalRating += review.getRating();
                     int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                    boolean isFavourited = userViewService.fetchProductIsFavourited(product.get().getUserId(), productId);
+                    String loggedInAs = SessionService.getLoggedInAs(session());
+                    Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+                    boolean loggedIn = false;
+                    boolean isFavourited = false;
+                    if (user.isPresent()) {
+                        loggedIn = true;
+                        isFavourited = userViewService.fetchProductIsFavourited(user.get().getId(), productId);
+                    }
 
-                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), isFavourited, session()));
+                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), loggedIn, isFavourited, session()));
                 }
             }
         } catch (Exception e) {

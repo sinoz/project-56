@@ -4,6 +4,7 @@
 # --- !Ups
 
 DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS reviewtokens;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS gameaccounts;
 DROP TABLE IF EXISTS users;
@@ -72,6 +73,14 @@ CREATE TABLE reviews (
   rating INTEGER
 );
 
+CREATE TABLE reviewtokens (
+  id SERIAL PRIMARY KEY,
+  reviewid VARCHAR(36),
+  userreceiverid INTEGER REFERENCES users(id),
+  usersenderid INTEGER REFERENCES users(id),
+  productid INTEGER REFERENCES gameaccounts(id)
+);
+
 CREATE TABLE couponcodes (
   id SERIAL PRIMARY KEY,
   code VARCHAR(128),
@@ -81,9 +90,9 @@ CREATE TABLE couponcodes (
 
 INSERT INTO couponcodes(code, percentage) VALUES ('dank', 19);
 INSERT INTO couponcodes(code, percentage) VALUES ('johan', -1);
--- INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
+INSERT INTO couponcodes(code, percentage) VALUES ('joris', 98);
 INSERT INTO couponcodes(code, percentage) VALUES ('maurice', 99);
-INSERT INTO couponcodes(code, percentage) VALUES ('ilyas', 100);
+INSERT INTO couponcodes(code, percentage) VALUES ('ilyas', 99);
 
 INSERT INTO users (username, password, passwordsalt, mail, profilepicture, paymentmail, inventory, favorites, orderhistory, membersince, isadmin) VALUES
   (

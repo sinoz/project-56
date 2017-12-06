@@ -107,10 +107,10 @@ public class SearchService {
             }
 
             products = sortProducts(scores, products, selectedGameCategory);
-
-            if (selectedGameCategory != null)
-                change = true;
         }
+
+        if (selectedGameCategory != null)
+            change = true;
 
         if (!change)
             products = productService.fetchProducts();

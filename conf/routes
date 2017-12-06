@@ -59,8 +59,8 @@ GET         /placeorder/buy/:verification/:token/:userId/:sessionToken/:p/:track
 GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedController.index(trackingId: String, mail: String)
 
 
-GET         /review                              controllers.AddReviewController.index
-POST        /review                              controllers.AddReviewController.addReview()
+GET         /review/:token                       controllers.AddReviewController.index(token: String)
+POST        /review/:reviewid/:productid/:usersenderid/:userreceiverid                          controllers.AddReviewController.addReview(reviewid: String, productid: String, usersenderid: String, userreceiverid: String)
 
 GET         /orderfailed                         controllers.OrderFailedController.index
 

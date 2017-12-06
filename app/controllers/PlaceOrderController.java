@@ -96,31 +96,39 @@ public final class PlaceOrderController extends Controller {
         if (orderExists(trackingId))
             return false;
 
+        // TODO: check if product already is bought
+
+        updateProduct(product);
         saveToDatabase(token, userId, price, trackingId, couponCode);
 
         sendOrderPlacedMail(mail, trackingId, product);
 
-        scheduleTask(trackingId, mail, product);
+        scheduleTask(trackingId, userId, mail, product);
 
         return true;
     }
 
-    private void scheduleTask(String trackingId, String mail, Product product) {
+    private void scheduleTask(String trackingId, int userId, String mail, Product product) {
         int status = 1;
-        schedule(trackingId, mail, status, product);
+        schedule(trackingId, userId, mail, status, product);
     }
 
-    private void schedule(String trackingId, String mail, int status, Product product) {
+    private void schedule(String trackingId, int userId, String mail, int status, Product product) {
         FiniteDuration d = Duration.create(30 + new Random().nextInt(15), TimeUnit.SECONDS);
         actorSystem.scheduler().scheduleOnce(d, () ->
         {
             updateDatabase(trackingId, status);
-            if (status < 5) {
-                schedule(trackingId, mail, status + 1, product);
+            if (status < 4) {
+                schedule(trackingId, userId, mail, status + 1, product);
             } else {
-                sendOrderFinishedMail(mail, trackingId, product);
+                finishOrder(trackingId, userId, mail, product);
             }
         }, context);
+    }
+
+    private void finishOrder(String trackingId, int userId, String mail, Product product) {
+        saveReviewToken(trackingId, userId, product);
+        sendOrderFinishedMail(mail, trackingId, product);
     }
 
     private boolean orderExists(String trackingId) {
@@ -131,6 +139,14 @@ public final class PlaceOrderController extends Controller {
             ResultSet result = stmt.executeQuery();
 
             return result.next();
+        });
+    }
+
+    private void updateProduct(Product product) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE gameaccounts SET disabled = TRUE WHERE id=?");
+            stmt.setInt(1, product.getId());
+            stmt.execute();
         });
     }
 
@@ -158,6 +174,17 @@ public final class PlaceOrderController extends Controller {
         });
     }
 
+    private void saveReviewToken(String trackingId, int userId, Product product) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO reviewtokens (reviewid, userreceiverid, usersenderid, productid) VALUES (?, ?, ?, ?)");
+            stmt.setString(1, trackingId);
+            stmt.setInt(2, product.getUserId());
+            stmt.setInt(3, userId);
+            stmt.setInt(4, product.getId());
+            stmt.execute();
+        });
+    }
+
     private void sendOrderPlacedMail(String mail, String trackingId, Product product) {
         if (!checkMail(mail))
             return;
@@ -171,7 +198,7 @@ public final class PlaceOrderController extends Controller {
             return;
 
         String title = "ReStart - Product Delivered - " + trackingId;
-        mails.sendEmail(title, mail, "Your order with tracking ID: " + trackingId + ". Has been delivered. You can use these details to log in: ...");
+        mails.sendEmail(title, mail, "Your order with tracking ID: " + trackingId + " has been delivered. You can write a review by going to: restart-webshop.herokuapp.com/review/" + trackingId + " You can use these details to log in: ...");
     }
 
     private boolean checkMail(String mail) {
