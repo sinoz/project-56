@@ -260,7 +260,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'This is a Worst Player account!!!', -- description
     now(), -- addedsince
     TRUE, -- canbuy
-    -10.00, -- buyprice
+    1.00, -- buyprice
     FALSE, -- cantrade
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
