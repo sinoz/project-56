@@ -27,7 +27,7 @@
                                 <div class="row">
                                     <div class="col-md-2 col-sm-2">
                                         <div class="live-camera">
-                                            <a href="/admin/products/i/@product.getId">
+                                            <a href="/admin/products/productsSelected/@product.getId">
                                                 <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
                                                     <div class="transbox"><p>@product.getBuyPriceText</p></div>
                                                 </figure>
@@ -35,8 +35,8 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-6 image">
-                                        <a href="/admin/products/i/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
-                                        <a href="/admin/products/i/@product.getId"><button class="awesomebutton">Details</button></a>
+                                        <a href="/admin/products/productsSelected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                        <a href="/admin/products/productsSelected/@product.getId"><button class="awesomebutton">Details</button></a>
                                         <a href="/products/selected/@product.getId"><button class="awesomebutton">Public</button></a>
                                     </div>
                                 </div>
