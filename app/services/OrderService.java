@@ -1,6 +1,8 @@
 package services;
 
 import models.Order;
+import models.Product;
+import models.ViewableUser;
 import play.db.Database;
 
 import javax.inject.Inject;
@@ -24,9 +26,14 @@ public final class OrderService {
      */
     private final play.db.Database database;
 
+    private final ProductService productService;
+    private final UserViewService userViewService;
+
     @Inject
-    public OrderService(play.db.Database database){
+    public OrderService(play.db.Database database, ProductService productService, UserViewService userViewService) {
         this.database = database;
+        this.productService = productService;
+        this.userViewService = userViewService;
     }
 
     /**
@@ -41,18 +48,28 @@ public final class OrderService {
 
             ResultSet queryResult = stmt.executeQuery();
 
-            if(queryResult.next()){
+            if (queryResult.next()){
                 Order order = new Order();
+
+                int productid = queryResult.getInt("productid");
+                int userid = queryResult.getInt("userid");
 
                 order.setId(queryResult.getInt("id"));
                 order.setTrackId(trackid);
                 order.hasUser(queryResult.getBoolean("hasuser"));
-                order.setUserId(queryResult.getInt("userid"));
-                order.setProductId(queryResult.getInt("productid"));
+                order.setUserId(userid);
+                order.setProductId(productid);
                 order.setPrice(queryResult.getFloat("price"));
                 order.setCouponCode(queryResult.getString("couponcode"));
                 order.setOrderType(queryResult.getInt("ordertype"));
                 order.setStatus(queryResult.getInt("status"));
+                order.setOrderplaced(queryResult.getDate("orderplaced"));
+
+                Optional<Product> product = productService.fetchProduct(productid);
+                Optional<ViewableUser> user = userViewService.fetchViewableUser(userid);
+
+                product.ifPresent(order::setProduct);
+                user.ifPresent(order::setUser);
 
                 result = Optional.of(order);
             }
@@ -61,7 +78,7 @@ public final class OrderService {
         });
     }
 
-    public List<Order> getOrderByUser(int userid){
+    public List<Order> getOrdersByUser(int userid){
         return database.withConnection(connection -> {
             List<Order> result = new ArrayList<>();
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE userid=?");
@@ -69,18 +86,26 @@ public final class OrderService {
 
             ResultSet queryResult = stmt.executeQuery();
 
-            if(queryResult.next()){
+            while (queryResult.next()){
                 Order order = new Order();
+
+                int productid = queryResult.getInt("productid");
 
                 order.setId(queryResult.getInt("id"));
                 order.setTrackId(queryResult.getString("trackid"));
                 order.hasUser(queryResult.getBoolean("hasuser"));
                 order.setUserId(userid);
-                order.setProductId(queryResult.getInt("productid"));
+                order.setProductId(productid);
                 order.setPrice(queryResult.getFloat("price"));
                 order.setOrderType(queryResult.getInt("ordertype"));
                 order.setStatus(queryResult.getInt("status"));
                 order.setOrderplaced(queryResult.getDate("orderplaced"));
+
+                Optional<Product> product = productService.fetchProduct(productid);
+                Optional<ViewableUser> user = userViewService.fetchViewableUser(userid);
+
+                product.ifPresent(order::setProduct);
+                user.ifPresent(order::setUser);
 
                 result.add(order);
             }

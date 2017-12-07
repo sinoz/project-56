@@ -1,9 +1,7 @@
 package controllers;
 
-import com.google.common.collect.Lists;
 import models.Order;
 import models.Product;
-import models.User;
 import models.ViewableUser;
 import play.data.FormFactory;
 import play.db.Database;
@@ -13,7 +11,6 @@ import services.OrderService;
 import services.ProductService;
 import services.SessionService;
 import services.UserViewService;
-import views.html.myaccount.index;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -67,7 +64,7 @@ public final class MyAccountController extends Controller {
 			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
 			if (user.isPresent())
 			{
-				List<Order> order = orderService.getOrderByUser(user.get().getId());
+				List<Order> order = orderService.getOrdersByUser(user.get().getId());
 				List<Product> product = productService.fetchProducts();
 				return ok(views.html.myaccount.index.render(session(), user.get(), order, product));
 			}else {

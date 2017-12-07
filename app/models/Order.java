@@ -51,6 +51,8 @@ public final class Order extends Model {
 	@Formats.DateTime(pattern = "dd/MM/yyyy")
 	private Date orderplaced;
 
+	private Product product;
+	private ViewableUser user;
 
 	public int getId() {
 		return id;
@@ -130,5 +132,21 @@ public final class Order extends Model {
 
 	public void setOrderplaced(Date orderplaced) {
 		this.orderplaced = orderplaced;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public ViewableUser getUser() {
+		return user;
+	}
+
+	public void setUser(ViewableUser user) {
+		this.user = user;
 	}
 }

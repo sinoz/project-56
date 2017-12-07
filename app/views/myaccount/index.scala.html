@@ -46,8 +46,16 @@
                                             @for(order <- orders) {
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>@order.getProductId</td>
-                                                    <td>@order.getUserId</td>
+                                                    @if(order.getProduct != null) {
+                                                        <td>@order.getProduct.getTitle</td>
+                                                    } else {
+                                                        <td>Not Found</td>
+                                                    }
+                                                    @if(order.getUser != null) {
+                                                        <td>@order.getUser.getUsername</td>
+                                                    } else {
+                                                        <td>Not Found</td>
+                                                    }
                                                     <td><a href="/trackorder/@order.getTrackId"><i>Status</i></a></td>
                                                     <td>@order.getOrderplaced</td>
                                                     <td>€@order.getPrice</td>

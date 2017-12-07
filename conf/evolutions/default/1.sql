@@ -488,7 +488,6 @@ INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, stat
     '', -- couponcode
     0, -- status
     now() -- orderplaced
-
   );
 
 INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES
