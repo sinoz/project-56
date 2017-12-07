@@ -71,17 +71,47 @@ public final class AdminController extends Controller {
 	    try {
 	        int gameId = Integer.valueOf(id);
             Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
-            if (gc.isPresent()) {
-                Form<GameCategoryForm> form = formFactory.form(GameCategoryForm.class);
-                form.get().title = gc.get().getName();
-                form.get().description = gc.get().getDescription();
-                return redirect(ok(gamecategorySelected.render(form, session(), gc.get())));
-            }
+            if (gc.isPresent())
+                return ok(gamecategorySelected.render(formFactory.form(GameCategoryForm.class), session(), gc.get()));
         } catch (Exception e) {
 	        e.printStackTrace();
         }
         return indexGameCategories();
     }
+
+    public Result updateGameCategorySelected(String id) {
+        Form<GameCategoryForm> formBinding = formFactory.form(GameCategoryForm.class).bindFromRequest();
+        try {
+            int gameId = Integer.valueOf(id);
+            Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
+            if (gc.isPresent()) {
+                if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+                    return badRequest(gamecategorySelected.render(formBinding, session(), gc.get()));
+                } else {
+                    GameCategoryForm form = formBinding.get();
+                    String title = form.getName();
+                    String description = form.getDescription();
+                    productService.updateGameCategory(gameId, title, description);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	    return redirect("/admin/gamecategories");
+    }
+
+//    public Result deleteGameCategorySelected(String id) {
+//        try {
+//            int gameId = Integer.valueOf(id);
+//            Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
+//            if (gc.isPresent()) {
+//                productService.deleteGameCategory(gameId);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return redirect("/admin/gamecategories");
+//    }
 
     public Result indexProducts() {
         List<Product> p = productService.fetchProducts();

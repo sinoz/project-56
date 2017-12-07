@@ -13,7 +13,7 @@ import java.util.List;
 public final class GameCategoryForm implements Constraints.Validatable<List<ValidationError>> {
 
 	@Constraints.Required
-	public String title;
+	public String name;
 
 	@Constraints.Required
 	public String description;
@@ -22,12 +22,12 @@ public final class GameCategoryForm implements Constraints.Validatable<List<Vali
 	public List<ValidationError> validate() {
 		List<ValidationError> errors = new ArrayList<>();
 
-		if (title.length() < 2) {
-			errors.add(new ValidationError("title", "Title must be at least 2 characters long"));
+		if (name.length() < 2) {
+			errors.add(new ValidationError("name", "Name must be at least 2 characters long"));
 		}
 
-		if (title.length() > 32) {
-			errors.add(new ValidationError("title", "Title must be maximum of 32 characters long"));
+		if (name.length() > 32) {
+			errors.add(new ValidationError("name", "Name must be maximum of 32 characters long"));
 		}
 
 		if (description.length() < 8) {
@@ -37,8 +37,8 @@ public final class GameCategoryForm implements Constraints.Validatable<List<Vali
 		return errors;
 	}
 
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
 	public String getDescription() {
