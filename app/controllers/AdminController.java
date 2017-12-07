@@ -47,14 +47,17 @@ public final class AdminController extends Controller {
      */
     private final FormFactory formFactory;
 
+    private final AuthenticationService authService;
+
     private final AdminService adminService;
 
 	@Inject
-    public AdminController(Database database, UserViewService userViewService, ProductService productService, FormFactory formFactory, AdminService adminService) {
+    public AdminController(Database database, UserViewService userViewService, ProductService productService, FormFactory formFactory, AuthenticationService authService, AdminService adminService) {
 	    this.database = database;
 	    this.userViewService = userViewService;
 	    this.productService = productService;
 	    this.formFactory = formFactory;
+	    this.authService = authService;
 	    this.adminService = adminService;
     }
 
@@ -109,8 +112,14 @@ public final class AdminController extends Controller {
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
                 return badRequest(views.html.admin.modifyUser.render(formBinding, user, session()));
             } else {
-                adminService.updateSettings(Integer.valueOf(userid), form);
-                return redirect("/admin/users/modify/" + userid);
+                Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
+                if(!admin.isPresent()) {
+                    formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
+                    return badRequest(views.html.admin.modifyUser.render(formBinding, user, session()));
+                } else {
+                    adminService.updateSettings(Integer.valueOf(userid), form);
+                    return redirect("/admin/users/modify/" + userid);
+                }
             }
         }
     }

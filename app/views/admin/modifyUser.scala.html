@@ -61,6 +61,17 @@
                                         </div>
                                     </div>
 
+                                        <!-- Admin password input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="adminPassword">Your Admin Password:</label>
+                                        <div class="col-md-4">
+                                            <input id="password" name="adminPassword" type="password" class="form-control input-md">
+                                            @for(error <- form("adminPassword").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
                                     <br>
 
                                         <!-- Submit Button -->
