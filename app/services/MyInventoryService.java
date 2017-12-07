@@ -216,13 +216,14 @@ public final class MyInventoryService {
 
     private void saveToDatabase(int token, int userId, String trackingId) {
         database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orders (trackid, hasuser, userid, productid, ordertype, status) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orders (trackid, hasuser, userid, productid, ordertype, status, orderplaced) VALUES (?, ?, ?, ?, ?, ?, ?)");
             stmt.setString(1, trackingId);
             stmt.setBoolean(2, userId != -1);
             stmt.setInt(3, userId);
             stmt.setInt(4, token);
             stmt.setInt(5, 1);
             stmt.setInt(6, 0);
+            stmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
             stmt.execute();
         });
     }

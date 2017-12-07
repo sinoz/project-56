@@ -1,5 +1,7 @@
-@(session: play.mvc.Http.Session)
-    @import components._
+@import java.util
+@import components._
+
+@(session: play.mvc.Http.Session, viewableUser: ViewableUser, orders: util.List[Order], products: util.List[Product])
 
 @main("ReStart") {
     <body>
@@ -23,9 +25,44 @@
                             @profileUserMenu("myaccount", null)
                         </div>
                     </div>
+
                     <div class="col-md-8">
                         <div class="portlet">
+                            <h1>Order History</h1>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Product Name</th>
+                                                    <th>Buyer</th>
+                                                    <th>TrackID</th>
+                                                    <th>Date</th>
+                                                    <th>Price</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            @for(order <- orders) {
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>@order.getProductId</td>
+                                                    <td>@order.getUserId</td>
+                                                    <td><a href="/trackorder/@order.getTrackId"><i>Status</i></a></td>
+                                                    <td>@order.getOrderplaced</td>
+                                                    <td>€@order.getPrice</td>
+                                                    <td>@if(order.getStatus != 4) {
+                                                        <span class="label label-info">Processing</span>
+                                                    }else{
+                                                        <span class="label label-primary">Completed</span>
+                                                    }
 
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </div>
                         </div>
                     </div>
                 </div>

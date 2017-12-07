@@ -60,7 +60,8 @@ CREATE TABLE orders (
   price DOUBLE PRECISION,
   couponcode VARCHAR(128),
   ordertype INT, -- type of order
-  status INT -- TODO: change to enum, status of the order
+  status INT, -- TODO: change to enum, status of the order
+  orderplaced TIMESTAMP
 );
 
 CREATE TABLE reviews (
@@ -468,7 +469,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   );
 
-INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status) VALUES
+INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status, orderplaced) VALUES
   (
     '54947df8-0e9e-4471-a2f9-9af509fb5889', -- trackid
     TRUE, -- hasuser
@@ -476,7 +477,9 @@ INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, stat
     1, -- productid
     105.00, -- price
     '', -- couponcode
-    0 -- status
+    0, -- status
+    now() -- orderplaced
+
   );
 
 INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES

@@ -1,10 +1,12 @@
 package models;
 
 import io.ebean.Model;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * An account order.
@@ -43,6 +45,11 @@ public final class Order extends Model {
 
 	@Constraints.Required
 	private int status;
+
+	/** date of when the order was placed, it is only set once */
+	@Constraints.Required
+	@Formats.DateTime(pattern = "dd/MM/yyyy")
+	private Date orderplaced;
 
 
 	public int getId() {
@@ -115,5 +122,13 @@ public final class Order extends Model {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public Date getOrderplaced() {
+		return orderplaced;
+	}
+
+	public void setOrderplaced(Date orderplaced) {
+		this.orderplaced = orderplaced;
 	}
 }

@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -53,6 +55,34 @@ public final class OrderService {
                 order.setStatus(queryResult.getInt("status"));
 
                 result = Optional.of(order);
+            }
+
+            return result;
+        });
+    }
+
+    public List<Order> getOrderByUser(int userid){
+        return database.withConnection(connection -> {
+            List<Order> result = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE userid=?");
+            stmt.setInt(1, userid);
+
+            ResultSet queryResult = stmt.executeQuery();
+
+            if(queryResult.next()){
+                Order order = new Order();
+
+                order.setId(queryResult.getInt("id"));
+                order.setTrackId(queryResult.getString("trackid"));
+                order.hasUser(queryResult.getBoolean("hasuser"));
+                order.setUserId(userid);
+                order.setProductId(queryResult.getInt("productid"));
+                order.setPrice(queryResult.getFloat("price"));
+                order.setOrderType(queryResult.getInt("ordertype"));
+                order.setStatus(queryResult.getInt("status"));
+                order.setOrderplaced(queryResult.getDate("orderplaced"));
+
+                result.add(order);
             }
 
             return result;
