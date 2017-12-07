@@ -3,7 +3,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], isFavourited: Boolean, session: play.mvc.Http.Session)
+@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], loggedIn: Boolean, isFavourited: Boolean, session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -25,7 +25,7 @@
                         <div class="live-camera">
                             <figure class="live-camera-cover">
                                 <div>
-                                @if(session.get("loggedInAs") != null){
+                                @if(loggedIn) {
                                     @helper.form(action = helper.CSRF(routes.FavouritesController.addFavourite())) {
                                         <input type="hidden" name="id" value=@product.getId>
                                         @if(isFavourited) {

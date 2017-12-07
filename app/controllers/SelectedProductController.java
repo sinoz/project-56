@@ -4,15 +4,15 @@ import forms.FavouriteForm;
 import models.GameCategory;
 import models.Product;
 import models.Review;
+import models.ViewableUser;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ProductService;
+import services.SessionService;
 import services.UserViewService;
 
 import javax.inject.Inject;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +50,7 @@ public class SelectedProductController extends Controller {
     public Result index(String token) {
         try {
             int productId = Integer.valueOf(token);
-            Optional<Product> product = productService.fetchProduct(productId);
+            Optional<Product> product = productService.fetchVisibleProduct(productId);
             List<Review> reviewsproduct;
             if (product.isPresent()) {
                 Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.get().getGameId());
@@ -62,9 +62,16 @@ public class SelectedProductController extends Controller {
                         totalRating += review.getRating();
                     int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                    boolean isFavourited = userViewService.fetchProductIsFavourited(product.get().getUserId(), productId);
+                    String loggedInAs = SessionService.getLoggedInAs(session());
+                    Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+                    boolean loggedIn = false;
+                    boolean isFavourited = false;
+                    if (user.isPresent()) {
+                        loggedIn = true;
+                        isFavourited = userViewService.fetchProductIsFavourited(user.get().getId(), productId);
+                    }
 
-                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), isFavourited, session()));
+                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), loggedIn, isFavourited, session()));
                 }
             }
         } catch (Exception e) {

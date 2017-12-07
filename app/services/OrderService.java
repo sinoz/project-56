@@ -49,6 +49,7 @@ public final class OrderService {
                 order.setProductId(queryResult.getInt("productid"));
                 order.setPrice(queryResult.getFloat("price"));
                 order.setCouponCode(queryResult.getString("couponcode"));
+                order.setOrderType(queryResult.getInt("ordertype"));
                 order.setStatus(queryResult.getInt("status"));
 
                 result = Optional.of(order);

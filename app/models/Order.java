@@ -39,16 +39,8 @@ public final class Order extends Model {
 	/** A coupon code used for this order */
 	private String couponCode;
 
-	/**
-	 * The status of this order (0-5)
-	 * 0:  added
-	 * 1:  processing
-	 * 2:  changing email
-	 * 3:  changing password
-	 * 4:  initializing inventory
-	 * 5:  done
-	 * TODO: use an Enum for this instead of a hardcoded int value
-	 */
+	private int orderType;
+
 	@Constraints.Required
 	private int status;
 
@@ -107,6 +99,14 @@ public final class Order extends Model {
 
 	public void setCouponCode(String couponCode) {
 		this.couponCode = couponCode;
+	}
+
+	public int getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(int orderType) {
+		this.orderType = orderType;
 	}
 
 	public int getStatus() {

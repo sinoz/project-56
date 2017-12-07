@@ -2,6 +2,7 @@ package controllers;
 
 import forms.MailerForm;
 import models.ViewableUser;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
 import play.db.Database;
@@ -10,6 +11,7 @@ import play.mvc.Result;
 import services.MailerService;
 import services.SessionService;
 import services.UserViewService;
+import util.RecaptchaUtils;
 import views.html.contact.index;
 
 import javax.inject.Inject;
@@ -34,14 +36,19 @@ public final class ContactController extends Controller {
 	private final FormFactory formFactory;
 
 	private final UserViewService userViewService;
+
 	private final MailerService mails;
 
+	private RecaptchaUtils recaptcha;
+
 	@Inject
-	public ContactController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, MailerService mails) {
+	public ContactController(play.db.Database database, FormFactory formFactory, UserViewService userViewService, MailerService mails, RecaptchaUtils recaptcha) {
 	    this.database = database;
 		this.formFactory = formFactory;
 		this.userViewService = userViewService;
 		this.mails = mails;
+		this.recaptcha = recaptcha;
+
 	}
 
 	/**
@@ -61,9 +68,15 @@ public final class ContactController extends Controller {
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
 			return badRequest(index.render(formBinding, getMail(), session()));
 		} else {
-			MailerForm form = formBinding.get();
-			mails.sendEmail(form);
-			return redirect("/");
+			DynamicForm requestData = formFactory.form().bindFromRequest();
+			String recaptchaResponse = requestData.get("g-recaptcha-response");
+			if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+				return badRequest(views.html.contact.index.render(formBinding, getMail(), session()));
+			} else {
+				MailerForm form = formBinding.get();
+				mails.sendEmail(form);
+				return redirect("/");
+			}
 		}
 	}
 

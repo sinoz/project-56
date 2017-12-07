@@ -1,6 +1,7 @@
 package controllers;
 
 import forms.CouponCodeForm;
+import forms.SessionMailForm;
 import models.*;
 import play.data.Form;
 import play.data.FormFactory;
@@ -64,7 +65,7 @@ public class ProductCheckoutBuyController extends Controller {
         try {
             int t = Integer.valueOf(token);
             return productService
-                    .fetchProduct(t)
+                    .fetchVisibleProduct(t)
                     .map(product -> {
                         Optional<User> user = userViewService.fetchUser(product.getUserId());
 
@@ -78,15 +79,20 @@ public class ProductCheckoutBuyController extends Controller {
     }
 
     public Result open(Product product, double price, Optional<User> user, String token, String couponCode) {
-        // TODO:
-        Optional<ViewableUser> buyer = userViewService.fetchViewableUser(SessionService.getLoggedInAs(session()));
+        String loggedInAs = SessionService.getLoggedInAs(session());
+        if (loggedInAs == null && !SessionService.isValidTime(session())) {
+            return ok(views.html.checkout.mail.render("/products/checkout/buy/" + product.getId(), formFactory.form(SessionMailForm.class)));
+        }
+
+        Optional<ViewableUser> buyer = userViewService.fetchViewableUser(loggedInAs);
         String userId = buyer.map(viewableUser -> viewableUser.getId() + "").orElse("null");
         String sessionToken = SessionService.getSessionToken(session());
+
         if (sessionToken == null) sessionToken = "null";
         String trackingId = orderService.getNewTrackingId();
+        if (couponCode == null) couponCode = "null";
         String mail = SessionService.getMail(session());
         if (mail == null) mail = "null";
-        if (couponCode == null) couponCode = "null";
 
         String verification = orderService.createVerification(token, userId, sessionToken, price + "", trackingId, couponCode, mail);
 
@@ -101,7 +107,7 @@ public class ProductCheckoutBuyController extends Controller {
             CouponCodeForm couponCodeForm = form.get();
 
             return productService
-                .fetchProduct(Integer.valueOf(token))
+                .fetchVisibleProduct(Integer.valueOf(token))
                 .map(product -> {
                     Optional<User> user = userViewService.fetchUser(product.getUserId());
                     Optional<CouponCode> couponCode = getCouponCode(couponCodeForm.coupon);
