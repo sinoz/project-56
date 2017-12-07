@@ -12,10 +12,11 @@ GET         /products/selected/:token            controllers.SelectedProductCont
 
 GET         /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.index(token: String)
 POST        /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.couponCode(token: String)
+POST        /products/checkout/mail/:redirect    controllers.ProductCheckoutMailController.index(redirect: String)
 
 GET         /newproduct/:gamecat                 controllers.AddProductController.index(gamecat: String)
 POST        /addproduct/:id                      controllers.AddProductController.addProduct(id: String)
-GET        /myaccount/inventory/update/:id       controllers.AddProductController.indexUpdateProduct(id: String)
+GET         /myaccount/inventory/update/:id      controllers.AddProductController.indexUpdateProduct(id: String)
 POST        /myaccount/inventory/update/:id      controllers.AddProductController.updateProduct(id: String)
 
 # Map static resources from the /public folder to the /assets URL path

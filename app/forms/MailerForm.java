@@ -34,37 +34,33 @@ public final class MailerForm implements Constraints.Validatable<List<Validation
             errors.add(new ValidationError("email", "Email must be at least 8 characters long"));
         }
 
-        if (phone.contains("[0-9]+") == true) {
-            errors.add(new ValidationError("phone", "this is an invalid number"));
+        if (phone.contains("[0-9]+")) {
+            errors.add(new ValidationError("phone", "This is an invalid number"));
         }
         if (email.length() > 128) {
             errors.add(new ValidationError("email", "Email must be maximum of 128 characters long"));
         }
 
-        if (name.length() <= 1) {
-            errors.add(new ValidationError("name", "fill in a real name dumbass"));
+        if (name.length() <= 1 || name.equals("name")) {
+            errors.add(new ValidationError("name", "Please fill in a real name"));
         }
 
-        if (name == ("rick roll") || name == ("name")) {
-            errors.add(new ValidationError("name", "You can't Rick roll me!??!?!"));
-        }
         return errors;
     }
 
-    public String getmailName() {
+    public String getName() {
         return name;
     }
 
-    public String getmailEmail() {
+    public String getMail() {
         return email;
     }
 
     public String getContent() {
-        return email;
+        return content;
     }
 
     public String getPhone() {
-        return email;
+        return phone;
     }
-
 }
