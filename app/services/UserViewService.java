@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.util.*;
 
 /**
- * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s for the {@link controllers.UserAccountController}
+ * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s
  *
  * @author Johan van der Hoeven
  * @author Maurice van Veen
@@ -103,7 +103,7 @@ public final class UserViewService {
     }
 
     /**
-     * Attempts to find a {@link User} that matches the given username and password combination.
+     * Attempts to find a {@link User} that matches the given username.
      */
     public Optional<User> fetchUser(String username) {
         return database.withConnection(connection -> {
@@ -142,7 +142,7 @@ public final class UserViewService {
     }
 
     /**
-     * Attempts to find a {@link User} that matches the given username and password combination.
+     * Attempts to find a {@link User} that matches the given id.
      */
     public Optional<User> fetchUser(int id) {
         return database.withConnection(connection -> {

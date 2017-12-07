@@ -22,7 +22,7 @@ public class SessionService {
 
         session.put("loggedInAs", user.getUsername());
         session.put("profilePictureURL", Optional.ofNullable(user.getProfilePicture()).orElse("images/default_profile_pic.png"));
-        session.put("usedMail", user.getMail());
+        setMail(session, user.getMail());
         session.put("usedPaymentMail", Optional.ofNullable(user.getPaymentMail()).orElse(""));
         session.put("sessionToken", token);
 
@@ -31,7 +31,7 @@ public class SessionService {
 
     public static void updateSession(Http.Session session, String usernameToChangeTo, String emailToChangeTo, String paymentMailToChangeTo) {
         session.put("loggedInAs", usernameToChangeTo);
-        session.put("usedMail", emailToChangeTo);
+        setMail(session, emailToChangeTo);
         session.put("usedPaymentMail", paymentMailToChangeTo);
     }
 
@@ -52,6 +52,27 @@ public class SessionService {
 
     public static String getMail(Http.Session session) {
         return session.getOrDefault("usedMail", null);
+    }
+
+    public static void setMail(Http.Session session, String mail) {
+        session.put("usedMail", mail);
+    }
+
+    public static boolean isValidTime(Http.Session session) {
+        String validTime = session.get("validTime");
+        if (validTime == null)
+            return false;
+
+        try {
+            long time = Long.valueOf(validTime);
+            return System.currentTimeMillis() < time;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void setValidTime(Http.Session session) {
+        session.put("validTime", (System.currentTimeMillis() + 1000 * 60) + "");
     }
 
     public static boolean redirect(Http.Session session, play.db.Database database) {

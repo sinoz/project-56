@@ -12,10 +12,11 @@ GET         /products/selected/:token            controllers.SelectedProductCont
 
 GET         /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.index(token: String)
 POST        /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.couponCode(token: String)
+POST        /products/checkout/mail/:redirect    controllers.ProductCheckoutMailController.index(redirect: String)
 
 GET         /newproduct/:gamecat                 controllers.AddProductController.index(gamecat: String)
 POST        /addproduct/:id                      controllers.AddProductController.addProduct(id: String)
-GET        /myaccount/inventory/update/:id       controllers.AddProductController.indexUpdateProduct(id: String)
+GET         /myaccount/inventory/update/:id      controllers.AddProductController.indexUpdateProduct(id: String)
 POST        /myaccount/inventory/update/:id      controllers.AddProductController.updateProduct(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
@@ -59,8 +60,8 @@ GET         /placeorder/buy/:verification/:token/:userId/:sessionToken/:p/:track
 GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedController.index(trackingId: String, mail: String)
 
 
-GET         /review                              controllers.AddReviewController.index
-POST        /review                              controllers.AddReviewController.addReview()
+GET         /review/:token                       controllers.AddReviewController.index(token: String)
+POST        /review/:reviewid/:productid/:usersenderid/:userreceiverid                          controllers.AddReviewController.addReview(reviewid: String, productid: String, usersenderid: String, userreceiverid: String)
 
 GET         /orderfailed                         controllers.OrderFailedController.index
 
@@ -70,7 +71,18 @@ GET         /trackorder/:trackingid              controllers.TrackOrderControlle
 POST        /trackorder/search                   controllers.TrackOrderController.redirect
 
 GET         /admin                               controllers.AdminController.index
+
 GET         /admin/users                         controllers.AdminController.indexUsers
+GET         /admin/users/view/:userid            controllers.AdminController.viewUser(userid: String)
+GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
+POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
+GET         /admin/users/delete/:userid          controllers.AdminController.indexDeleteUser(userid: String)
+POST        /admin/users/delete/:userid          controllers.AdminController.deleteUser(userid: String)
+
 GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
+GET         /admin/gamecategories/i/:id          controllers.AdminController.indexGameCategorySelected(id: String)
+POST        /admin/gamecategories/i/:id          controllers.AdminController.updateGameCategorySelected(id: String)
+#GET         /admin/gamecategories/d/:id          controllers.AdminController.deleteGameCategorySelected(id: String)
+
 GET         /admin/products                      controllers.AdminController.indexProducts
 GET         /admin/statistics                    controllers.AdminController.indexStatistics

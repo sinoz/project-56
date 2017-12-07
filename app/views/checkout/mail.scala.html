@@ -1,0 +1,57 @@
+@(redirect: String, form: play.data.Form[forms.SessionMailForm])
+    @import components._
+
+@main("Mail Form") {
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/registration.css")">
+
+    <body>
+        <div class="site-content">
+            @header("Home", session)
+
+            @banner()
+
+            <main class="main-content">
+                <div class="fullwidth-block">
+                    <div class="container">
+                        <h1>Set an Email for your ReStart</h1>
+
+                        @helper.form(action = helper.CSRF(routes.ProductCheckoutMailController.index(redirect)), 'style -> "width:400px; margin: 0 auto;") {
+                            <div class="required-field-block">
+                                @defining(if (form("email").getValue.isPresent) form("email").getValue.get() else "") { text =>
+                                    <input type="text" name="email" value="@text" placeholder="Email" class="form-control">
+                                }
+                                <div class="required-icon">
+                                    <div class="text">*</div>
+                                </div>
+
+                                @for(error <- form("email").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <button class="btn btn-primary">Save</button>
+
+                            @if(form.hasGlobalErrors) {
+                                <p class="error">
+                                @for(error <- form.globalErrors) {
+                                    @error.format(messages())
+                                }
+                                </p>
+                            }
+                        }
+                    </div>
+                </div>
+            </main>
+
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/registration.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
