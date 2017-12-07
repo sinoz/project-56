@@ -25,6 +25,9 @@ public final class AdminModifyUserForm implements Constraints.Validatable<List<V
     public String paymentMail;
 
     @Constraints.Required
+    public boolean isAdmin;
+
+    @Constraints.Required
     public String adminPassword;
 
 //    @Constraints.Required
@@ -71,6 +74,10 @@ public final class AdminModifyUserForm implements Constraints.Validatable<List<V
 
     public String getPaymentMail(){
         return paymentMail;
+    }
+
+    public boolean getIsAdmin(){
+        return isAdmin;
     }
 
     public String getAdminPassword(){

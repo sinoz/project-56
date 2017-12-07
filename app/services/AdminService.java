@@ -5,6 +5,7 @@ import forms.AdminModifyUserForm;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * @author Johan van der Hoeven
@@ -45,6 +46,16 @@ public final class AdminService {
             stmt.setString(3, form.paymentMail);
             stmt.setInt(4, userId);
             stmt.execute();
+        });
+    }
+
+    public boolean isAdmin(int userId){
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT isadmin FROM users WHERE id=?");
+            stmt.setInt(1, userId);
+
+            ResultSet result = stmt.executeQuery();
+            return result.next() && result.getBoolean("isadmin");
         });
     }
 }

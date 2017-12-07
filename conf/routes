@@ -72,7 +72,7 @@ POST        /trackorder/search                   controllers.TrackOrderControlle
 
 GET         /admin                               controllers.AdminController.index
 GET         /admin/users                         controllers.AdminController.indexUsers
-GET         /admin/users/view                    controllers.AdminController.indexUsers
+GET         /admin/users/view/:userid            controllers.AdminController.viewUser(userid: String)
 GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
 POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
 GET         /admin/gamecategories                controllers.AdminController.indexGameCategories

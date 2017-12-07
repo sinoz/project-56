@@ -1,5 +1,5 @@
 @import forms.AdminModifyUserForm
-@(form: play.data.Form[AdminModifyUserForm], user: Optional[User], session: play.mvc.Http.Session)
+@(form: play.data.Form[AdminModifyUserForm], user: Optional[User], isAdmin: Boolean, session: play.mvc.Http.Session)
 @import components._
 
 @main("Restart"){
@@ -61,6 +61,22 @@
                                         </div>
                                     </div>
 
+                                        <!-- IsAdmin input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="isAdmin">Make Administrator:</label>
+                                        <div style="float: left; position: relative; width: 6%;">
+                                            @if(isAdmin) {
+                                                <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md" checked>
+                                            } else {
+                                                <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md">
+                                                }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("canTrade").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
                                         <!-- Admin password input-->
                                     <div class="form-group">
                                         <label class="col-md-4 control-label" for="adminPassword">Your Admin Password:</label>
@@ -71,6 +87,8 @@
                                             }
                                         </div>
                                     </div>
+
+
 
                                     <br>
 

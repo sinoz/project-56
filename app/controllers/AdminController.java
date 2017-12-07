@@ -93,7 +93,12 @@ public final class AdminController extends Controller {
      */
     public Result indexModifyUser(String userid){
         Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
-        return ok(modifyUser.render(formFactory.form(AdminModifyUserForm.class), user, session()));
+        boolean isAdmin = false;
+        if(user.isPresent() && adminService.isAdmin(user.get().getId())){
+            isAdmin = true;
+        }
+
+        return ok(modifyUser.render(formFactory.form(AdminModifyUserForm.class), user, isAdmin, session()));
     }
 
     /**
@@ -102,25 +107,37 @@ public final class AdminController extends Controller {
     public Result modifyUser(String userid){
         Form<AdminModifyUserForm> formBinding = formFactory.form(AdminModifyUserForm.class).bindFromRequest();
         Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
+        boolean isAdmin = false;
+        if(user.isPresent() && adminService.isAdmin(user.get().getId())){
+            isAdmin = true;
+        }
 
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-            return badRequest(views.html.admin.modifyUser.render(formBinding, user, session()));
+            return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
         } else {
             AdminModifyUserForm form = formBinding.get();
 
             if(adminService.userExists(form.username.toLowerCase())){
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
-                return badRequest(views.html.admin.modifyUser.render(formBinding, user, session()));
+                return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
             } else {
                 Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
                 if(!admin.isPresent()) {
                     formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
-                    return badRequest(views.html.admin.modifyUser.render(formBinding, user, session()));
+                    return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
                 } else {
                     adminService.updateSettings(Integer.valueOf(userid), form);
                     return redirect("/admin/users/modify/" + userid);
                 }
             }
         }
+    }
+
+    /**
+     * The method that renders the view user page
+     */
+    public Result viewUser(String userid){
+        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
+        return ok(viewUser.render(user, session()));
     }
 }
