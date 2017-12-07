@@ -1,0 +1,74 @@
+@(form: play.data.Form[forms.GameCategoryForm], session: play.mvc.Http.Session, gameCategory: GameCategory)
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-title">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("gamecategories", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-20">
+                                        <h1 class="section-title">@gameCategory.getName</h1>
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="live-camera">
+                                                <a href="/products/game=@gameCategory.getName.replace(" ", "_")">
+                                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div style="margin-left: 20px;" class="col-md-7 col-sm-14">
+                                            @helper.form(action = helper.CSRF(routes.LoginController.login()), 'style -> "margin: 0 auto;") {
+                                                <div class="form-group">
+                                                    <label for="title" class="control-label">Title</label>
+                                                    @defining(if (form("title").getValue.isPresent) form("title").getValue.get() else "") { text =>
+                                                        <input type="text" class="form-control" id="title" title="title" required="" value="@text" placeholder="Title...">
+                                                    }
+                                                    @for(error <- form("title").errors) {
+                                                        <p>@error.format(messages())</p>
+                                                    }
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="description" class="control-label">Description</label>
+                                                    @defining(if (form("description").getValue.isPresent) form("description").getValue.get() else "") { text =>
+                                                        <textarea class="form-control" id="description" title="description" required="" rows="5" placeholder="Description...">@text</textarea>
+                                                    }
+                                                    @for(error <- form("description").errors) {
+                                                        <p>@error.format(messages())</p>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
