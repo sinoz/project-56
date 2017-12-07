@@ -26,14 +26,45 @@
                         } else {
                             <h2>View User</h2>
 
-                            <strong>UserId:         </strong> @user.get().getId
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="id">User Id:</label>
+                                <div class="col-md-5">
+                                    <strong>@user.get().getId</strong>
+                                </div>
+                            </div>
                             <br>
-                            <strong>Username:       </strong> @user.get().getUsername
                             <br>
-                            <strong>Email:          </strong> @user.get().getMail
-                            <br>
-                            <strong>Payment Email:  </strong> @user.get().getPaymentMail
 
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="username">Username:</label>
+                                <div class="col-md-5">
+                                    <strong>@user.get().getUsername</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="mail">Email:</label>
+                                <div class="col-md-5">
+                                    <strong>@user.get().getMail</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="paymail">Payment Email:</label>
+                                <div class="col-md-5">
+                                    <strong>@user.get().getPaymentMail</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                                <!-- Back Button -->
+                            <div>
+                                <a href="/admin/users">
+                                    <button class="btn btn-primary">Back</button>
+                                </a>
+                            </div>
                         }
                         </div>
                     </div>

@@ -162,7 +162,7 @@ public final class AdminController extends Controller {
         } else {
             AdminModifyUserForm form = formBinding.get();
 
-            if(adminService.userExists(form.username.toLowerCase())){
+            if(adminService.userExists(form.username.toLowerCase()) && !form.username.equals(user.get().getUsername())){
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
                 return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
             } else {
