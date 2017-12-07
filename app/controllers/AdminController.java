@@ -1,6 +1,7 @@
 package controllers;
 
 import com.google.common.collect.Lists;
+import forms.AdminDeleteUserForm;
 import forms.AdminModifyUserForm;
 import forms.GameCategoryForm;
 import models.GameCategory;
@@ -173,6 +174,39 @@ public final class AdminController extends Controller {
                     adminService.updateSettings(Integer.valueOf(userid), form);
                     return redirect("/admin/users/modify/" + userid);
                 }
+            }
+        }
+    }
+
+    /**
+     * The method that renders the delete user page
+     */
+    public Result indexDeleteUser(String userid){
+        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
+        return ok(deleteUser.render(formFactory.form(AdminDeleteUserForm.class), user, session()));
+    }
+
+    /**
+     * The method that deletes the user using the adminService
+     */
+    public Result deleteUser(String userid){
+        Form<AdminDeleteUserForm> formBinding = formFactory.form(AdminDeleteUserForm.class).bindFromRequest();
+        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
+
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return badRequest(views.html.admin.deleteUser.render(formBinding, user, session()));
+        } else {
+            AdminDeleteUserForm form = formBinding.get();
+            Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
+            if(!admin.isPresent()) {
+                formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
+                return badRequest(views.html.admin.deleteUser.render(formBinding, user, session()));
+            } else if(admin.get().getId() == Integer.valueOf(userid)) {
+                formBinding = formBinding.withError(new ValidationError("adminPassword", "You can not delete your own account."));
+                return badRequest(views.html.admin.deleteUser.render(formBinding, user, session()));
+            } else {
+                adminService.deleteUser(Integer.valueOf(userid));
+                return redirect("/admin/users");
             }
         }
     }

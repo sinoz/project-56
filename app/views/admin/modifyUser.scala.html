@@ -88,17 +88,28 @@
                                         </div>
                                     </div>
 
-
-
                                     <br>
 
                                         <!-- Submit Button -->
                                     <div class="form-group">
                                         <div class="col-md-8">
-                                            <input type="submit" name="Submit" value="Save">
+                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
                                     </div>
                                 }
+                                    <!-- Cancel Button -->
+                                    <div>
+                                        <a href="/admin/users">
+                                            <button class="btn btn-primary">Cancel</button>
+                                        </a>
+                                    </div>
+
+                                    <!-- Delete Button -->
+                                    <div>
+                                        <a href="/admin/users/delete/@user.get().getId">
+                                            <button class="btn btn-danger">Delete User</button>
+                                        </a>
+                                    </div>
                             }
                         </div>
                     </div>

@@ -58,4 +58,12 @@ public final class AdminService {
             return result.next() && result.getBoolean("isadmin");
         });
     }
+
+    public void deleteUser(int userId){
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM users WHERE id=?");
+            stmt.setInt(1, userId);
+            stmt.execute();
+        });
+    }
 }
