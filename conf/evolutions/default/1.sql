@@ -61,7 +61,7 @@ CREATE TABLE orders (
   price DOUBLE PRECISION,
   couponcode VARCHAR(128),
   ordertype INT, -- type of order
-  status INT -- TODO: change to enum, status of the order
+  status INT -- status of order
 );
 
 CREATE TABLE reviews (

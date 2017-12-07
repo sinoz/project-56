@@ -63,7 +63,7 @@ public final class ProductService {
 	}
 
 	/**
-	 * Attempts to find a {@link GameCategory} that matches the given game name.
+	 * Attempts to find a {@link GameCategory} that matches the given game id.
 	 */
 	public Optional<GameCategory> fetchGameCategory(int gameId) {
 		return database.withConnection(connection -> {
@@ -115,6 +115,31 @@ public final class ProductService {
 			return gameCategory;
 		});
 	}
+
+	/**
+	 * Attempts to update a {@link GameCategory} that matches the given game id.
+	 */
+	public void updateGameCategory(int gameId, String name, String description) {
+		database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE gamecategories SET name=?, description=? WHERE id=?");
+			stmt.setString(1, name);
+			stmt.setString(2, description);
+			stmt.setInt(3, gameId);
+			stmt.execute();
+		});
+	}
+
+//    public void deleteGameCategory(int gameId) {
+//        database.withConnection(connection -> {
+//            PreparedStatement stmt = connection.prepareStatement("DELETE FROM gameaccounts WHERE gameid=?");
+//            stmt.setInt(1, gameId);
+//            stmt.execute();
+//
+//            stmt = connection.prepareStatement("DELETE FROM gamecategories WHERE id=?");
+//            stmt.setInt(1, gameId);
+//            stmt.execute();
+//        });
+//    }
 
 	/**
 	 * Attempts to find all {@link Product}.

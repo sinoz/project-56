@@ -72,7 +72,6 @@ public final class PlaceOrderController extends Controller {
                                 return redirect("/orderfailed");
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
                     // user does not exist or an error happened with user information
@@ -101,7 +100,7 @@ public final class PlaceOrderController extends Controller {
         updateProduct(product);
         saveToDatabase(token, userId, price, trackingId, couponCode);
 
-        sendOrderPlacedMail(mail, trackingId, product);
+        sendOrderPlacedMail(mail, userId, trackingId, product);
 
         scheduleTask(trackingId, userId, mail, product);
 
@@ -127,8 +126,9 @@ public final class PlaceOrderController extends Controller {
     }
 
     private void finishOrder(String trackingId, int userId, String mail, Product product) {
-        saveReviewToken(trackingId, userId, product);
-        sendOrderFinishedMail(mail, trackingId, product);
+        if (userId != -1)
+            saveReviewToken(trackingId, userId, product);
+        sendOrderFinishedMail(mail, userId, trackingId, product);
     }
 
     private boolean orderExists(String trackingId) {
@@ -185,7 +185,7 @@ public final class PlaceOrderController extends Controller {
         });
     }
 
-    private void sendOrderPlacedMail(String mail, String trackingId, Product product) {
+    private void sendOrderPlacedMail(String mail, int userId, String trackingId, Product product) {
         if (!checkMail(mail))
             return;
 
@@ -193,12 +193,15 @@ public final class PlaceOrderController extends Controller {
         mails.sendEmail(title, mail, "Your order has tracking ID: " + trackingId);
     }
 
-    private void sendOrderFinishedMail(String mail, String trackingId, Product product) {
+    private void sendOrderFinishedMail(String mail, int userId, String trackingId, Product product) {
         if (!checkMail(mail))
             return;
 
         String title = "ReStart - Product Delivered - " + trackingId;
-        mails.sendEmail(title, mail, "Your order with tracking ID: " + trackingId + " has been delivered. You can write a review by going to: restart-webshop.herokuapp.com/review/" + trackingId + " You can use these details to log in: ...");
+        String review = " You can write a review by going to: restart-webshop.herokuapp.com/review/" + trackingId;
+        if (userId == -1)
+            review = "";
+        mails.sendEmail(title, mail, "Your order with tracking ID: " + trackingId + " has been delivered." + review + " You can use these details to log in: ...");
     }
 
     private boolean checkMail(String mail) {

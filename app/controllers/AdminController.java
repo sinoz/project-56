@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.common.collect.Lists;
 import forms.AdminModifyUserForm;
+import forms.GameCategoryForm;
 import models.GameCategory;
 import models.Product;
 import models.User;
@@ -9,6 +10,8 @@ import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
+import play.data.Form;
+import play.data.FormFactory;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -74,6 +77,52 @@ public final class AdminController extends Controller {
         List<GameCategory> gc = productService.fetchGameCategories();
         return redirect(ok(gamecategories.render(session(), Lists.partition(gc, 4))));
     }
+
+    public Result indexGameCategorySelected(String id) {
+	    try {
+	        int gameId = Integer.valueOf(id);
+            Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
+            if (gc.isPresent())
+                return ok(gamecategorySelected.render(formFactory.form(GameCategoryForm.class), session(), gc.get()));
+        } catch (Exception e) {
+	        e.printStackTrace();
+        }
+        return indexGameCategories();
+    }
+
+    public Result updateGameCategorySelected(String id) {
+        Form<GameCategoryForm> formBinding = formFactory.form(GameCategoryForm.class).bindFromRequest();
+        try {
+            int gameId = Integer.valueOf(id);
+            Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
+            if (gc.isPresent()) {
+                if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+                    return badRequest(gamecategorySelected.render(formBinding, session(), gc.get()));
+                } else {
+                    GameCategoryForm form = formBinding.get();
+                    String title = form.getName();
+                    String description = form.getDescription();
+                    productService.updateGameCategory(gameId, title, description);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	    return redirect("/admin/gamecategories");
+    }
+
+//    public Result deleteGameCategorySelected(String id) {
+//        try {
+//            int gameId = Integer.valueOf(id);
+//            Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
+//            if (gc.isPresent()) {
+//                productService.deleteGameCategory(gameId);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return redirect("/admin/gamecategories");
+//    }
 
     public Result indexProducts() {
         List<Product> p = productService.fetchProducts();
