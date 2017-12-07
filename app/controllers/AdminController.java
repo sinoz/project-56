@@ -1,10 +1,13 @@
 package controllers;
 
 import com.google.common.collect.Lists;
+import forms.GameCategoryForm;
 import models.GameCategory;
 import models.Product;
 import models.User;
 import models.ViewableUser;
+import play.data.Form;
+import play.data.FormFactory;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -31,6 +34,11 @@ public final class AdminController extends Controller {
 	private final Database database;
 
     /**
+     * A {@link FormFactory} to use search forms.
+     */
+    private FormFactory formFactory;
+
+    /**
      * The {@link services.UserViewService} to obtain data from.
      */
     private final UserViewService userViewService;
@@ -38,8 +46,9 @@ public final class AdminController extends Controller {
     private final ProductService productService;
 
 	@Inject
-    public AdminController(Database database, UserViewService userViewService, ProductService productService) {
+    public AdminController(Database database, FormFactory formFactory, UserViewService userViewService, ProductService productService) {
 	    this.database = database;
+	    this.formFactory = formFactory;
 	    this.userViewService = userViewService;
 	    this.productService = productService;
     }
@@ -56,6 +65,22 @@ public final class AdminController extends Controller {
     public Result indexGameCategories() {
         List<GameCategory> gc = productService.fetchGameCategories();
         return redirect(ok(gamecategories.render(session(), Lists.partition(gc, 4))));
+    }
+
+    public Result indexGameCategorySelected(String id) {
+	    try {
+	        int gameId = Integer.valueOf(id);
+            Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
+            if (gc.isPresent()) {
+                Form<GameCategoryForm> form = formFactory.form(GameCategoryForm.class);
+                form.get().title = gc.get().getName();
+                form.get().description = gc.get().getDescription();
+                return redirect(ok(gamecategorySelected.render(form, session(), gc.get())));
+            }
+        } catch (Exception e) {
+	        e.printStackTrace();
+        }
+        return indexGameCategories();
     }
 
     public Result indexProducts() {
