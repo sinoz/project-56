@@ -3,6 +3,7 @@ package controllers;
 import com.google.common.collect.Lists;
 import models.GameCategory;
 import models.Product;
+import models.User;
 import models.ViewableUser;
 import play.db.Database;
 import play.mvc.Controller;
@@ -14,10 +15,12 @@ import views.html.admin.*;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A {@link Controller} for the Admin page.
  *
+ * @author Johan van der Hoeven
  * @author Maurice van Veen
  */
 public final class AdminController extends Controller {
@@ -66,5 +69,13 @@ public final class AdminController extends Controller {
 
     private Result redirect(Result result) {
 	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
+    }
+
+    /**
+     *  The method that renders the modify user page
+     */
+    public Result indexModifyUser(String userid){
+        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
+        return ok(modifyUser.render(session(), user));
     }
 }

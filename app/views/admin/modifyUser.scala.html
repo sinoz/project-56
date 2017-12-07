@@ -1,0 +1,46 @@
+@(session: play.mvc.Http.Session, user: Optional[User])
+@import components._
+
+@main("Restart"){
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("users", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            @if(!user.isPresent){
+                                <h2>This user does not exist.</h2>
+                            } else {
+                                <h2>Modify User</h2>
+
+                                @helper.form(action = helper.CSRF(routes.PersonalSettingsController.editSettings()), 'class -> "form-horizontal") {
+
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("../../../../public/javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("../../../../public/javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("../../../../public/javascripts/app.js")"></script>
+        </div>
+    </body>
+}

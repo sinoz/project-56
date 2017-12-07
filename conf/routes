@@ -72,6 +72,8 @@ POST        /trackorder/search                   controllers.TrackOrderControlle
 
 GET         /admin                               controllers.AdminController.index
 GET         /admin/users                         controllers.AdminController.indexUsers
+GET         /admin/users/view                    controllers.AdminController.indexUsers
+GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
 GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
 GET         /admin/products                      controllers.AdminController.indexProducts
 GET         /admin/statistics                    controllers.AdminController.indexStatistics

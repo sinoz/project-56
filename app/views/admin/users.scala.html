@@ -27,15 +27,16 @@
                                 <div class="row">
                                     <div class="col-md-2 col-sm-2">
                                         <div class="live-camera">
-                                            <a href="/admin/users/i/@user.getId">
+                                            <a href="/admin/users/@user.getId">
                                                 <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 image">
-                                        <a href="/admin/users/i/@user.getId"> <h3 class="location">@user.getUsername</h3></a>
-                                        <a href="/admin/users/i/@user.getUsername"><button class="awesomebutton">Details</button></a>
-                                        <a href="/user/@user.getUsername"><button class="awesomebutton">Public</button></a>
+                                    <div class="col-md-8 col-sm-8 image">
+                                        <a href="/admin/users/@user.getId"> <h3 class="location">@user.getUsername</h3></a>
+                                        <a href="/admin/users/@user.getId"><button class="awesomebutton">View Details</button></a>
+                                        <a href="/user/@user.getUsername"><button class="awesomebutton">View Public</button></a>
+                                        <a href="/admin/users/modify/@user.getId"><button class="awesomebutton">Modify User</button></a>
                                     </div>
                                 </div>
                             }
