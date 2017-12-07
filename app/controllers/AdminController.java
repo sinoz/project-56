@@ -10,8 +10,6 @@ import models.ViewableUser;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
-import play.data.Form;
-import play.data.FormFactory;
 import play.db.Database;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -21,9 +19,6 @@ import views.html.admin.*;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletionStage;
-
-import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * A {@link Controller} for the Admin page.
