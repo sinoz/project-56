@@ -60,17 +60,17 @@ public final class AdminController extends Controller {
     }
 
 	public Result index() {
-	    return redirect(ok(index.render(session())));
+	    return adminRedirect(ok(index.render(session())));
 	}
 
     public Result indexUsers() {
 	    List<ViewableUser> u = userViewService.fetchViewableUsers();
-        return redirect(ok(users.render(session(), u)));
+        return adminRedirect(ok(users.render(session(), u)));
     }
 
     public Result indexGameCategories() {
         List<GameCategory> gc = productService.fetchGameCategories();
-        return redirect(ok(gamecategories.render(session(), Lists.partition(gc, 4))));
+        return adminRedirect(ok(gamecategories.render(session(), Lists.partition(gc, 4))));
     }
 
     public Result indexGameCategorySelected(String id) {
@@ -78,7 +78,7 @@ public final class AdminController extends Controller {
 	        int gameId = Integer.valueOf(id);
             Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
             if (gc.isPresent())
-                return ok(gamecategorySelected.render(formFactory.form(GameCategoryForm.class), session(), gc.get()));
+                return adminRedirect(ok(gamecategorySelected.render(formFactory.form(GameCategoryForm.class), session(), gc.get())));
         } catch (Exception e) {
 	        e.printStackTrace();
         }
@@ -92,7 +92,7 @@ public final class AdminController extends Controller {
             Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
             if (gc.isPresent()) {
                 if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-                    return badRequest(gamecategorySelected.render(formBinding, session(), gc.get()));
+                    return adminRedirect(badRequest(gamecategorySelected.render(formBinding, session(), gc.get())));
                 } else {
                     GameCategoryForm form = formBinding.get();
                     String title = form.getName();
@@ -116,19 +116,19 @@ public final class AdminController extends Controller {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//        return redirect("/admin/gamecategories");
+//        return adminRedirect("/admin/gamecategories");
 //    }
 
     public Result indexProducts() {
         List<Product> p = productService.fetchProducts();
-        return redirect(ok(products.render(session(), p)));
+        return adminRedirect(ok(products.render(session(), p)));
     }
 
     public Result indexStatistics() {
-        return redirect(ok(statistics.render(session())));
+        return adminRedirect(ok(statistics.render(session())));
     }
 
-    private Result redirect(Result result) {
+    private Result adminRedirect(Result result) {
 	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
     }
 
@@ -142,36 +142,49 @@ public final class AdminController extends Controller {
             isAdmin = true;
         }
 
-        return ok(modifyUser.render(formFactory.form(AdminModifyUserForm.class), user, isAdmin, session()));
+        return adminRedirect(ok(modifyUser.render(formFactory.form(AdminModifyUserForm.class), user, isAdmin, session())));
     }
 
     /**
      * The method that modifies the user
      */
     public Result modifyUser(String userid){
+        int id;
+        try {
+            id = Integer.valueOf(userid);
+        } catch (Exception e) {
+            return adminRedirect(redirect("/404"));
+        }
+
         Form<AdminModifyUserForm> formBinding = formFactory.form(AdminModifyUserForm.class).bindFromRequest();
-        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
+        Optional<User> user = userViewService.fetchUser(id);
+
+        if (!user.isPresent())
+            return adminRedirect(redirect("/404"));
+
         boolean isAdmin = false;
-        if(user.isPresent() && adminService.isAdmin(user.get().getId())){
+        if(adminService.isAdmin(user.get().getId())){
             isAdmin = true;
         }
 
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-            return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
+            return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
         } else {
             AdminModifyUserForm form = formBinding.get();
 
-            if(adminService.userExists(form.username.toLowerCase())){
+            if(!user.get().getUsername().equalsIgnoreCase(form.username) && adminService.userExists(form.username.toLowerCase())){
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
-                return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
+                return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
             } else {
-                Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
+                String loggedInAs = SessionService.getLoggedInAs(session());
+
+                Optional<User> admin = authService.fetchUser(loggedInAs, form.getAdminPassword());
                 if(!admin.isPresent()) {
                     formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
-                    return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
+                    return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
                 } else {
-                    adminService.updateSettings(Integer.valueOf(userid), form);
-                    return redirect("/admin/users/modify/" + userid);
+                    adminService.updateSettings(id, form);
+                    return adminRedirect(redirect("/admin/users"));
                 }
             }
         }
@@ -181,7 +194,14 @@ public final class AdminController extends Controller {
      * The method that renders the view user page
      */
     public Result viewUser(String userid){
-        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
-        return ok(viewUser.render(user, session()));
+        int id;
+        try {
+            id = Integer.valueOf(userid);
+        } catch (Exception e) {
+            return adminRedirect(redirect("/404"));
+        }
+
+        Optional<User> user = userViewService.fetchUser(id);
+        return adminRedirect(ok(viewUser.render(user, session())));
     }
 }

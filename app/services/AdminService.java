@@ -40,11 +40,12 @@ public final class AdminService {
      */
     public void updateSettings(int userId, AdminModifyUserForm form) {
         database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username=?, mail=?, paymentmail=? WHERE id=?");
+            PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username=?, mail=?, paymentmail=?, isadmin=? WHERE id=?");
             stmt.setString(1, form.username);
             stmt.setString(2, form.mail);
             stmt.setString(3, form.paymentMail);
-            stmt.setInt(4, userId);
+            stmt.setBoolean(4, form.isAdmin);
+            stmt.setInt(5, userId);
             stmt.execute();
         });
     }
