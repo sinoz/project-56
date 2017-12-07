@@ -1,0 +1,50 @@
+package services;
+
+import forms.AdminModifyUserForm;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.sql.PreparedStatement;
+
+/**
+ * @author Johan van der Hoeven
+ */
+@Singleton
+public final class AdminService {
+    private final play.db.Database database;
+
+    /**
+     * Creates a new {@link AdminService}.
+     */
+    @Inject
+    public AdminService(play.db.Database database) {
+        this.database = database;
+    }
+
+    /**
+     * Checks if a user with the given username exists in the database.
+     */
+    public boolean userExists(String username) {
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
+
+            stmt.setString(1, username.toLowerCase());
+
+            return stmt.executeQuery().next();
+        });
+    }
+
+    /**
+     * Attempts to update a user using the given {@link forms.AdminModifyUserForm}.
+     */
+    public void updateSettings(int userId, AdminModifyUserForm form) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE users SET username=?, mail=?, paymentmail=? WHERE id=?");
+            stmt.setString(1, form.username);
+            stmt.setString(2, form.mail);
+            stmt.setString(3, form.paymentMail);
+            stmt.setInt(4, userId);
+            stmt.execute();
+        });
+    }
+}

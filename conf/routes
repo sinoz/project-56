@@ -74,6 +74,7 @@ GET         /admin                               controllers.AdminController.ind
 GET         /admin/users                         controllers.AdminController.indexUsers
 GET         /admin/users/view                    controllers.AdminController.indexUsers
 GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
+POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
 GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
 GET         /admin/products                      controllers.AdminController.indexProducts
 GET         /admin/statistics                    controllers.AdminController.indexStatistics

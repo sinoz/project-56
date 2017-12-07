@@ -1,4 +1,5 @@
-@(session: play.mvc.Http.Session, user: Optional[User])
+@import forms.AdminModifyUserForm
+@(form: play.data.Form[AdminModifyUserForm], user: Optional[User], session: play.mvc.Http.Session)
 @import components._
 
 @main("Restart"){
@@ -26,8 +27,48 @@
                             } else {
                                 <h2>Modify User</h2>
 
-                                @helper.form(action = helper.CSRF(routes.PersonalSettingsController.editSettings()), 'class -> "form-horizontal") {
+                                @helper.form(action = helper.CSRF(routes.AdminController.modifyUser(user.get().getId.toString)), 'class -> "form-horizontal") {
+                                        <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Username:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="username" type="text" class="form-control input-md" value=@user.get().getUsername>
+                                            @for(error <- form("username").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
 
+                                        <!-- email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="mail" type="text" class="form-control input-md" value=@user.get().getMail>
+                                            @for(error <- form("mail").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Payment email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="paymentMail" type="text" class="form-control input-md" value=@user.get().getPaymentMail>
+                                            @for(error <- form("paymentMail").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <br>
+
+                                        <!-- Submit Button -->
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <input type="submit" name="Submit" value="Save">
+                                        </div>
+                                    </div>
                                 }
                             }
                         </div>
