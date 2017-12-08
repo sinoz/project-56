@@ -13,6 +13,7 @@ import services.*;
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -152,15 +153,16 @@ public final class PlaceOrderController extends Controller {
 
     private void saveToDatabase(int token, int userId, double price, String trackingId, String couponCode) {
         database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status, ordertype) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orders (trackid, hasuser, userid, productid, ordertype, status, price, couponcode, orderplaced) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             stmt.setString(1, trackingId);
             stmt.setBoolean(2, userId != -1);
             stmt.setInt(3, userId);
             stmt.setInt(4, token);
-            stmt.setDouble(5, price);
-            stmt.setString(6, couponCode);
-            stmt.setInt(7, 0);
-            stmt.setInt(8, 0);
+            stmt.setInt(5, 0);
+            stmt.setInt(6, 0);
+            stmt.setDouble(7, price);
+            stmt.setString(8, couponCode);
+            stmt.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
             stmt.execute();
         });
     }
