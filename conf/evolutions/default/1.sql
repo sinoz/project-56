@@ -100,9 +100,9 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'admin', -- username
     'u7+UejmS48mFKzGIiB1+U10r7u5GB6K7zwF2ryZf9e0lFU/7Ww/7YkAB9aa0PzWkfGtBrPcxPrXQYf6Ycz7kX8ZPB0ye7MQSRQNWBq17kro=', -- password (admin)
     '032aee72a91f745f6a94bbc7fda17f09c5b65d0bd2046c3bba62724e15439ea2', -- password salt
-    'contact@ReStart.com', -- mail
+    'restartcontactus@gmail.com', -- mail
     'images/dankadmin.gif', -- profile picture
-    'payment@ReStart.com', -- payment mail
+    'restartcontactus@gmail.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
     NULL, -- order history
