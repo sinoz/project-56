@@ -150,6 +150,7 @@ public final class AdminController extends Controller {
      * The method that modifies the user
      */
     public Result modifyUser(String userid){
+        //Check if userid is a valid user id
         int id;
         try {
             id = Integer.valueOf(userid);
@@ -160,29 +161,34 @@ public final class AdminController extends Controller {
         Form<AdminModifyUserForm> formBinding = formFactory.form(AdminModifyUserForm.class).bindFromRequest();
         Optional<User> user = userViewService.fetchUser(id);
 
+        //Check if user could be loaded from database
         if (!user.isPresent())
             return adminRedirect(redirect("/404"));
 
-        boolean isAdmin = false;
-        if(adminService.isAdmin(user.get().getId())){
-            isAdmin = true;
-        }
+        boolean isAdmin = adminService.isAdmin(user.get().getId());
 
+        //Check for form errors
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
             return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
         } else {
             AdminModifyUserForm form = formBinding.get();
+            String loggedInAs = SessionService.getLoggedInAs(session());
 
+            // Check if user filled in new username and whether new username already exists
             if(!user.get().getUsername().equalsIgnoreCase(form.username) && adminService.userExists(form.username.toLowerCase())){
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
                 return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
+                //Check if admin is removing admin rights from his own account
+            } else if(user.get().getUsername().toLowerCase().equals(loggedInAs) && !form.isAdmin){
+                formBinding = formBinding.withError(new ValidationError("isAdmin", "You can not remove admin rights from your own account."));
+                return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
             } else {
-                String loggedInAs = SessionService.getLoggedInAs(session());
-
                 Optional<User> admin = authService.fetchUser(loggedInAs, form.getAdminPassword());
+                //Check if admin password is correct
                 if(!admin.isPresent()) {
                     formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
                     return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
+                    //Modify user
                 } else {
                     adminService.updateSettings(id, form);
                     return adminRedirect(redirect("/admin/users"));
