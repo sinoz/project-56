@@ -180,7 +180,7 @@ public final class AdminController extends Controller {
                 return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
                 //Check if admin is removing admin rights from his own account
             } else if(user.get().getUsername().toLowerCase().equals(loggedInAs) && !form.isAdmin){
-                formBinding = formBinding.withError(new ValidationError("isAdmin", "You can not remove admin rights from your own account."));
+                formBinding = formBinding.withError(new ValidationError("adminPassword", "You can not remove admin rights from your own account."));
                 return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
             } else {
                 Optional<User> admin = authService.fetchUser(loggedInAs, form.getAdminPassword());
