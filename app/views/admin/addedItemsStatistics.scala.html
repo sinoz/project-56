@@ -1,5 +1,5 @@
 @(session: play.mvc.Http.Session)
-    @import components._
+@import components._
 
 @main("ReStart") {
     <body>
@@ -16,12 +16,12 @@
                                 <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
                             </div>
 
-                            @adminUserMenu("statistics", "general")
+                            @adminUserMenu("statistics", "items")
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="portlet">
-                            <h2>General Statistics</h2>
+                            <h2>Added Items Statistics</h2>
                         </div>
                     </div>
                 </div>

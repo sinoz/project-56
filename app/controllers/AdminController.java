@@ -125,10 +125,6 @@ public final class AdminController extends Controller {
         return adminRedirect(ok(products.render(session(), p)));
     }
 
-    public Result indexStatistics() {
-        return adminRedirect(ok(statistics.render(session())));
-    }
-
     private Result adminRedirect(Result result) {
 	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
     }
@@ -243,5 +239,17 @@ public final class AdminController extends Controller {
 
         Optional<User> user = userViewService.fetchUser(id);
         return adminRedirect(ok(viewUser.render(user, session())));
+    }
+
+    public Result indexStatistics() {
+        return adminRedirect(ok(statistics.render(session())));
+    }
+
+    public Result indexUsageStatistics(){
+        return adminRedirect(ok(usageStatistics.render(session())));
+    }
+
+    public Result indexItemStatistics(){
+        return adminRedirect(ok(addedItemsStatistics.render(session())));
     }
 }
