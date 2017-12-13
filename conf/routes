@@ -85,4 +85,7 @@ POST        /admin/gamecategories/i/:id          controllers.AdminController.upd
 #GET         /admin/gamecategories/d/:id          controllers.AdminController.deleteGameCategorySelected(id: String)
 
 GET         /admin/products                      controllers.AdminController.indexProducts
+
 GET         /admin/statistics                    controllers.AdminController.indexStatistics
+GET         /admin/statistics/usage              controllers.AdminController.indexUsageStatistics
+GET         /admin/statistics/items              controllers.AdminController.indexItemStatistics
