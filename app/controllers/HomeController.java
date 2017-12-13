@@ -27,18 +27,21 @@ public final class HomeController extends Controller {
 	 * The amount of columns of game categories to present per row in the view.
 	 */
 	private static final int COLS_PER_ROW = 4;
+
 	/**
 	 * The execution context used to asynchronously perform database operations.
 	 */
 	private final DbExecContext dbEc;
+
 	/**
 	 * The execution context used to asynchronously perform operations.
 	 */
 	private final HttpExecutionContext httpEc;
+
 	/**
 	 * The {@link ProductService} to obtain product data from.
 	 */
-	private ProductService products;
+	private final ProductService products;
 
 	/**
 	 * Creates a new {@link HomeController}.
