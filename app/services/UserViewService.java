@@ -20,7 +20,7 @@ public final class UserViewService {
     private final play.db.Database database;
 
     @Inject
-    public UserViewService(play.db.Database database){
+    public UserViewService(play.db.Database database) {
         this.database = database;
     }
 
@@ -125,14 +125,12 @@ public final class UserViewService {
                 u.setProfilePicture(results.getString("profilepicture"));
                 u.setMemberSince(results.getDate("membersince"));
 
-                Array favorites_array = results.getArray("favorites");
-                // TODO: improve
-                if (favorites_array != null) {
-                    Integer[] f1 = (Integer[]) favorites_array.getArray();
-                    ArrayList<Integer> f2 = new ArrayList<>();
-                    f2.addAll(Arrays.asList(f1));
-                    u.setFavorites(f2);
+                List<Integer> favorites = new ArrayList<>();
+                Array a = results.getArray("favorites");
+                if (a != null) {
+                    favorites.addAll(Arrays.asList((Integer[]) a.getArray()));
                 }
+                u.setFavorites(favorites);
 
                 user = Optional.of(u);
             }

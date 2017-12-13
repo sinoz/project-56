@@ -5,7 +5,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, list: util.List[util.List[Product]], session: play.mvc.Http.Session, input: String, message: String, minPrice:Integer, maxPrice:Integer)
+@(gameCategory: GameCategory, list: util.List[util.List[Product]], suggestions: util.List[util.List[Product]], session: play.mvc.Http.Session, input: String, message: String, minPrice:Integer, maxPrice:Integer)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -33,7 +33,26 @@
                                 @filter(minPrice, maxPrice)
 
                                 </div>
+
                                 <div class="col-md-9 col-sm-9">
+
+                                    @for(row <- suggestions) {
+                                        <div class="row">
+                                        @for(product <- row) {
+                                            <div class="col-md-2 col-sm-2">
+                                                <div class="live-camera">
+                                                    <a href="/products/selected/@product.getId">
+                                                        <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                            <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                            <div class="transbox"><p>@product.getTitle</p></div>
+                                                        </figure>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        </div>
+                                    }
+
                                     @for(row <- list) {
                                         <div class="row">
                                         @for(product <- row) {
@@ -63,7 +82,6 @@
                                     }
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </main>

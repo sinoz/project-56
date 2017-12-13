@@ -90,9 +90,7 @@ public final class FavouritesService {
             if(results.next()) {
                 Array a = results.getArray("favorites");
                 if (a != null) {
-                    for (Integer i : (Integer[]) a.getArray()) {
-                        list.add(i);
-                    }
+                    list.addAll(Arrays.asList((Integer[]) a.getArray()));
                 }
             }
             return list;

@@ -206,8 +206,8 @@ INSERT INTO gamecategories (name, image, description) VALUES
   );
 
 INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description, addedsince, canbuy, buyprice, cantrade, maillast, mailcurrent, passwordcurrent) VALUES
-  -- This gameaccount has been bought by admin and sold by default
   (
+    -- This gameaccount has been bought by admin and sold by default
     2, -- userid
     1, -- gameid
     FALSE , -- visible
