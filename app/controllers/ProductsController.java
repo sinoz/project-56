@@ -76,7 +76,9 @@ public class ProductsController extends Controller {
         } else if (token.startsWith("input=")) {
             return indexInput(token, filters, prices);
         }
-        return ok(views.html.selectedproduct.index.render(token, "", session()));
+
+        List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 3);
+        return ok(views.html.selectedproduct.index.render(token, "", Lists.partition(suggestedProducts, 5), session()));
     }
 
     private Result indexGame(String token, String filters, SearchService.FilterPrices prices) {
@@ -89,7 +91,7 @@ public class ProductsController extends Controller {
             } catch (Exception e) {
                 return redirect("/404");
             }
-            List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session());
+            List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 1);
 
             String input = gameCategory.get().getName();
 
@@ -108,7 +110,7 @@ public class ProductsController extends Controller {
 
         String input = token;
 
-        List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session());
+        List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 1);
 
         if (searchResults.getProducts().size() > 0)
             if (searchResults.getSelectedGameCategory() != null)
@@ -118,6 +120,6 @@ public class ProductsController extends Controller {
         else if (searchResults.getSelectedGameCategory() != null)
             return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), input, searchResults.getMessage(), session()));
         else
-            return ok(views.html.selectedproduct.index.render(token, input, session()));
+            return ok(views.html.selectedproduct.index.render(token, input, Lists.partition(suggestedProducts, 5), session()));
     }
 }

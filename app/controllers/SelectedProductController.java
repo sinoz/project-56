@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.common.collect.Lists;
 import forms.FavouriteForm;
 import models.GameCategory;
 import models.Product;
@@ -9,6 +10,7 @@ import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
 import services.ProductService;
+import services.SearchService;
 import services.SessionService;
 import services.UserViewService;
 
@@ -40,11 +42,14 @@ public class SelectedProductController extends Controller {
      */
     private ProductService productService;
 
+    private SearchService searchService;
+
     @Inject
-    public SelectedProductController(FormFactory formFactory, UserViewService userViewService, ProductService productService){
+    public SelectedProductController(FormFactory formFactory, UserViewService userViewService, ProductService productService, SearchService searchService){
         this.formFactory = formFactory;
         this.userViewService = userViewService;
         this.productService = productService;
+        this.searchService = searchService;
     }
 
     public Result index(String token) {
@@ -71,12 +76,16 @@ public class SelectedProductController extends Controller {
                         isFavourited = userViewService.fetchProductIsFavourited(user.get().getId(), productId);
                     }
 
-                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, formFactory.form(FavouriteForm.class), loggedIn, isFavourited, session()));
+                    List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 3);
+                    while (suggestedProducts.size() > 6 * 2)
+                        suggestedProducts.remove(suggestedProducts.size() - 1);
+                    return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, Lists.partition(suggestedProducts, 6), formFactory.form(FavouriteForm.class), loggedIn, isFavourited, session()));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ok(views.html.selectedproduct.index.render(token, token, session()));
+        List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 3);
+        return ok(views.html.selectedproduct.index.render(token, token, Lists.partition(suggestedProducts, 5), session()));
     }
 }

@@ -3,7 +3,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], form: play.data.Form[forms.FavouriteForm], loggedIn: Boolean, isFavourited: Boolean, session: play.mvc.Http.Session)
+@(gameCategory: GameCategory, product: Product, rating: Integer, reviews: util.List[Review], suggestions: util.List[util.List[Product]], form: play.data.Form[forms.FavouriteForm], loggedIn: Boolean, isFavourited: Boolean, session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -136,6 +136,13 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="col-md-12">
+                    <br>
+                    <div class="product-title"><h1>Suggestions</h1></div>
+                    @suggestionsField(suggestions)
                 </div>
             </div>
             @footer()

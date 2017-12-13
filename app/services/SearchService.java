@@ -91,7 +91,7 @@ public class SearchService {
     /**
      * Processes a given input with raw filter data.
      */
-    public List<Product> fetchSuggestedProducts(Http.Session session) {
+    public List<Product> fetchSuggestedProducts(Http.Session session, int n) {
         List<Product> suggestions = new ArrayList<>();
 
         if (!SessionService.redirect(session, database)) {
@@ -136,13 +136,13 @@ public class SearchService {
                     }
                 }
 
-                // get top 5 sorted products
+                // get top n*5 sorted products
                 HashMap<Integer, Integer> scoresCopy = new HashMap<>();
                 scoresCopy.putAll(scores);
                 List<Product> sorted = sortProducts(scoresCopy, allProducts);
                 int m = sorted.size();
-                if (m > 10)
-                    m = 10;
+                if (m > n * 5)
+                    m = n * 5;
                 for (int i = 0; i < m; i++) {
                     if (scores.get(sorted.get(i).getId()) == 0)
                         break;
