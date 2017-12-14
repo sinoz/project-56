@@ -36,14 +36,11 @@ public final class AdminController extends Controller {
      * The {@link services.UserViewService} to obtain data from.
      */
     private final UserViewService userViewService;
-
     private final ProductService productService;
-
     private final OrderService orderService;
-
     private final CouponCodeService couponCodeService;
-
     private final ReviewService reviewService;
+    private final VisitTimeService visitTimeService;
 
     /**
      * The required {@link FormFactory} to produce forms for modifying a user's personal settings.
@@ -55,13 +52,23 @@ public final class AdminController extends Controller {
     private final AdminService adminService;
 
 	@Inject
-    public AdminController(Database database, UserViewService userViewService, ProductService productService, OrderService orderService, CouponCodeService couponCodeService, ReviewService reviewService, FormFactory formFactory, AuthenticationService authService, AdminService adminService) {
+    public AdminController(Database database,
+                           UserViewService userViewService,
+                           ProductService productService,
+                           OrderService orderService,
+                           CouponCodeService couponCodeService,
+                           ReviewService reviewService,
+                           VisitTimeService visitTimeService,
+                           FormFactory formFactory,
+                           AuthenticationService authService,
+                           AdminService adminService) {
 	    this.database = database;
 	    this.userViewService = userViewService;
 	    this.productService = productService;
 	    this.orderService = orderService;
 	    this.couponCodeService = couponCodeService;
 	    this.reviewService = reviewService;
+	    this.visitTimeService = visitTimeService;
 	    this.formFactory = formFactory;
 	    this.authService = authService;
 	    this.adminService = adminService;
@@ -133,7 +140,8 @@ public final class AdminController extends Controller {
     }
 
     private Result adminRedirect(Result result) {
-	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
+//	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
+        return result;
     }
 
     /**
@@ -249,7 +257,19 @@ public final class AdminController extends Controller {
     }
 
     public Result indexStatistics() {
-        return adminRedirect(ok(statistics.render(session())));
+        WebshopVisitTimesData webshopVisitTimesData = new WebshopVisitTimesData(visitTimeService, -1);
+        return adminRedirect(ok(statistics.render(session(), webshopVisitTimesData)));
+    }
+
+    public Result indexStatisticsPerUser(String id) {
+        try {
+            int userid = Integer.valueOf(id);
+            WebshopVisitTimesData webshopVisitTimesData = new WebshopVisitTimesData(visitTimeService, userid);
+            return adminRedirect(ok(statistics.render(session(), webshopVisitTimesData)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return adminRedirect(redirect("/404"));
     }
 
     public Result indexUsageStatistics(){
