@@ -71,10 +71,20 @@ GET         /trackorder/:trackingid              controllers.TrackOrderControlle
 POST        /trackorder/search                   controllers.TrackOrderController.redirect
 
 GET         /admin                               controllers.AdminController.index
+
 GET         /admin/users                         controllers.AdminController.indexUsers
-GET         /admin/users/view                    controllers.AdminController.indexUsers
+GET         /admin/users/view/:userid            controllers.AdminController.viewUser(userid: String)
 GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
+POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
+GET         /admin/users/delete/:userid          controllers.AdminController.indexDeleteUser(userid: String)
+POST        /admin/users/delete/:userid          controllers.AdminController.deleteUser(userid: String)
+
 GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
+GET         /admin/gamecategories/i/:id          controllers.AdminController.indexGameCategorySelected(id: String)
+POST        /admin/gamecategories/i/:id          controllers.AdminController.updateGameCategorySelected(id: String)
+#GET         /admin/gamecategories/d/:id          controllers.AdminController.deleteGameCategorySelected(id: String)
+
 GET         /admin/products                      controllers.AdminController.indexProducts
 GET         /admin/statistics                    controllers.AdminController.indexStatistics
 GET         /admin/products/productsSelected/:productid         controllers.AdminController.indexModifyProduct(productid: String)
+POST         /admin/products/productsSelected/:productid         controllers.AdminController.updateModifyProduct(productid: String)

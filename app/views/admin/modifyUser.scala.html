@@ -1,4 +1,5 @@
-@(session: play.mvc.Http.Session, user: Optional[User])
+@import forms.AdminModifyUserForm
+@(form: play.data.Form[AdminModifyUserForm], user: Optional[User], isAdmin: Boolean, session: play.mvc.Http.Session)
 @import components._
 
 @main("Restart"){
@@ -26,9 +27,89 @@
                             } else {
                                 <h2>Modify User</h2>
 
-                                @helper.form(action = helper.CSRF(routes.PersonalSettingsController.editSettings()), 'class -> "form-horizontal") {
+                                @helper.form(action = helper.CSRF(routes.AdminController.modifyUser(user.get().getId.toString)), 'class -> "form-horizontal") {
+                                        <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Username:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="username" type="text" class="form-control input-md" value=@user.get().getUsername>
+                                            @for(error <- form("username").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
 
+                                        <!-- email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="mail" type="text" class="form-control input-md" value=@user.get().getMail>
+                                            @for(error <- form("mail").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Payment email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="paymentMail" type="text" class="form-control input-md" value=@user.get().getPaymentMail>
+                                            @for(error <- form("paymentMail").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- IsAdmin input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="isAdmin">Make Administrator:</label>
+                                        <div style="float: left; position: relative; width: 6%;">
+                                            @if(isAdmin) {
+                                                <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md" checked>
+                                            } else {
+                                                <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md">
+                                                }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("canTrade").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                        <!-- Admin password input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="adminPassword">Your Admin Password:</label>
+                                        <div class="col-md-4">
+                                            <input id="password" name="adminPassword" type="password" class="form-control input-md">
+                                            @for(error <- form("adminPassword").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <br>
+
+                                        <!-- Submit Button -->
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
                                 }
+                                    <!-- Cancel Button -->
+                                    <div>
+                                        <a href="/admin/users">
+                                            <button class="btn btn-primary">Cancel</button>
+                                        </a>
+                                    </div>
+
+                                    <!-- Delete Button -->
+                                    <div>
+                                        <a href="/admin/users/delete/@user.get().getId">
+                                            <button class="btn btn-danger">Delete User</button>
+                                        </a>
+                                    </div>
                             }
                         </div>
                     </div>

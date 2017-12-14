@@ -1,0 +1,94 @@
+@(form: play.data.Form[forms.GameCategoryForm], session: play.mvc.Http.Session, gameCategory: GameCategory)
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("gamecategories", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-20">
+                                        <h1 class="section-title">@gameCategory.getName</h1>
+                                        <div class="col-md-3 col-sm-6">
+                                            <div class="live-camera">
+                                                <a href="/products/game=@gameCategory.getName.replace(" ", "_")">
+                                                    <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                                </a>
+                                                <a href="/admin/gamecategories">
+                                                    <button class="btn btn-primary"><< Go Back</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div style="margin-left: 20px;" class="col-md-7 col-sm-14">
+                                            @helper.form(action = helper.CSRF(routes.AdminController.updateGameCategorySelected(gameCategory.getId + "")), 'style -> "margin: 0 auto;") {
+                                                <div class="required-field-block">
+                                                    <label for="name" class="control-label">Title</label>
+                                                    @defining(if (form("name").getValue.isPresent) form("name").getValue.get() else gameCategory.getName) { text =>
+                                                        <input type="text" name="name" value="@text" placeholder="Title" class="form-control">
+                                                    }
+
+                                                    @for(error <- form("name").errors) {
+                                                        <p>@error.format(messages())</p>
+                                                    }
+                                                </div>
+                                                <br>
+                                                <div class="required-field-block">
+                                                    <label for="description" class="control-label">Description</label>
+                                                    @defining(if (form("description").getValue.isPresent) form("description").getValue.get() else gameCategory.getDescription) { text =>
+                                                        <input type="text" name="description" value="@text" placeholder="Description" class="form-control">
+                                                    }
+                                                    @for(error <- form("description").errors) {
+                                                        <p>@error.format(messages())</p>
+                                                    }
+                                                </div>
+
+                                                <br>
+
+                                                <button class="btn btn-primary">Save</button>
+
+                                                @if(form.hasGlobalErrors) {
+                                                    <p class="error">
+                                                    @for(error <- form.globalErrors) {
+                                                        @error.format(messages())
+                                                    }
+                                                    </p>
+                                                }
+                                            }
+                                            @*<br>*@
+                                            @*<a href="/admin/gamecategories/d/@gameCategory.getId">*@
+                                                @*<button class="btn btn-primary" style="border-color: RED; background-color: RED;">Delete</button>*@
+                                            @*</a>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}
