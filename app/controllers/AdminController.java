@@ -1,13 +1,11 @@
 package controllers;
 
+import chart.*;
 import com.google.common.collect.Lists;
 import forms.AdminDeleteUserForm;
 import forms.AdminModifyUserForm;
 import forms.GameCategoryForm;
-import models.GameCategory;
-import models.Product;
-import models.User;
-import models.ViewableUser;
+import models.*;
 import play.data.Form;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
@@ -41,6 +39,12 @@ public final class AdminController extends Controller {
 
     private final ProductService productService;
 
+    private final OrderService orderService;
+
+    private final CouponCodeService couponCodeService;
+
+    private final ReviewService reviewService;
+
     /**
      * The required {@link FormFactory} to produce forms for modifying a user's personal settings.
      */
@@ -51,10 +55,13 @@ public final class AdminController extends Controller {
     private final AdminService adminService;
 
 	@Inject
-    public AdminController(Database database, UserViewService userViewService, ProductService productService, FormFactory formFactory, AuthenticationService authService, AdminService adminService) {
+    public AdminController(Database database, UserViewService userViewService, ProductService productService, OrderService orderService, CouponCodeService couponCodeService, ReviewService reviewService, FormFactory formFactory, AuthenticationService authService, AdminService adminService) {
 	    this.database = database;
 	    this.userViewService = userViewService;
 	    this.productService = productService;
+	    this.orderService = orderService;
+	    this.couponCodeService = couponCodeService;
+	    this.reviewService = reviewService;
 	    this.formFactory = formFactory;
 	    this.authService = authService;
 	    this.adminService = adminService;
@@ -246,10 +253,16 @@ public final class AdminController extends Controller {
     }
 
     public Result indexUsageStatistics(){
-        return adminRedirect(ok(usageStatistics.render(session())));
+        CouponCodeData couponCodeData = new CouponCodeData(couponCodeService, orderService);
+        GameCategorySearchData gameCategorySearchData = new GameCategorySearchData(productService);
+        ReviewPlacementData reviewPlacementData = new ReviewPlacementData(reviewService, orderService);
+        return adminRedirect(ok(usageStatistics.render(session(), couponCodeData, gameCategorySearchData, reviewPlacementData)));
     }
 
     public Result indexItemStatistics(){
-        return adminRedirect(ok(addedItemsStatistics.render(session())));
+        UserRegisteredData userRegisteredData = new UserRegisteredData(userViewService);
+        ProductAddedData productAddedData = new ProductAddedData(productService);
+        OrderPlacedData orderPlacedData = new OrderPlacedData(orderService);
+        return adminRedirect(ok(addedItemsStatistics.render(session(), userRegisteredData, productAddedData, orderPlacedData)));
     }
 }

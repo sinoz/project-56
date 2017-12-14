@@ -2,10 +2,13 @@ package services;
 
 import models.Review;
 import models.ReviewToken;
+import models.User;
 
 import javax.inject.Inject;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,13 +20,44 @@ import java.util.Optional;
 public final class ReviewService {
 
     private final play.db.Database database;
+    private final UserViewService userViewService;
 
     /**
      * Creates a new {@link ReviewService}.
      */
     @Inject
-    public ReviewService(play.db.Database database) {
+    public ReviewService(play.db.Database database, UserViewService userViewService) {
         this.database = database;
+        this.userViewService = userViewService;
+    }
+
+    public List<Review> fetchReviews(){
+        return database.withConnection(connection -> {
+            List<Review> list = new ArrayList<>();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM reviews");
+
+            ResultSet results = stmt.executeQuery();
+
+            while(results.next()){
+                Review r = new Review();
+
+                r.setId(results.getString("id"));
+                r.setUserReceiverId(results.getInt("userreceiverid"));
+                r.setUserSenderId(results.getInt("usersenderid"));
+                r.setTitle(results.getString("title"));
+                r.setDescription(results.getString("description"));
+                r.setRating(results.getInt("rating"));
+
+                Optional<User> sender = userViewService.fetchUser(r.getUserSenderId());
+                sender.ifPresent(r::setSender);
+                Optional<User> receiver = userViewService.fetchUser(r.getUserReceiverId());
+                receiver.ifPresent(r::setReceiver);
+
+                list.add(r);
+            }
+            return list;
+        });
     }
 
     /**

@@ -1,4 +1,7 @@
-@(session: play.mvc.Http.Session)
+@import chart.UserRegisteredData
+@import chart.ProductAddedData
+@import chart.OrderPlacedData
+@(session: play.mvc.Http.Session, userRegisteredData: UserRegisteredData, productAddedData: ProductAddedData, orderPlacedData: OrderPlacedData)
 @import components._
 
 @main("ReStart") {
@@ -25,31 +28,85 @@
                         <div class="portlet">
                             <h2>Added Items Statistics</h2>
 
-                            <canvas id="myChart" width="400" height="400"></canvas>
+                            <h3>User Registered Data</h3>
+                            <canvas id="userRegisterData" width="400" height="400"></canvas>
+                            <br>
+                            <h3>Product Added Data</h3>
+                            <canvas id="productAddedData" width="400" height="400"></canvas>
+                            <br>
+                            <h3>Order Placed Data</h3>
+                            <canvas id="orderPlacedData" width="400" height="400"></canvas>
+
                             <script>
-                                    var ctx = document.getElementById("myChart");
-                                    var myChart = new Chart(ctx, {
-                                        type: 'bar',
+                                    var userRegisterData = document.getElementById("userRegisterData");
+                                    var userRegisterChart = new Chart(userRegisterData, {
+                                        type: 'line',
                                         data: {
-                                            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                                            labels: @userRegisteredData.getLabelsHTML,
                                             datasets: [{
-                                                label: '# of Votes',
-                                                data: [12, 19, 3, 5, 2, 3],
+                                                label: '# of registered users',
+                                                data: @userRegisteredData.getDataHTML,
                                                 backgroundColor: [
-                                                    'rgba(255, 99, 132, 0.2)',
-                                                    'rgba(54, 162, 235, 0.2)',
-                                                    'rgba(255, 206, 86, 0.2)',
-                                                    'rgba(75, 192, 192, 0.2)',
-                                                    'rgba(153, 102, 255, 0.2)',
-                                                    'rgba(255, 159, 64, 0.2)'
+                                                    'rgba(99, 132, 255, 0.2)'
                                                 ],
                                                 borderColor: [
-                                                    'rgba(255,99,132,1)',
-                                                    'rgba(54, 162, 235, 1)',
-                                                    'rgba(255, 206, 86, 1)',
-                                                    'rgba(75, 192, 192, 1)',
-                                                    'rgba(153, 102, 255, 1)',
-                                                    'rgba(255, 159, 64, 1)'
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+
+                                    var productAddedData = document.getElementById("productAddedData");
+                                    var productAddedChart = new Chart(productAddedData, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @productAddedData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of added products',
+                                                data: @productAddedData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+
+                                    var orderPlacedData = document.getElementById("orderPlacedData");
+                                    var orderPlacedChart = new Chart(orderPlacedData, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @orderPlacedData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of placed orders',
+                                                data: @orderPlacedData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)'
                                                 ],
                                                 borderWidth: 1
                                             }]

@@ -1,8 +1,12 @@
-@(session: play.mvc.Http.Session)
+@import chart.CouponCodeData
+@import chart.ReviewPlacementData
+@import chart.GameCategorySearchData
+@(session: play.mvc.Http.Session, couponCodeData : CouponCodeData, gameCategorySearchData: GameCategorySearchData, reviewPlacementData: ReviewPlacementData)
 @import components._
 
 @main("ReStart") {
     <body>
+        <script src="@routes.Assets.versioned("javascripts/chartjs/Chart.min.js")"></script>
         <div class="site-content">
             @header("Admin", session)
 
@@ -22,6 +26,95 @@
                     <div class="col-md-8">
                         <div class="portlet">
                             <h2>Usage Statistics</h2>
+
+                            <h3>Coupon Code Usage Data</h3>
+                            <canvas id="couponCodeUsageData" width="400" height="400"></canvas>
+                            <br>
+                            <h3>Game Category Search Data</h3>
+                            <canvas id="gameCategorySearchData" width="400" height="400"></canvas>
+                            <br>
+                            <h3>Review Placement Usage Data</h3>
+                            <canvas id="reviewPlacementUsageData" width="400" height="400"></canvas>
+
+                            <script>
+                                    var couponCodeData = document.getElementById("couponCodeUsageData");
+                                    var couponCodeChart = new Chart(couponCodeData, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: @couponCodeData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of coupon code uses',
+                                                data: @couponCodeData.getDataHTML,
+                                                backgroundColor: @couponCodeData.getBackgroundColorHTML,
+                                                borderColor: @couponCodeData.getBorderColorHTML,
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+
+                                    var gameCategorySearchData = document.getElementById("gameCategorySearchData");
+                                    var gameCategorySearchChart = new Chart(gameCategorySearchData, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: @gameCategorySearchData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of coupon code uses',
+                                                data: @gameCategorySearchData.getDataHTML,
+                                                backgroundColor: @gameCategorySearchData.getBackgroundColorHTML,
+                                                borderColor: @gameCategorySearchData.getBorderColorHTML,
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+
+                                    var reviewPlacementData = document.getElementById("reviewPlacementUsageData");
+                                    var reviewPlacementChart = new Chart(reviewPlacementData, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: @reviewPlacementData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of order per review ratio',
+                                                data: @reviewPlacementData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)',
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)',
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+                            </script>
                         </div>
                     </div>
                 </div>

@@ -15,7 +15,8 @@ CREATE TABLE gamecategories (
   id SERIAL PRIMARY KEY,
   name VARCHAR(32),
   image VARCHAR(256), -- url to profile picture
-  description TEXT
+  description TEXT,
+  search INT
   --   TODO: optionally add specifications
 );
 

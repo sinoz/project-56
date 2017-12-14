@@ -27,6 +27,8 @@ public final class GameCategory extends Model {
 	/** General information about the game. */
 	private String description;
 
+	private int search;
+
 	/** Specific information about the game (ranks, stats, etc.) */
 	//  TODO: this may be unnecessary
 	//	private String specifications;
@@ -60,6 +62,14 @@ public final class GameCategory extends Model {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public int getSearch() {
+		return search;
+	}
+
+	public void setSearch(int search) {
+		this.search = search;
 	}
 
 	//	public String getSpecifications() {

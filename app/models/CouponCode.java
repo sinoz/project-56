@@ -1,6 +1,6 @@
 package models;
 
-public class CouponCode {
+public final class CouponCode {
 	private final String code;
 	private final double percentage;
 
