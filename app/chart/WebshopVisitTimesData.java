@@ -26,10 +26,9 @@ public final class WebshopVisitTimesData extends ChartData {
 
 		for (VisitTime visitTime : visittimes) {
 			Date d = visitTime.getTime();
-//			GregorianCalendar cal = new GregorianCalendar().;
-//			System.out.println();
-//			System.out.println("HI " + d.getHours());
-			data[0] += 1;
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(d);
+			data[cal.get(GregorianCalendar.HOUR_OF_DAY)] += 1;
 		}
 	}
 }
