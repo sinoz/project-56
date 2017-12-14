@@ -3,6 +3,7 @@
 
 # --- !Ups
 
+DROP TABLE IF EXISTS visittimes;
 DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS reviewtokens;
 DROP TABLE IF EXISTS orders;
@@ -11,11 +12,18 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS gamecategories;
 DROP TABLE IF EXISTS couponcodes;
 
+CREATE TABLE visittimes (
+  id SERIAL PRIMARY KEY,
+  userid INT,
+  time TIMESTAMP
+);
+
 CREATE TABLE gamecategories (
   id SERIAL PRIMARY KEY,
   name VARCHAR(32),
   image VARCHAR(256), -- url to profile picture
-  description TEXT
+  description TEXT,
+  search INT
   --   TODO: optionally add specifications
 );
 

@@ -1,5 +1,6 @@
 package controllers;
 
+import chart.*;
 import com.google.common.collect.Lists;
 import concurrent.DbExecContext;
 import forms.ProductForm;
@@ -12,6 +13,7 @@ import models.GameCategory;
 import models.Product;
 import models.User;
 import models.ViewableUser;
+import models.*;
 import play.data.Form;
 import play.data.FormFactory;
 
@@ -53,8 +55,11 @@ public final class AdminController extends Controller {
      * The {@link services.UserViewService} to obtain data from.
      */
     private final UserViewService userViewService;
-
     private final ProductService productService;
+    private final OrderService orderService;
+    private final CouponCodeService couponCodeService;
+    private final ReviewService reviewService;
+    private final VisitTimeService visitTimeService;
 
     private final FormFactory formFactory;
 
@@ -75,17 +80,32 @@ public final class AdminController extends Controller {
     private final HttpExecutionContext httpEc;
 
 	@Inject
-    public AdminController(play.db.Database database, UserViewService userViewService, ProductService productService, FormFactory formFactory, AuthenticationService authService, AdminService adminService, MyInventoryService myInventoryService, DbExecContext dbEc, HttpExecutionContext httpEc)
-    {
-            this.database = database;
-            this.userViewService = userViewService;
-            this.productService = productService;
-            this.formFactory = formFactory;
-            this.authService = authService;
-            this.adminService = adminService;
-            this.myInventoryService = myInventoryService;
-            this.dbEc = dbEc;
-            this.httpEc = httpEc;
+    public AdminController(Database database,
+                           UserViewService userViewService,
+                           ProductService productService,
+                           OrderService orderService,
+                           CouponCodeService couponCodeService,
+                           ReviewService reviewService,
+                           VisitTimeService visitTimeService,
+                           FormFactory formFactory,
+                           AuthenticationService authService,
+                           AdminService adminService,
+                           MyInventoryService myInventoryService,
+                           DbExecContext dbEc,
+                           HttpExecutionContext httpEc) {
+	    this.database = database;
+	    this.userViewService = userViewService;
+	    this.productService = productService;
+	    this.orderService = orderService;
+	    this.couponCodeService = couponCodeService;
+	    this.reviewService = reviewService;
+	    this.visitTimeService = visitTimeService;
+	    this.formFactory = formFactory;
+	    this.authService = authService;
+	    this.adminService = adminService;
+        this.myInventoryService = myInventoryService;
+        this.dbEc = dbEc;
+        this.httpEc = httpEc;
     }
 
 	public Result index() {
@@ -154,11 +174,8 @@ public final class AdminController extends Controller {
     }
 
     private Result adminRedirect(Result result) {
-        return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
-    }
-
-    private Result redirect(Result result) {
-        return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
+//	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
+        return result;
     }
 
     /**
@@ -274,15 +291,33 @@ public final class AdminController extends Controller {
     }
 
     public Result indexStatistics() {
-        return adminRedirect(ok(statistics.render(session())));
+        WebshopVisitTimesData webshopVisitTimesData = new WebshopVisitTimesData(visitTimeService, -1);
+        return adminRedirect(ok(statistics.render(session(), webshopVisitTimesData)));
+    }
+
+    public Result indexStatisticsPerUser(String id) {
+        try {
+            int userid = Integer.valueOf(id);
+            WebshopVisitTimesData webshopVisitTimesData = new WebshopVisitTimesData(visitTimeService, userid);
+            return adminRedirect(ok(statistics.render(session(), webshopVisitTimesData)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return adminRedirect(redirect("/404"));
     }
 
     public Result indexUsageStatistics(){
-        return adminRedirect(ok(usageStatistics.render(session())));
+        CouponCodeData couponCodeData = new CouponCodeData(couponCodeService, orderService);
+        GameCategorySearchData gameCategorySearchData = new GameCategorySearchData(productService);
+        ReviewPlacementData reviewPlacementData = new ReviewPlacementData(reviewService, orderService);
+        return adminRedirect(ok(usageStatistics.render(session(), couponCodeData, gameCategorySearchData, reviewPlacementData)));
     }
 
     public Result indexItemStatistics(){
-        return adminRedirect(ok(addedItemsStatistics.render(session())));
+        UserRegisteredData userRegisteredData = new UserRegisteredData(userViewService);
+        ProductAddedData productAddedData = new ProductAddedData(productService);
+        OrderPlacedData orderPlacedData = new OrderPlacedData(orderService);
+        return adminRedirect(ok(addedItemsStatistics.render(session(), userRegisteredData, productAddedData, orderPlacedData)));
     }
 
     /**

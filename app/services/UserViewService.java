@@ -288,6 +288,7 @@ public final class UserViewService {
                 gc.setName(results.getString("name"));
                 gc.setImage(results.getString("image"));
                 gc.setDescription(results.getString("description"));
+                gc.setSearch(results.getInt("search"));
 
                 gameCategory = Optional.of(gc);
             }

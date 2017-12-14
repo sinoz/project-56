@@ -87,6 +87,7 @@ POST        /admin/gamecategories/i/:id          controllers.AdminController.upd
 GET         /admin/products                      controllers.AdminController.indexProducts
 GET         /admin/statistics                    controllers.AdminController.indexStatistics
 GET         /admin/products/productsSelected/:productid         controllers.AdminController.indexModifyProduct(productid: String)
-POST         /admin/products/productsSelected/:productid         controllers.AdminController.updateModifyProduct(productid: String)
+POST        /admin/products/productsSelected/:productid         controllers.AdminController.updateModifyProduct(productid: String)
+GET         /admin/statistics/user/:id           controllers.AdminController.indexStatisticsPerUser(id: String)
 GET         /admin/statistics/usage              controllers.AdminController.indexUsageStatistics
 GET         /admin/statistics/items              controllers.AdminController.indexItemStatistics

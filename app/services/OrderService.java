@@ -78,6 +78,43 @@ public final class OrderService {
         });
     }
 
+    public List<Order> fetchOrders(){
+        return database.withConnection(connection -> {
+            List<Order> result = new ArrayList<>();
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders");
+
+            ResultSet queryResult = stmt.executeQuery();
+
+            while (queryResult.next()){
+                Order order = new Order();
+
+                int userid = queryResult.getInt("userid");
+                int productid = queryResult.getInt("productid");
+
+                order.setId(queryResult.getInt("id"));
+                order.setTrackId(queryResult.getString("trackid"));
+                order.hasUser(queryResult.getBoolean("hasuser"));
+                order.setUserId(userid);
+                order.setProductId(productid);
+                order.setCouponCode(queryResult.getString("couponcode"));
+                order.setPrice(queryResult.getFloat("price"));
+                order.setOrderType(queryResult.getInt("ordertype"));
+                order.setStatus(queryResult.getInt("status"));
+                order.setOrderplaced(queryResult.getDate("orderplaced"));
+
+                Optional<Product> product = productService.fetchProduct(productid);
+                Optional<ViewableUser> user = userViewService.fetchViewableUser(userid);
+
+                product.ifPresent(order::setProduct);
+                user.ifPresent(order::setUser);
+
+                result.add(order);
+            }
+
+            return result;
+        });
+    }
+
     public List<Order> getOrdersByUser(int userid){
         return database.withConnection(connection -> {
             List<Order> result = new ArrayList<>();

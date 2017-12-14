@@ -54,6 +54,7 @@ public final class ProductService {
 				gameCategory.setName(results.getString("name"));
 				gameCategory.setImage(results.getString("image"));
 				gameCategory.setDescription(results.getString("description"));
+				gameCategory.setSearch(results.getInt("search"));
 
 				gameCategories.add(gameCategory);
 			}
@@ -81,6 +82,7 @@ public final class ProductService {
 				gc.setName(results.getString("name"));
 				gc.setImage(results.getString("image"));
 				gc.setDescription(results.getString("description"));
+				gc.setSearch(results.getInt("search"));
 
 				gameCategory = Optional.of(gc);
 			}
@@ -108,6 +110,7 @@ public final class ProductService {
 				gc.setName(results.getString("name"));
 				gc.setImage(results.getString("image"));
 				gc.setDescription(results.getString("description"));
+				gc.setSearch(results.getInt("search"));
 
 				gameCategory = Optional.of(gc);
 			}
@@ -126,6 +129,28 @@ public final class ProductService {
 			stmt.setString(2, description);
 			stmt.setInt(3, gameId);
 			stmt.execute();
+		});
+	}
+
+	/**
+	 * Attempts to update a {@link GameCategory} that matches the given game id.
+	 */
+	public void updateGameCategorySearch(int gameId) {
+		database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
+			stmt.setInt(1, gameId);
+
+			ResultSet result = stmt.executeQuery();
+
+			if (result.next()) {
+				int start = result.getInt("search");
+				int search = start + 1;
+
+				stmt = connection.prepareStatement("UPDATE gamecategories SET search=? WHERE id=?");
+				stmt.setInt(1, search);
+				stmt.setInt(2, gameId);
+				stmt.execute();
+			}
 		});
 	}
 
