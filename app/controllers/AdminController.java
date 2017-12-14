@@ -174,8 +174,7 @@ public final class AdminController extends Controller {
     }
 
     private Result adminRedirect(Result result) {
-//	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
-        return result;
+	    return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
     }
 
     /**
