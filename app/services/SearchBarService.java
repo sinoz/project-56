@@ -1,8 +1,7 @@
 package services;
 
-import play.db.Database;
-
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -13,10 +12,11 @@ import java.util.List;
  *
  * @author Johan van der Hoeven
  */
+@Singleton
 public final class SearchBarService {
-    @Inject private static play.db.Database database;
+    @Inject private play.db.Database database;
 
-    public static List<String> fetchGameCategoryNames(){
+    public List<String> fetchGameCategoryNames(){
         return database.withConnection(connection -> {
             List<String> res = new ArrayList<>();
 

@@ -1,0 +1,127 @@
+@import components._
+@import forms.ReviewForm
+
+@(form: play.data.Form[forms.ReviewForm], reviewid: String, product: Product, usersender: ViewableUser, userreceiver: ViewableUser, session: play.mvc.Http.Session)
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Home", session)
+
+            @banner()
+
+            <br>
+            <div class="container">
+                <div class="col-md-4">
+                    <div><h1>Leave a review</h1></div>
+                    <p>You bought the product: @product.getTitle</p>
+                    <p>From the seller: @userreceiver.getUsername</p>
+                    @*<div class="container">*@
+                        @*<div class="row" style="margin-top:0px;">*@
+                          @*<div class="col-md-6">*@
+                              @*<div class="well well-sm">*@
+                                  @*<div class="text-right">*@
+                                    @*<a class="btn btn-success btn-green" href="#reviewbox" id="open-review-box">Leave a Review</a>*@
+                                  @*</div>*@
+
+                                  @*<div class="row" id="post-review-box" style="display:none;">*@
+                                      @*<div class="col-md-12">*@
+                                          @*<form accept-charset="UTF-8" action="" method="post">*@
+                                              @*<input id="ratings-hidden" name="rating" type="hidden">*@
+                                              @*<textarea class="form-control animated" cols="50" id="new-Title" name="Title" placeholder="Enter your title here..." rows="5" style="margin-bottom: 10px"></textarea>*@
+
+                                              @*<textarea class="form-control animated" cols="50" id="new-review" name="description" placeholder="Enter your review here..." rows="5"></textarea>*@
+
+                                              @*<div class="text-right">*@
+                                                  @*<div class="stars starrr" data-rating="0"></div>*@
+                                                  @*<a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none; margin-right: 10px;">*@
+                                                      @*<span class="glyphicon glyphicon-remove"></span>Cancel</a>*@
+                                                  @*<button class="btn btn-success btn-lg" type="submit">Save</button>*@
+                                              @*</div>*@
+                                          @*</form>*@
+                                      @*</div>*@
+                                  @*</div>*@
+                              @*</div>*@
+                          @*</div>*@
+                        @*</div>*@
+
+                        @helper.form(action = helper.CSRF(routes.AddReviewController.addReview(reviewid, product.getId + "", usersender.getId + "", userreceiver.getId + "")), 'class -> "form-horizontal") {
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="title">Title</label>
+                                @defining(if (form("title").getValue.isPresent) form("title").getValue.get() else "") { text =>
+                                    <input id="title" name="title" type="text" class="form-control input-md">
+                                }
+                                @for(error <- form("title").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="description">Description</label>
+                                @defining(if (form("description").getValue.isPresent) form("description").getValue.get() else "") { text =>
+                                    <input id="description" name="description" type="text" class="form-control input-md">
+                                }
+                                @for(error <- form("description").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="rating">Rating</label>
+                                @defining(if (form("rating").getValue.isPresent) form("rating").getValue.get() else 1) { text =>
+                                    <input id="rating" name="rating" type="number" class="form-control input-md">
+                                }
+                                @for(error <- form("rating").errors) {
+                                    <p>@error.format(messages())</p>
+                                }
+                            </div>
+
+                            <div class="g-recaptcha" data-theme="dark light" data-sitekey="6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL"></div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <div class="col-xs-8">
+                                    <input type="submit" name="submit" value="Save">
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                    <a href="/"><button class="button">Home</button></a>
+
+                </div>
+            </div>
+
+            <br>
+
+            @footer()
+
+        </div>
+
+
+
+
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+            <!-- Required for the banner -->
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/reviewbox.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+}

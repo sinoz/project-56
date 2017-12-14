@@ -1,6 +1,4 @@
-@import services.SearchBarService
-
-@(input: String)
+@(input: String, message: String)
 
 <div class="hero" data-bg-image="@routes.Assets.versioned("images/Banner-Test.jpg")">
     <div class="container">
@@ -9,11 +7,26 @@
             <input type="text" id="searchinput" name="input" placeholder="Find your game..." value="@input" list="games">
             <input type="submit" value="Find">
             <datalist id="games">
-                @for(cat <- SearchBarService.fetchGameCategoryNames()){
-                    <option value="@cat"></option>
-                }
+                @* Ilyas: !!!!!
+                    Use SearchBarService.fetchGameCategoryNames() in a controller,
+                    then pass down the result to this view
+                *@
+
+                @*for(cat <- SearchBarService.fetchGameCategoryNames()){*@
+                    @*<option value="@cat"></option>*@
+                @*}*@
             </datalist>
         }
         </div>
     </div>
+</div>
+
+<div class="container">
+    @if(message != null && message.length > 0) {
+        <div>
+            <span>
+                <h1 style="color: white;">@message</h1>
+            </span>
+        </div>
+    }
 </div>

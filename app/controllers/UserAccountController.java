@@ -1,8 +1,9 @@
 package controllers;
 
 import concurrent.DbExecContext;
-import models.*;
-import play.db.Database;
+import models.Product;
+import models.Review;
+import models.ViewableUser;
 import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;

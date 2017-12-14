@@ -1,0 +1,57 @@
+@import java.util
+
+@(session: play.mvc.Http.Session, products: util.List[Product])
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("products", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            @for(product <- products) {
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-2">
+                                        <div class="live-camera">
+                                            <a href="/admin/products/productsSelected/@product.getId">
+                                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                    <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                </figure>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-6 image">
+                                        <a href="/admin/products/productsSelected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                        <a href="/admin/products/productsSelected/@product.getId"><button class="awesomebutton">Details</button></a>
+                                        <a href="/products/selected/@product.getId"><button class="awesomebutton">Public</button></a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

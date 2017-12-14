@@ -3,23 +3,51 @@ package services;
 import models.*;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 
 /**
- * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s for the {@link controllers.UserAccountController}
+ * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s
  *
  * @author Johan van der Hoeven
  * @author Maurice van Veen
  */
+@Singleton
 public final class UserViewService {
     private final play.db.Database database;
 
     @Inject
-    public UserViewService(play.db.Database database){
+    public UserViewService(play.db.Database database) {
         this.database = database;
+    }
+
+    /**
+     * Attempts to find all {@link ViewableUser}.
+     */
+    public List<ViewableUser> fetchViewableUsers() {
+        return database.withConnection(connection -> {
+            List<ViewableUser> users = new ArrayList<>();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users");
+
+            ResultSet results = stmt.executeQuery();
+
+            while (results.next()) {
+                int id = results.getInt("id");
+                String username = results.getString("username");
+                String mail = results.getString("mail");
+                String profilepicture = results.getString("profilepicture");
+                Date memberSince = results.getDate("membersince");
+                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
+
+                users.add(u);
+            }
+
+            return users;
+        });
     }
 
     /**
@@ -75,7 +103,44 @@ public final class UserViewService {
     }
 
     /**
-     * Attempts to find a {@link User} that matches the given username and password combination.
+     * Attempts to find a {@link User} that matches the given username.
+     */
+    public Optional<User> fetchUser(String username) {
+        return database.withConnection(connection -> {
+            Optional<User> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
+            stmt.setString(1, username);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                User u = new User();
+
+                u.setId(results.getInt("id"));
+                u.setUsername(results.getString("username"));
+                u.setPassword(results.getString("password"));
+                u.setMail(results.getString("mail"));
+                u.setPaymentMail(results.getString("paymentmail"));
+                u.setProfilePicture(results.getString("profilepicture"));
+                u.setMemberSince(results.getDate("membersince"));
+
+                List<Integer> favorites = new ArrayList<>();
+                Array a = results.getArray("favorites");
+                if (a != null) {
+                    favorites.addAll(Arrays.asList((Integer[]) a.getArray()));
+                }
+                u.setFavorites(favorites);
+
+                user = Optional.of(u);
+            }
+
+            return user;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link User} that matches the given id.
      */
     public Optional<User> fetchUser(int id) {
         return database.withConnection(connection -> {
@@ -223,6 +288,7 @@ public final class UserViewService {
                 gc.setName(results.getString("name"));
                 gc.setImage(results.getString("image"));
                 gc.setDescription(results.getString("description"));
+                gc.setSearch(results.getInt("search"));
 
                 gameCategory = Optional.of(gc);
             }

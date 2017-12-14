@@ -5,7 +5,7 @@
 * message to display.
 *@
 @import java.util
-@(gameCategory: GameCategory, list: util.List[util.List[Product]], session: play.mvc.Http.Session, input: String, minPrice:Integer, maxPrice:Integer)
+@(gameCategory: GameCategory, list: util.List[util.List[Product]], suggestions: util.List[util.List[Product]], session: play.mvc.Http.Session, input: String, message: String, minPrice:Integer, maxPrice:Integer)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -16,7 +16,7 @@
             <div class="site-content">
                 @header("Home", session)
 
-                @searchbar(input)
+                @searchbar(input, message)
 
                 <main class="main-content">
                     <div class="fullwidth-block">
@@ -33,7 +33,11 @@
                                 @filter(minPrice, maxPrice)
 
                                 </div>
+
                                 <div class="col-md-9 col-sm-9">
+
+                                    @suggestionsField(suggestions)
+
                                     @for(row <- list) {
                                         <div class="row">
                                         @for(product <- row) {
@@ -63,7 +67,6 @@
                                     }
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </main>

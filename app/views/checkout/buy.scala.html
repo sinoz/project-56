@@ -4,7 +4,7 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(product: Product, potentialDiscountedPrice: Double, user: Optional[User], rating: Int, session: play.mvc.Http.Session, token: String)
+@(product: Product, potentialDiscountedPrice: Double, user: Optional[User], rating: Int, session: play.mvc.Http.Session, verification: String, token: String, userId: String, sessionToken: String, trackingId: String, couponCode: String, mail: String)
     @*
     * Call the `main` template with two arguments. The first
     * argument is a `String` with the title of the page, the second
@@ -130,7 +130,7 @@
                                                 // Make a call to the REST api to execute the payment
                                                 return actions.payment.execute().then(function() {
                                                     //  window.alert('Payment Complete!');
-                                                    window.location.href = "/orderconfirmed/test"
+                                                    window.location.href = "/placeorder/buy/@verification/@token/@userId/@sessionToken/@potentialDiscountedPrice/@trackingId/@couponCode/@mail"
                                                 });
                                             }
 

@@ -5,6 +5,7 @@ import play.libs.mailer.Email;
 import play.libs.mailer.MailerClient;
 
 import javax.inject.Inject;
+
 /**
  * TODO
  *
@@ -28,6 +29,16 @@ public final class MailerService {
                 .addTo("restartcontactus@gmail.com <restartcontactus@gmail.com>")
                 // sends text, HTML or both...
                 .setBodyText(form.content + "\n" + "\n" + form.email + "\n" +form.phone);
+        mailerClient.send(email);
+    }
+
+    public void sendEmail(String title, String to, String message) {
+        Email email = new Email()
+                .setSubject(title)
+                .setFrom("noreply <restartcontactus@gmail.com>")
+                .addTo(to + " <" + to + ">")
+                // sends text, HTML or both...
+                .setBodyText(message);
         mailerClient.send(email);
     }
 }

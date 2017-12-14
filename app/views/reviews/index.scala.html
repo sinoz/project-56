@@ -1,0 +1,84 @@
+@import java.util
+@import components._
+
+@(user: User, rating: Integer, reviews: util.List[util.List[Review]], session: play.mvc.Http.Session)
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("MyAccount", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-userpic">
+                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(session.get("profilePictureURL"))" alt=""></figure>
+                            </div>
+
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @profileUserMenu("reviews", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="col-md-8">
+                                <a href="/user/@user.getUsername">
+                                    <div class="live-camera">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="profile-userpic">
+                                                <figure class="live-camera-cover"><img src="@routes.Assets.versioned(user.getProfilePicture)" alt=""></figure>
+                                            </div>
+                                        </div>
+
+                                        <div class="profile-usertitle">
+                                            <div class="profile-usertitle-name-white">@user.getUsername</div>
+
+                                            <div class="profile-usertitle-membersince-white">
+                                                Member Since:<br/>
+                                                @user.getMemberSince.format("dd-MM-yyyy")
+                                            </div>
+                                        </div>
+
+                                        @for(star_full <- 1 to rating){
+                                            <span><img src="/assets/images/star_full.png" class="col-xs-1"></span>
+                                        }
+                                        @for(star_empty <- 1 to (5 - rating)){
+                                            <span><img src="/assets/images/star_empty.png" class="col-xs-1"></span>
+                                        }
+                                        <br><br>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if(reviews.size() > 0) {
+                        <div class="container">
+                            <div class="portlet">
+                                <div class="col-md-4">
+                                    @reviewsField(reviews.get(0))
+                                </div>
+                                <div class="col-md-4">
+                                    @reviewsField(reviews.get(1))
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

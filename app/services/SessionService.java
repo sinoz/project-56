@@ -4,6 +4,7 @@ import models.User;
 import play.db.Database;
 import play.mvc.Http;
 
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * @author Maurice van Veen
  */
+@Singleton
 public class SessionService {
 
     public static void initSession(Http.Session session, User user, play.db.Database database) {
@@ -20,7 +22,7 @@ public class SessionService {
 
         session.put("loggedInAs", user.getUsername());
         session.put("profilePictureURL", Optional.ofNullable(user.getProfilePicture()).orElse("images/default_profile_pic.png"));
-        session.put("usedMail", user.getMail());
+        setMail(session, user.getMail());
         session.put("usedPaymentMail", Optional.ofNullable(user.getPaymentMail()).orElse(""));
         session.put("sessionToken", token);
 
@@ -29,7 +31,7 @@ public class SessionService {
 
     public static void updateSession(Http.Session session, String usernameToChangeTo, String emailToChangeTo, String paymentMailToChangeTo) {
         session.put("loggedInAs", usernameToChangeTo);
-        session.put("usedMail", emailToChangeTo);
+        setMail(session, emailToChangeTo);
         session.put("usedPaymentMail", paymentMailToChangeTo);
     }
 
@@ -41,23 +43,60 @@ public class SessionService {
     }
 
     public static String getLoggedInAs(Http.Session session) {
-        return session.get("loggedInAs");
+        return session.getOrDefault("loggedInAs", null);
     }
 
     public static String getSessionToken(Http.Session session) {
-        return session.get("sessionToken");
+        return session.getOrDefault("sessionToken", null);
+    }
+
+    public static String getMail(Http.Session session) {
+        return session.getOrDefault("usedMail", null);
+    }
+
+    public static void setMail(Http.Session session, String mail) {
+        session.put("usedMail", mail);
+    }
+
+    public static boolean isValidTime(Http.Session session) {
+        String validTime = session.get("validTime");
+        if (validTime == null)
+            return false;
+
+        try {
+            long time = Long.valueOf(validTime);
+            return System.currentTimeMillis() < time;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static void setValidTime(Http.Session session) {
+        session.put("validTime", (System.currentTimeMillis() + 1000 * 60) + "");
     }
 
     public static boolean redirect(Http.Session session, play.db.Database database) {
         String loggedInAs = getLoggedInAs(session);
         String sessionToken = getSessionToken(session);
-        String databaseToken = fetchToken(database, loggedInAs);
-        boolean output = loggedInAs == null || loggedInAs.length() == 0 || !SecurityService.secure(sessionToken).equals(databaseToken);
+        boolean output = loggedInAs == null || loggedInAs.length() == 0 || !checkSessionToken(database, loggedInAs, sessionToken);
         if (output)
             clearSession(session);
         return output;
     }
 
+    public static boolean redirectAdmin(Http.Session session, play.db.Database database) {
+        if (redirect(session, database))
+            return true;
+
+        String loggedInAs = getLoggedInAs(session);
+        String sessionToken = getSessionToken(session);
+        return !isAdmin(database, loggedInAs, SecurityService.secure(sessionToken));
+    }
+
+    public static boolean checkSessionToken(play.db.Database database, String loggedInAs, String sessionToken) {
+        String databaseToken = fetchToken(database, loggedInAs);
+        return SecurityService.secure(sessionToken).equals(databaseToken);
+    }
 
     private static void clearSession(Http.Session session) {
         session.clear();
@@ -82,6 +121,17 @@ public class SessionService {
                 return result.getString("sessionToken");
             }
             return null;
+        });
+    }
+
+    private static boolean isAdmin(play.db.Database database, String username, String sessionToken) {
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT isadmin FROM users WHERE username=? AND sessiontoken=?");
+            stmt.setString(1, username);
+            stmt.setString(2, sessionToken);
+
+            ResultSet result = stmt.executeQuery();
+            return result.next() && result.getBoolean("isadmin");
         });
     }
 }

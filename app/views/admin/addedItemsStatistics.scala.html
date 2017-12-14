@@ -1,0 +1,138 @@
+@import chart.UserRegisteredData
+@import chart.ProductAddedData
+@import chart.OrderPlacedData
+@(session: play.mvc.Http.Session, userRegisteredData: UserRegisteredData, productAddedData: ProductAddedData, orderPlacedData: OrderPlacedData)
+@import components._
+
+@main("ReStart") {
+    <body>
+        <script src="@routes.Assets.versioned("javascripts/chartjs/Chart.min.js")"></script>
+
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("statistics", "items")
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <h2>Added Items Statistics</h2>
+
+                            <h3>User Registered Data</h3>
+                            <canvas id="userRegisterData" width="400" height="400"></canvas>
+                            <br>
+                            <h3>Product Added Data</h3>
+                            <canvas id="productAddedData" width="400" height="400"></canvas>
+                            <br>
+                            <h3>Order Placed Data</h3>
+                            <canvas id="orderPlacedData" width="400" height="400"></canvas>
+
+                            <script>
+                                    var userRegisterData = document.getElementById("userRegisterData");
+                                    var userRegisterChart = new Chart(userRegisterData, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @userRegisteredData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of registered users',
+                                                data: @userRegisteredData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+
+                                    var productAddedData = document.getElementById("productAddedData");
+                                    var productAddedChart = new Chart(productAddedData, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @productAddedData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of added products',
+                                                data: @productAddedData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+
+                                    var orderPlacedData = document.getElementById("orderPlacedData");
+                                    var orderPlacedChart = new Chart(orderPlacedData, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @orderPlacedData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of placed orders',
+                                                data: @orderPlacedData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

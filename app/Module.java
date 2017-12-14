@@ -18,7 +18,6 @@ public final class Module extends AbstractModule {
 	public void configure() {
 		bindServices();
 		bindOthers();
-		requestStaticInjection(SearchBarService.class);
 	}
 
 	private void bindServices() {
@@ -26,6 +25,12 @@ public final class Module extends AbstractModule {
 		bind(AuthenticationService.class).asEagerSingleton();
 		bind(FavouritesService.class).asEagerSingleton();
 		bind(ProductService.class).asEagerSingleton();
+		bind(UserViewService.class).asEagerSingleton();
+		bind(TaskService.class).asEagerSingleton();
+		bind(SearchService.class).asEagerSingleton();
+		bind(SecurityService.class).asEagerSingleton();
+		bind(SessionService.class).asEagerSingleton();
+		bind(SearchBarService.class).asEagerSingleton();
 		bind(UserViewService.class).asEagerSingleton();
 	}
 

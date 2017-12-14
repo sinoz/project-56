@@ -1,10 +1,11 @@
 @import components._
+@import java.util
 
 @*
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(token: String, input: String, session: play.mvc.Http.Session)
+@(token: String, input: String, suggestions: util.List[util.List[Product]], session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -15,12 +16,30 @@
         <div class="site-content">
             @header("Home", session)
 
-            @searchbar(input)
+            @searchbar(input, null)
 
             <main class="main-content">
                 <div class="fullwidth-block">
                     <div class="container">
                         <h3 class="section-title">No products found...</h3>
+
+                        <br>
+                        @for(row <- suggestions) {
+                            <div class="row">
+                            @for(product <- row) {
+                                <div class="col-md-2 col-sm-2">
+                                    <div class="live-camera">
+                                        <a href="/products/selected/@product.getId">
+                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
+                                                <div class="transbox"><p>@product.getBuyPriceText</p></div>
+                                                <div class="transbox"><p>@product.getTitle</p></div>
+                                            </figure>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                            </div>
+                        }
                     </div>
                 </div>
             </main>

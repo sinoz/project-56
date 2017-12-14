@@ -1,0 +1,73 @@
+@import chart.WebshopVisitTimesData
+@(session: play.mvc.Http.Session, webshopVisitTimesData: WebshopVisitTimesData)
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <script src="@routes.Assets.versioned("javascripts/chartjs/Chart.min.js")"></script>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("statistics", "general")
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <h2>General Statistics</h2>
+
+                            <h3>Webshop Visit Times Data</h3>
+                            <canvas id="webshopVisitTimesData" width="400" height="400"></canvas>
+
+                            <script>
+                                    var webshopVisitTimesData = document.getElementById("webshopVisitTimesData");
+                                    var webshopVisitTimesChart = new Chart(webshopVisitTimesData, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @webshopVisitTimesData.getLabelsHTML,
+                                            datasets: [{
+                                                label: '# of visits',
+                                                data: @webshopVisitTimesData.getDataHTML,
+                                                backgroundColor: [
+                                                    'rgba(99, 132, 255, 0.2)'
+                                                ],
+                                                borderColor: [
+                                                    'rgba(99, 132, 255, 1)'
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            scales: {
+                                                yAxes: [{
+                                                    ticks: {
+                                                        beginAtZero:true
+                                                    }
+                                                }]
+                                            }
+                                        }
+                                    });
+                                </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

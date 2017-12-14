@@ -11,10 +11,7 @@ import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.MyInventoryService;
-import services.ProductService;
-import services.SessionService;
-import services.UserViewService;
+import services.*;
 import views.html.addproduct.index;
 import views.html.addproduct.update;
 
@@ -48,6 +45,9 @@ public class AddProductController extends Controller {
     private final ProductService productService;
 
     private final UserViewService userViewService;
+
+    private final OrderService orderService;
+
     /**
      * The execution context used to asynchronously perform database operations.
      */
@@ -58,12 +58,13 @@ public class AddProductController extends Controller {
     private final HttpExecutionContext httpEc;
 
     @Inject
-    public AddProductController(play.db.Database database, FormFactory formFactory, MyInventoryService myInventoryService, ProductService productService, UserViewService userViewService, DbExecContext dbEc, HttpExecutionContext httpEc){
+    public AddProductController(play.db.Database database, FormFactory formFactory, MyInventoryService myInventoryService, ProductService productService, UserViewService userViewService, OrderService orderService, DbExecContext dbEc, HttpExecutionContext httpEc){
         this.database = database;
         this.formFactory = formFactory;
         this.myInventoryService = myInventoryService;
         this.productService = productService;
         this.userViewService = userViewService;
+        this.orderService = orderService;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
     }
@@ -85,8 +86,11 @@ public class AddProductController extends Controller {
 
                 Form<ProductForm> form = formFactory.form(ProductForm.class);
 
-                Optional<Product> product = productService.fetchProduct(id);
-                if (product.isPresent()) {
+                String loggedInAs = SessionService.getLoggedInAs(session());
+                Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+                Optional<Product> product = productService.fetchVisibleProduct(id);
+
+                if (product.isPresent() && user.isPresent() && product.get().getUserId() == user.get().getId()) {
                     return ok(update.render(form, product.get(), session(), "updategameaccount"));
                 }
             } catch (Exception e) {
@@ -111,7 +115,6 @@ public class AddProductController extends Controller {
                 return completedFuture(redirect("/login"));
             }
 
-            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
             Product product = new Product();
 
             ProductForm productForm = formBinding.get();
@@ -130,7 +133,14 @@ public class AddProductController extends Controller {
             product.setMailCurrent(productForm.emailCurrent);
             product.setPasswordCurrent(productForm.passwordCurrent);
 
-            return runAsync(() -> myInventoryService.addProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+            String trackingId = orderService.getNewTrackingId();
+            String mail = user.get().getMail();
+
+            boolean result = myInventoryService.placeOrder(product.getId(), product, user.get().getId(), trackingId, mail);
+            if (result)
+                return completedFuture(redirect("/orderconfirmed/" + trackingId + "/" + mail));
+            else
+                return completedFuture(redirect("/orderfailed"));
         }
     }
 
@@ -139,7 +149,7 @@ public class AddProductController extends Controller {
         if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
             try {
                 int id = Integer.valueOf(productid);
-                Optional<Product> product = productService.fetchProduct(id);
+                Optional<Product> product = productService.fetchVisibleProduct(id);
                 if (product.isPresent()) {
                     return completedFuture(badRequest(update.render(formBinding, product.get(), session(), "updategameaccount")));
                 }
@@ -177,7 +187,8 @@ public class AddProductController extends Controller {
                 product.setMailCurrent(form.emailCurrent);
                 product.setPasswordCurrent(form.passwordCurrent);
 
-                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
+                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor)
+                        .thenApplyAsync(i -> redirect("/myaccount/inventory"), httpEc.current());
             } catch (Exception e) {
                 e.printStackTrace();
             }

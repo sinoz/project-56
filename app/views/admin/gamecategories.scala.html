@@ -1,0 +1,60 @@
+@import java.util
+
+@(session: play.mvc.Http.Session, list: util.List[util.List[GameCategory]])
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("gamecategories", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-9">
+                                        <h1 class="section-title">Games</h1>
+                                        @for(row <- list) {
+                                            <div class="row">
+                                            @for(gameCategory <- row) {
+                                                <div class="col-md-3 col-sm-6">
+                                                    <div class="live-camera">
+                                                        <a href="/admin/gamecategories/i/@gameCategory.getId">
+                                                            <figure class="live-camera-cover"><img src="@routes.Assets.versioned(gameCategory.getImage())" alt=""></figure>
+                                                            <h3 class="location">@gameCategory.getName</h3>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

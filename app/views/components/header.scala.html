@@ -3,8 +3,8 @@
 <div class="site-header">
     <div class="container">
         <a href="/" class="branding">
-            <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
             <div class="logo-type">
+            <img src="@routes.Assets.versioned("images/RestartBigLogo.png")" alt="" class="logo">
             </div>
             <div><h1 class="site-title">Make Your Game Life Great Again</h1></div>
         </a>
@@ -31,6 +31,12 @@
                     <li class="menu-item"><a href="/contact">Contact</a></li>
                 }
 
+                @if(activeMenuItem.equals("TrackOrder")) {
+                    <li class="menu-item current-menu-item"><a href="/trackorder">Track Order</a></li>
+                } else {
+                    <li class="menu-item"><a href="/trackorder">Track Order</a></li>
+                }
+
                 @if(!session.containsKey("loggedInAs")) {
                     @if(activeMenuItem.equals("Login")) {
                         <li class="menu-item current-menu-item"><a href="/login">Login</a></li>
@@ -38,7 +44,11 @@
                         <li class="menu-item"><a href="/login">Login</a></li>
                     }
                 } else {
-                    <li class="menu-item"><a href="/myaccount">My Account</a></li>
+                    @if(activeMenuItem.equals("MyAccount")) {
+                        <li class="menu-item current-menu-item"><a href="/myaccount">My Account</a></li>
+                    } else {
+                        <li class="menu-item"><a href="/myaccount">My Account</a></li>
+                    }
                 }
             </ul>
                 <!-- .menu -->

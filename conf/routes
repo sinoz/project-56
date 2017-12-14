@@ -4,6 +4,11 @@
 
 # An example controller showing a sample home page
 GET         /                                    controllers.HomeController.index
+GET         /MMORPG                              controllers.HomeController.indexMMORPG
+GET         /FPS                                 controllers.HomeController.indexFPS
+GET         /MOBA                                controllers.HomeController.indexMOBA
+GET         /sandbox                             controllers.HomeController.indexsandbox
+GET         /other                               controllers.HomeController.indexother
 
 GET         /products/:token                     controllers.ProductsController.index(token: String)
 POST        /products/search                     controllers.ProductsController.redirect
@@ -12,10 +17,11 @@ GET         /products/selected/:token            controllers.SelectedProductCont
 
 GET         /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.index(token: String)
 POST        /products/checkout/buy/:token        controllers.ProductCheckoutBuyController.couponCode(token: String)
+POST        /products/checkout/mail/:redirect    controllers.ProductCheckoutMailController.index(redirect: String)
 
 GET         /newproduct/:gamecat                 controllers.AddProductController.index(gamecat: String)
 POST        /addproduct/:id                      controllers.AddProductController.addProduct(id: String)
-GET        /myaccount/inventory/update/:id       controllers.AddProductController.indexUpdateProduct(id: String)
+GET         /myaccount/inventory/update/:id      controllers.AddProductController.indexUpdateProduct(id: String)
 POST        /myaccount/inventory/update/:id      controllers.AddProductController.updateProduct(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
@@ -26,8 +32,8 @@ GET         /faq                                 controllers.FAQController.index
 GET         /register                            controllers.RegistrationController.index
 POST        /register                            controllers.RegistrationController.register
 
-GET         /contact                           controllers.ContactController.index
-POST        /contact                           controllers.ContactController.mail
+GET         /contact                             controllers.ContactController.index
+POST        /contact                             controllers.ContactController.mail
 
 GET         /myaccount                           controllers.MyAccountController.index
 
@@ -48,9 +54,45 @@ GET         /myaccount/inventory/game/:id        controllers.MyInventoryControll
 GET         /myaccount/inventory/details/:id     controllers.MyInventoryController.indexProductDetails(id: String)
 GET         /myaccount/addgameaccount            controllers.MyInventoryController.indexAddGameAccount
 
+GET         /myaccount/reviews                   controllers.ReviewsController.index
+
 GET         /logout                              controllers.LogoutController.index
 
 GET         /user/:username                      controllers.UserAccountController.index(username: String)
 
-GET         /orderconfirmed/:token               controllers.OrderConfirmedController.index(token: String)
+GET         /placeorder/buy/:verification/:token/:userId/:sessionToken/:p/:trackingId/:couponCode/:mail    controllers.PlaceOrderController.index(verification: String, token: String, userId: String, sessionToken: String, p: String, trackingId: String, couponCode: String, mail: String)
+
+GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedController.index(trackingId: String, mail: String)
+
+
+GET         /review/:token                       controllers.AddReviewController.index(token: String)
+POST        /review/:reviewid/:productid/:usersenderid/:userreceiverid                          controllers.AddReviewController.addReview(reviewid: String, productid: String, usersenderid: String, userreceiverid: String)
+
 GET         /orderfailed                         controllers.OrderFailedController.index
+
+GET         /trackorder                          controllers.TrackOrderController.index
+GET         /trackorder/                         controllers.TrackOrderController.index
+GET         /trackorder/:trackingid              controllers.TrackOrderController.indexOrder(trackingid: String)
+POST        /trackorder/search                   controllers.TrackOrderController.redirect
+
+GET         /admin                               controllers.AdminController.index
+
+GET         /admin/users                         controllers.AdminController.indexUsers
+GET         /admin/users/view/:userid            controllers.AdminController.viewUser(userid: String)
+GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
+POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
+GET         /admin/users/delete/:userid          controllers.AdminController.indexDeleteUser(userid: String)
+POST        /admin/users/delete/:userid          controllers.AdminController.deleteUser(userid: String)
+
+GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
+GET         /admin/gamecategories/i/:id          controllers.AdminController.indexGameCategorySelected(id: String)
+POST        /admin/gamecategories/i/:id          controllers.AdminController.updateGameCategorySelected(id: String)
+#GET         /admin/gamecategories/d/:id          controllers.AdminController.deleteGameCategorySelected(id: String)
+
+GET         /admin/products                      controllers.AdminController.indexProducts
+GET         /admin/statistics                    controllers.AdminController.indexStatistics
+GET         /admin/products/productsSelected/:productid         controllers.AdminController.indexModifyProduct(productid: String)
+POST        /admin/products/productsSelected/:productid         controllers.AdminController.updateModifyProduct(productid: String)
+GET         /admin/statistics/user/:id           controllers.AdminController.indexStatisticsPerUser(id: String)
+GET         /admin/statistics/usage              controllers.AdminController.indexUsageStatistics
+GET         /admin/statistics/items              controllers.AdminController.indexItemStatistics

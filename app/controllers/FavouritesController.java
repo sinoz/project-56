@@ -80,7 +80,8 @@ public final class FavouritesController extends Controller{
             FavouriteForm form = formBinding.get();
             String prodId = form.getId();
 
-            return runAsync(() -> favouritesService.add(prodId, SessionService.getLoggedInAs(session())), dbExecutor).thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
+            return runAsync(() -> favouritesService.add(prodId, SessionService.getLoggedInAs(session())), dbExecutor)
+                    .thenApplyAsync(i -> redirect("/products/selected/" + prodId), httpEc.current());
         }
     }
 }

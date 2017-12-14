@@ -1,0 +1,40 @@
+@(session: play.mvc.Http.Session, input: String)
+@import components._
+
+@*
+* This template takes a single argument, a String containing a
+* message to display.
+*@
+@*
+* Call the `main` template with two arguments. The first
+* argument is a `String` with the title of the page, the second
+* argument is an `Html` object containing the body of the page. test
+*@
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("TrackOrder", session)
+
+            @trackordersearchbar(input)
+
+            <div class="container">
+                <div class="col-md-12">
+                    <h2>Fill in a tracking ID for an order.</h2>
+                    <br>
+                    <h3>Example: 01234567-abcd-0123-0123456789abcdefg</h3>
+                </div>
+            </div>
+
+            <br>
+
+            @footer()
+
+        </div>
+
+            <!-- Required for the banner -->
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}

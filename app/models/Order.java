@@ -1,10 +1,12 @@
 package models;
 
 import io.ebean.Model;
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * An account order.
@@ -15,15 +17,22 @@ import javax.persistence.Id;
 public final class Order extends Model {
 	/** The primary key of an order. */
 	@Id
-	private String id;
+	private int id;
+
+	/** track id of the order, used by the user for searching. */
+	@Constraints.Required
+	private String trackId;
+
+	@Constraints.Required
+	private boolean hasuser;
 
 	/** id of the user, can be used for searching for user. */
 	@Constraints.Required
-	private String userId;
+	private int userId;
 
 	/** The id of the product, can be used for searching for product */
 	@Constraints.Required
-	private String productId;
+	private int productId;
 
 	/** price of the order (total price) */
 	@Constraints.Required
@@ -32,41 +41,56 @@ public final class Order extends Model {
 	/** A coupon code used for this order */
 	private String couponCode;
 
-	/**
-	 * The status of this order (0-5)
-	 * 0:  added
-	 * 1:  processing
-	 * 2:  changing email
-	 * 3:  changing password
-	 * 4:  initializing inventory
-	 * 5:  done
-	 * TODO: use an Enum for this instead of a hardcoded int value
-	 */
+	private int orderType;
+
 	@Constraints.Required
 	private int status;
 
+	/** date of when the order was placed, it is only set once */
+	@Constraints.Required
+	@Formats.DateTime(pattern = "dd/MM/yyyy")
+	private Date orderplaced;
 
-	public String getId() {
+	private Product product;
+	private ViewableUser user;
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getUserId() {
+	public String getTrackId() {
+		return trackId;
+	}
+
+	public void setTrackId(String trackId) {
+		this.trackId = trackId;
+	}
+
+	public boolean hasUser() {
+		return hasuser;
+	}
+
+	public void hasUser(boolean hasuser) {
+		this.hasuser = hasuser;
+	}
+
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
-	public String getProductId() {
+	public int getProductId() {
 		return productId;
 	}
 
-	public void setProductId(String productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 
@@ -86,11 +110,43 @@ public final class Order extends Model {
 		this.couponCode = couponCode;
 	}
 
+	public int getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(int orderType) {
+		this.orderType = orderType;
+	}
+
 	public int getStatus() {
 		return status;
 	}
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public Date getOrderplaced() {
+		return orderplaced;
+	}
+
+	public void setOrderplaced(Date orderplaced) {
+		this.orderplaced = orderplaced;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public ViewableUser getUser() {
+		return user;
+	}
+
+	public void setUser(ViewableUser user) {
+		this.user = user;
 	}
 }

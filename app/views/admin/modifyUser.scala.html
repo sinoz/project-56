@@ -1,0 +1,128 @@
+@import forms.AdminModifyUserForm
+
+@(form: play.data.Form[AdminModifyUserForm], user: Optional[User], isAdmin: Boolean, session: play.mvc.Http.Session)
+    @import components._
+
+@main("Restart"){
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("users", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            @if(!user.isPresent){
+                                <h2>This user does not exist.</h2>
+                            } else {
+                                <h2>Modify User</h2>
+
+                                @helper.form(action = helper.CSRF(routes.AdminController.modifyUser(user.get().getId.toString)), 'class -> "form-horizontal") {
+                                        <!-- Text input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Username:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="username" type="text" class="form-control input-md" value=@user.get().getUsername>
+                                            @for(error <- form("username").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="mail" type="text" class="form-control input-md" value=@user.get().getMail>
+                                            @for(error <- form("mail").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Payment email input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="paymentMail" type="text" class="form-control input-md" value=@user.get().getPaymentMail>
+                                            @for(error <- form("paymentMail").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- IsAdmin input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="isAdmin">Make Administrator:</label>
+                                        <div style="float: left; position: relative; width: 4%;">
+                                            @if(isAdmin) {
+                                                <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md" checked>
+                                            } else {
+                                                <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md">
+                                                }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("canTrade").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                        <!-- Admin password input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="adminPassword">Your Admin Password:</label>
+                                        <div class="col-md-4">
+                                            <input id="password" name="adminPassword" type="password" class="form-control input-md">
+                                            @for(error <- form("adminPassword").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <br>
+
+                                        <!-- Submit Button -->
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- Cancel Button -->
+                                <div style="float: left; position: relative; margin-right: 10px">
+                                    <a href="/admin/users">
+                                        <button class="btn btn-primary">Cancel</button>
+                                    </a>
+                                </div>
+
+                                <!-- Delete Button -->
+                                <div style="float: left; position: relative">
+                                    <a href="/admin/users/delete/@user.get().getId">
+                                        <button class="btn btn-danger">Delete User</button>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

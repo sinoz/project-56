@@ -2,7 +2,7 @@
 * This template takes a single argument, a String containing a
 * message to display.
 *@
-@(list: List[List[GameCategory]], session: play.mvc.Http.Session)
+@(activeMenuItem: String, list: List[List[GameCategory]], session: play.mvc.Http.Session)
 @*
 * Call the `main` template with two arguments. The first
 * argument is a `String` with the title of the page, the second
@@ -15,11 +15,17 @@
         <div class="site-content">
             @header("Home", session)
 
-            @searchbar("")
+            @searchbar("", null)
 
             <main class="main-content">
                 <div class="fullwidth-block">
                     <div class="container">
+                        @gameNavigation(activeMenuItem)
+
+                        <br>
+
+                            <!-- .main-navigation -->
+
                         <h2 class="section-title">Games</h2>
                         @for(row <- list) {
                             <div class="row">

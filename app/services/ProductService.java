@@ -6,6 +6,7 @@ import models.Product;
 import models.User;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * @author I.A
  * @author Maurice van Veen
  */
+@Singleton
 public final class ProductService {
 	private final play.db.Database database;
 
@@ -52,6 +54,9 @@ public final class ProductService {
 				gameCategory.setName(results.getString("name"));
 				gameCategory.setImage(results.getString("image"));
 				gameCategory.setDescription(results.getString("description"));
+				gameCategory.setGenre(results.getString("genre"));
+				gameCategory.setSearch(results.getInt("search"));
+
 
 				gameCategories.add(gameCategory);
 			}
@@ -61,7 +66,7 @@ public final class ProductService {
 	}
 
 	/**
-	 * Attempts to find a {@link GameCategory} that matches the given game name.
+	 * Attempts to find a {@link GameCategory} that matches the given game id.
 	 */
 	public Optional<GameCategory> fetchGameCategory(int gameId) {
 		return database.withConnection(connection -> {
@@ -79,6 +84,7 @@ public final class ProductService {
 				gc.setName(results.getString("name"));
 				gc.setImage(results.getString("image"));
 				gc.setDescription(results.getString("description"));
+				gc.setSearch(results.getInt("search"));
 
 				gameCategory = Optional.of(gc);
 			}
@@ -106,6 +112,7 @@ public final class ProductService {
 				gc.setName(results.getString("name"));
 				gc.setImage(results.getString("image"));
 				gc.setDescription(results.getString("description"));
+				gc.setSearch(results.getInt("search"));
 
 				gameCategory = Optional.of(gc);
 			}
@@ -113,6 +120,53 @@ public final class ProductService {
 			return gameCategory;
 		});
 	}
+
+	/**
+	 * Attempts to update a {@link GameCategory} that matches the given game id.
+	 */
+	public void updateGameCategory(int gameId, String name, String description) {
+		database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE gamecategories SET name=?, description=? WHERE id=?");
+			stmt.setString(1, name);
+			stmt.setString(2, description);
+			stmt.setInt(3, gameId);
+			stmt.execute();
+		});
+	}
+
+	/**
+	 * Attempts to update a {@link GameCategory} that matches the given game id.
+	 */
+	public void updateGameCategorySearch(int gameId) {
+		database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
+			stmt.setInt(1, gameId);
+
+			ResultSet result = stmt.executeQuery();
+
+			if (result.next()) {
+				int start = result.getInt("search");
+				int search = start + 1;
+
+				stmt = connection.prepareStatement("UPDATE gamecategories SET search=? WHERE id=?");
+				stmt.setInt(1, search);
+				stmt.setInt(2, gameId);
+				stmt.execute();
+			}
+		});
+	}
+
+//    public void deleteGameCategory(int gameId) {
+//        database.withConnection(connection -> {
+//            PreparedStatement stmt = connection.prepareStatement("DELETE FROM gameaccounts WHERE gameid=?");
+//            stmt.setInt(1, gameId);
+//            stmt.execute();
+//
+//            stmt = connection.prepareStatement("DELETE FROM gamecategories WHERE id=?");
+//            stmt.setInt(1, gameId);
+//            stmt.execute();
+//        });
+//    }
 
 	/**
 	 * Attempts to find all {@link Product}.
@@ -201,11 +255,54 @@ public final class ProductService {
 	/**
 	 * Attempts to find a {@link Product} by an id.
 	 */
-	public Optional<Product> fetchProduct(int id) {
+	public Optional<Product> fetchVisibleProduct(int id) {
 		return database.withConnection(connection -> {
 			Optional<Product> product = Optional.empty();
 
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=? AND visible=TRUE AND disabled=FALSE;");
+			stmt.setInt(1, id);
+
+			ResultSet results = stmt.executeQuery();
+
+			if (results.next()) {
+				Product p = new Product();
+
+				p.setId(results.getInt("id"));
+				p.setUserId(results.getInt("userid"));
+				p.setGameId(results.getInt("gameid"));
+				p.setVisible(results.getBoolean("visible"));
+				p.setDisabled(results.getBoolean("disabled"));
+				p.setTitle(results.getString("title"));
+				p.setDescription(results.getString("description"));
+				p.setAddedSince(results.getDate("addedsince"));
+				p.setCanBuy(results.getBoolean("canbuy"));
+				p.setBuyPrice(results.getDouble("buyprice"));
+				p.setCanTrade(results.getBoolean("cantrade"));
+				p.setMailLast(results.getString("maillast"));
+				p.setMailCurrent(results.getString("mailcurrent"));
+				p.setPasswordCurrent(results.getString("passwordcurrent"));
+
+				Optional<User> user = userViewService.fetchUser(p.getUserId());
+				user.ifPresent(p::setUser);
+
+				Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
+				gameCategory.ifPresent(p::setGameCategory);
+
+				product = Optional.of(p);
+			}
+
+			return product;
+		});
+	}
+
+	/**
+	 * Attempts to find a {@link Product} by an id.
+	 */
+	public Optional<Product> fetchProduct(int id) {
+		return database.withConnection(connection -> {
+			Optional<Product> product = Optional.empty();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE id=?;");
 			stmt.setInt(1, id);
 
 			ResultSet results = stmt.executeQuery();

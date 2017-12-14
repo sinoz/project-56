@@ -3,6 +3,7 @@ package services;
 import models.User;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.Optional;
  *
  * @author I.A
  */
+@Singleton
 public final class AuthenticationService {
 	private final play.db.Database database;
 

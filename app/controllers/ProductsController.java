@@ -8,8 +8,7 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.ProductService;
-import services.SearchService;
+import services.*;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -39,10 +38,10 @@ public class ProductsController extends Controller {
     private SearchService searchService;
 
     @Inject
-    public ProductsController(FormFactory formFactory, ProductService productService) {
+    public ProductsController(FormFactory formFactory, ProductService productService, play.db.Database database, UserViewService userViewService, FavouritesService favouritesService, OrderService orderService) {
         this.formFactory = formFactory;
         this.productService = productService;
-        this.searchService = new SearchService(productService);
+        this.searchService = new SearchService(productService, database, userViewService, favouritesService, orderService);
     }
 
     public Result redirect() {
@@ -77,7 +76,9 @@ public class ProductsController extends Controller {
         } else if (token.startsWith("input=")) {
             return indexInput(token, filters, prices);
         }
-        return ok(views.html.selectedproduct.index.render(token, "", session()));
+
+        List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 3);
+        return ok(views.html.selectedproduct.index.render(token, "", Lists.partition(suggestedProducts, 5), session()));
     }
 
     private Result indexGame(String token, String filters, SearchService.FilterPrices prices) {
@@ -90,13 +91,16 @@ public class ProductsController extends Controller {
             } catch (Exception e) {
                 return redirect("/404");
             }
+            List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 1);
 
             String input = gameCategory.get().getName();
 
-            if (products.size() > 0)
-                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), session(), input, prices.getMin(), prices.getMax()));
-            else
-                return ok(views.html.products.gameError.render(gameCategory.get(), input, session()));
+            if (products.size() > 0) {
+                productService.updateGameCategorySearch(gameCategory.get().getId());
+                return ok(views.html.products.game.render(gameCategory.get(), Lists.partition(products, 2), Lists.partition(suggestedProducts, 5), session(), input, null, prices.getMin(), prices.getMax()));
+            } else {
+                return ok(views.html.products.gameError.render(gameCategory.get(), input, null, session()));
+            }
         } else {
             return redirect("/404");
         }
@@ -108,14 +112,18 @@ public class ProductsController extends Controller {
 
         String input = token;
 
+        List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 1);
+
         if (searchResults.getProducts().size() > 0)
-            if (searchResults.getSelectedGameCategory() != null)
-                return ok(views.html.products.game.render(searchResults.getSelectedGameCategory(), Lists.partition(searchResults.getProducts(), 2), session(), input, prices.getMin(), prices.getMax()));
-            else
-                return ok(views.html.products.products.render(Lists.partition(searchResults.getProducts(), 2), session(), input, prices.getMin(), prices.getMax()));
+            if (searchResults.getSelectedGameCategory() != null) {
+                productService.updateGameCategorySearch(searchResults.getSelectedGameCategory().getId());
+                return ok(views.html.products.game.render(searchResults.getSelectedGameCategory(), Lists.partition(searchResults.getProducts(), 2), Lists.partition(suggestedProducts, 5), session(), input, searchResults.getMessage(), prices.getMin(), prices.getMax()));
+            } else {
+                return ok(views.html.products.products.render(Lists.partition(searchResults.getProducts(), 2), Lists.partition(suggestedProducts, 5), session(), input, searchResults.getMessage(), prices.getMin(), prices.getMax()));
+            }
         else if (searchResults.getSelectedGameCategory() != null)
-            return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), input, session()));
+            return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), input, searchResults.getMessage(), session()));
         else
-            return ok(views.html.selectedproduct.index.render(token, input, session()));
+            return ok(views.html.selectedproduct.index.render(token, input, Lists.partition(suggestedProducts, 5), session()));
     }
 }
