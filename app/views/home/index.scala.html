@@ -20,47 +20,8 @@
             <main class="main-content">
                 <div class="fullwidth-block">
                     <div class="container">
-                        <div class="game-navigation">
-                            <button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
-                            <ul class="menu">
-                                @if(activeMenuItem.equals("ALL")) {
-                                    <li class="menu-item current-menu-item"><a href="/">ALL</a></li>
-                                } else {
-                                    <li class="menu-item"><a href="/">ALL</a></li>
-                                }
+                        @gameNavigation(activeMenuItem)
 
-                                @if(activeMenuItem.equals("MMORPG")) {
-                                    <li class="menu-item current-menu-item"><a href="/MMORPG">MMORPG</a></li>
-                                } else {
-                                    <li class="menu-item"><a href="/MMORPG">MMORPG</a></li>
-                                }
-
-                                @if(activeMenuItem.equals("MOBA")) {
-                                    <li class="menu-item current-menu-item"><a href="/MOBA">MOBA</a></li>
-                                } else {
-                                    <li class="menu-item"><a href="/MOBA">MOBA</a></li>
-                                }
-
-                                @if(activeMenuItem.equals("FPS")) {
-                                    <li class="menu-item current-menu-item"><a href="/FPS">FPS</a></li>
-                                } else {
-                                    <li class="menu-item"><a href="/FPS">FPS</a></li>
-                                }
-
-                                @if(activeMenuItem.equals("sandbox")) {
-                                    <li class="menu-item current-menu-item"><a href="/sandbox">sandbox</a></li>
-                                } else {
-                                    <li class="menu-item"><a href="/sandbox">sandbox</a></li>
-                                }
-
-                                @if(activeMenuItem.equals("garbage")) {
-                                    <li class="menu-item current-menu-item"><a href="/garbage">garbage</a></li>
-                                } else {
-                                    <li class="menu-item"><a href="/garbage">garbage</a></li>
-                                }
-                            </ul>
-                                <!-- .menu -->
-                        </div>
                         <br>
 
                             <!-- .main-navigation -->

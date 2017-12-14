@@ -179,7 +179,7 @@ INSERT INTO gamecategories (name, image, description, genre) VALUES
     'Hearthstone', -- name
     'images/Hearthstone-Cover.jpg', -- url to image
     'Hearthstone, originally known as Hearthstone: Heroes of Warcraft, is a free-to-play online collectible card video game developed and published by Blizzard Entertainment. Having been released worldwide on March 11, 2014, Hearthstone builds upon the already existing lore of the Warcraft series by using the same elements, characters, and relics. It was first released for Microsoft Windows and macOS, with support for iOS and Android devices being added later. The game features cross-platform play, allowing players on any device to compete with each other, restricted only by geographical region account limits.', -- description
-    'garbage' -- genre
+    'other' -- genre
   ),
   (
     'Dota 2', -- name
@@ -191,13 +191,13 @@ INSERT INTO gamecategories (name, image, description, genre) VALUES
     'Rocket League', -- name
     'images/Rocket_League-Cover.png', -- url to image
     'Rocket League is a vehicular soccer video game developed and published by Psyonix. The game was first released for Microsoft Windows and PlayStation 4 in July 2015, with ports for Xbox One, OS X, Linux, and Nintendo Switch later being released. In June 2016, 505 Games began distributing a physical retail version for PlayStation 4 and Xbox One, with Warner Bros. Interactive Entertainment taking over those duties by the end of 2017.', -- description
-    'garbage' -- genre
+    'other' -- genre
   ),
   (
     'For Honor', -- name
     'images/For_Honor-Cover.png', -- url to image
     'For Honor is a hack and slash fighting game developed and published by Ubisoft for Microsoft Windows, PlayStation 4, and Xbox One. The game allows players to play the roles of historical forms of soldiers and warriors, including knights, samurai, and vikings within a medieval setting, controlled using a third-person perspective.', -- description
-    'garbage' -- genre
+    'other' -- genre
   ),
   (
     'Call of Duty: WWII', -- name
@@ -209,7 +209,7 @@ INSERT INTO gamecategories (name, image, description, genre) VALUES
     'Starcraft II', -- name
     'images/Starcraft_2-Cover.png', -- url to image
     'StarCraft II: Wings of Liberty is a military science fiction real-time strategy video game developed and published by Blizzard Entertainment. It was released worldwide in July 2010 for Microsoft Windows and Mac OS X. A sequel to the 1998 video game StarCraft and its expansion set Brood War, the game is split into three installments: the base game with the subtitle Wings of Liberty, an expansion pack Heart of the Swarm, and a stand-alone expansion pack Legacy of the Void.', -- description
-    'garbage' -- genre
+    'other' -- genre
   ),
   (
     'RuneScape', -- name

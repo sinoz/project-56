@@ -8,7 +8,7 @@ GET         /MMORPG                              controllers.HomeController.inde
 GET         /FPS                                 controllers.HomeController.indexFPS
 GET         /MOBA                                controllers.HomeController.indexMOBA
 GET         /sandbox                             controllers.HomeController.indexsandbox
-GET         /garbage                             controllers.HomeController.indexgarbage
+GET         /other                               controllers.HomeController.indexother
 
 GET         /products/:token                     controllers.ProductsController.index(token: String)
 POST        /products/search                     controllers.ProductsController.redirect
