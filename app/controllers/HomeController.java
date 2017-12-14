@@ -12,7 +12,7 @@ import services.ProductService;
 import services.SessionService;
 import services.UserViewService;
 import services.VisitTimeService;
-import views.html.home.index;
+import views.html.home.*;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -84,6 +84,110 @@ public final class HomeController extends Controller {
 
 		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
 
-		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(index.render(Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(index.render("ALL",Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+	}
+
+	/**
+	 * Returns a {@link Result} combined with the home view.
+	 */
+	public CompletionStage<Result> indexFPS() {
+		if (!SessionService.redirect(session(), database)) {
+			String loggedInAs = SessionService.getLoggedInAs(session());
+			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+			if (user.isPresent()) {
+				visitTimeService.addVisitTime(user.get().getId());
+			} else {
+				visitTimeService.addVisitTime(-1);
+			}
+		} else {
+			visitTimeService.addVisitTime(-1);
+		}
+
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
+		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(FPS.render("FPS",Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+	}
+	/**
+	 * Returns a {@link Result} combined with the home view.
+	 */
+	public CompletionStage<Result> indexMMORPG() {
+		if (!SessionService.redirect(session(), database)) {
+			String loggedInAs = SessionService.getLoggedInAs(session());
+			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+			if (user.isPresent()) {
+				visitTimeService.addVisitTime(user.get().getId());
+			} else {
+				visitTimeService.addVisitTime(-1);
+			}
+		} else {
+			visitTimeService.addVisitTime(-1);
+		}
+
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
+		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(MMORPG.render("MMORPG",Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+	}
+
+	/**
+	 * Returns a {@link Result} combined with the home(MOBA) view.
+	 */
+	public CompletionStage<Result> indexMOBA() {
+		if (!SessionService.redirect(session(), database)) {
+			String loggedInAs = SessionService.getLoggedInAs(session());
+			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+			if (user.isPresent()) {
+				visitTimeService.addVisitTime(user.get().getId());
+			} else {
+				visitTimeService.addVisitTime(-1);
+			}
+		} else {
+			visitTimeService.addVisitTime(-1);
+		}
+
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
+		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(MOBA.render("MOBA",Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+	}
+
+	/**
+	 * Returns a {@link Result} combined with the home(sandbox) view.
+	 */
+	public CompletionStage<Result> indexsandbox() {
+		if (!SessionService.redirect(session(), database)) {
+			String loggedInAs = SessionService.getLoggedInAs(session());
+			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+			if (user.isPresent()) {
+				visitTimeService.addVisitTime(user.get().getId());
+			} else {
+				visitTimeService.addVisitTime(-1);
+			}
+		} else {
+			visitTimeService.addVisitTime(-1);
+		}
+
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
+		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(sandbox.render("sandbox", Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
+	}
+
+	/**
+	 * Returns a {@link Result} combined with the home(garbage) view.
+	 */
+	public CompletionStage<Result> indexgarbage() {
+		if (!SessionService.redirect(session(), database)) {
+			String loggedInAs = SessionService.getLoggedInAs(session());
+			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+			if (user.isPresent()) {
+				visitTimeService.addVisitTime(user.get().getId());
+			} else {
+				visitTimeService.addVisitTime(-1);
+			}
+		} else {
+			visitTimeService.addVisitTime(-1);
+		}
+
+		Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
+		return supplyAsync(products::fetchGameCategories, dbExecutor).thenApplyAsync(i -> ok(garbage.render("garbage",Lists.partition(i, COLS_PER_ROW), session())), httpEc.current());
 	}
 }

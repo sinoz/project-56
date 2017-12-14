@@ -54,7 +54,9 @@ public final class ProductService {
 				gameCategory.setName(results.getString("name"));
 				gameCategory.setImage(results.getString("image"));
 				gameCategory.setDescription(results.getString("description"));
+				gameCategory.setGenre(results.getString("genre"));
 				gameCategory.setSearch(results.getInt("search"));
+
 
 				gameCategories.add(gameCategory);
 			}

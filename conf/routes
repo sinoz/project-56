@@ -4,6 +4,11 @@
 
 # An example controller showing a sample home page
 GET         /                                    controllers.HomeController.index
+GET         /MMORPG                              controllers.HomeController.indexMMORPG
+GET         /FPS                                 controllers.HomeController.indexFPS
+GET         /MOBA                                controllers.HomeController.indexMOBA
+GET         /sandbox                             controllers.HomeController.indexsandbox
+GET         /garbage                             controllers.HomeController.indexgarbage
 
 GET         /products/:token                     controllers.ProductsController.index(token: String)
 POST        /products/search                     controllers.ProductsController.redirect

@@ -27,6 +27,9 @@ public final class GameCategory extends Model {
 	/** General information about the game. */
 	private String description;
 
+	/** Genre of the game. */
+	private String genre;
+
 	private int search;
 
 	/** Specific information about the game (ranks, stats, etc.) */
@@ -62,6 +65,14 @@ public final class GameCategory extends Model {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
 
 	public int getSearch() {

@@ -8,7 +8,7 @@
 * argument is a `String` with the title of the page, the second
 * argument is an `Html` object containing the body of the page. test
 *@
-    @import components._
+@import components._
 
 @main("ReStart") {
     <body>
@@ -64,11 +64,11 @@
                         <br>
 
                             <!-- .main-navigation -->
-
                         <h2 class="section-title">Games</h2>
                         @for(row <- list) {
                             <div class="row">
                             @for(gameCategory <- row) {
+                                @if(gameCategory.getGenre.equals("FPS")){
                                 <div class="col-md-3 col-sm-6">
                                     <div class="live-camera">
                                         <a href="/products/game=@gameCategory.getName.replace(" ", "_")">
@@ -77,6 +77,9 @@
                                         </a>
                                     </div>
                                 </div>
+                                } else {
+
+                                }
                             }
                             </div>
                         }
