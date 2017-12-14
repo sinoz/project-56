@@ -96,6 +96,7 @@ public final class OrderService {
                 order.hasUser(queryResult.getBoolean("hasuser"));
                 order.setUserId(userid);
                 order.setProductId(productid);
+                order.setCouponCode(queryResult.getString("couponcode"));
                 order.setPrice(queryResult.getFloat("price"));
                 order.setOrderType(queryResult.getInt("ordertype"));
                 order.setStatus(queryResult.getInt("status"));

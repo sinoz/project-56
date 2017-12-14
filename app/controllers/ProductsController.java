@@ -113,10 +113,12 @@ public class ProductsController extends Controller {
         List<Product> suggestedProducts = searchService.fetchSuggestedProducts(session(), 1);
 
         if (searchResults.getProducts().size() > 0)
-            if (searchResults.getSelectedGameCategory() != null)
+            if (searchResults.getSelectedGameCategory() != null) {
+                productService.updateGameCategorySearch(searchResults.getSelectedGameCategory().getId());
                 return ok(views.html.products.game.render(searchResults.getSelectedGameCategory(), Lists.partition(searchResults.getProducts(), 2), Lists.partition(suggestedProducts, 5), session(), input, searchResults.getMessage(), prices.getMin(), prices.getMax()));
-            else
+            } else {
                 return ok(views.html.products.products.render(Lists.partition(searchResults.getProducts(), 2), Lists.partition(suggestedProducts, 5), session(), input, searchResults.getMessage(), prices.getMin(), prices.getMax()));
+            }
         else if (searchResults.getSelectedGameCategory() != null)
             return ok(views.html.products.gameError.render(searchResults.getSelectedGameCategory(), input, searchResults.getMessage(), session()));
         else

@@ -80,8 +80,6 @@ public class SelectedProductController extends Controller {
                     while (suggestedProducts.size() > 6 * 2)
                         suggestedProducts.remove(suggestedProducts.size() - 1);
 
-                    productService.updateGameCategorySearch(gameCategory.get().getId());
-
                     return ok(views.html.selectedproduct.details.render(gameCategory.get(), product.get(), rating, reviewsproduct, Lists.partition(suggestedProducts, 6), formFactory.form(FavouriteForm.class), loggedIn, isFavourited, session()));
                 }
             }
