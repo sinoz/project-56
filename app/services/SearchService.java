@@ -1,7 +1,10 @@
 package services;
 
 import models.GameCategory;
+import models.Order;
 import models.Product;
+import models.User;
+import play.mvc.Http;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,9 +20,19 @@ public class SearchService {
      */
     private ProductService productService;
 
+    private play.db.Database database;
+
+    private UserViewService userViewService;
+    private FavouritesService favouritesService;
+    private OrderService orderService;
+
     @Inject
-    public SearchService(ProductService productService) {
+    public SearchService(ProductService productService, play.db.Database database, UserViewService userViewService, FavouritesService favouritesService, OrderService orderService) {
         this.productService = productService;
+        this.database = database;
+        this.userViewService = userViewService;
+        this.favouritesService = favouritesService;
+        this.orderService = orderService;
     }
 
     /**
@@ -73,6 +86,72 @@ public class SearchService {
         }
 
         return products;
+    }
+
+    /**
+     * Processes a given input with raw filter data.
+     */
+    public List<Product> fetchSuggestedProducts(Http.Session session, int n) {
+        List<Product> suggestions = new ArrayList<>();
+
+        if (!SessionService.redirect(session, database)) {
+            String loggedInAs = SessionService.getLoggedInAs(session);
+            Optional<User> u = userViewService.fetchUser(loggedInAs);
+            if (u.isPresent()) {
+                User user = u.get();
+
+                // add all favourites and orders to a list
+                List<Product> favourites = favouritesService.getProducts(user.getFavorites());
+                List<Order> orders = orderService.getOrdersByUser(user.getId());
+
+                List<Product> products = new ArrayList<>();
+                for (Product product : favourites)
+                    if (!products.contains(product))
+                        products.add(product);
+
+                for (Order order : orders)
+                    if (!products.contains(order.getProduct()))
+                        products.add(order.getProduct());
+
+                List<Product> allProducts = productService.fetchProducts();
+
+                // assign scores to all products
+                HashMap<Integer, Integer> scores = new HashMap<>();
+                for (Product product : allProducts)
+                    scores.put(product.getId(), 0);
+
+                for (Product p : products) {
+                    String title = p.getTitle();
+                    String game = p.getGameCategory().getName();
+
+                    List<String> t = new ArrayList<>();
+                    t.addAll(Arrays.asList(title.split(" ")));
+                    t.addAll(Arrays.asList(game.split(" ")));
+
+                    for (String token : t) {
+                        HashMap<Integer, Integer> subScores = processProductScores(token, allProducts);
+                        for (Product product : allProducts) {
+                            scores.put(product.getId(), scores.get(product.getId()) + subScores.get(product.getId()));
+                        }
+                    }
+                }
+
+                // get top n*5 sorted products
+                HashMap<Integer, Integer> scoresCopy = new HashMap<>();
+                scoresCopy.putAll(scores);
+                List<Product> sorted = sortProducts(scoresCopy, allProducts);
+                int m = sorted.size();
+                if (m > n * 5)
+                    m = n * 5;
+                for (int i = 0; i < m; i++) {
+                    if (scores.get(sorted.get(i).getId()) == 0)
+                        break;
+                    suggestions.add(sorted.get(i));
+                }
+            }
+        }
+
+        return suggestions;
     }
 
     /**
@@ -215,6 +294,23 @@ public class SearchService {
 
         List<Product> sortedProducts = new ArrayList<>();
         while (scores.size() > 0 && (selectedGameCategory != null || max == 0 ? max >= 0 : max >= 1)) {
+            for (Product product : products) {
+                if (scores.containsKey(product.getId()) && scores.get(product.getId()) == max) {
+                    sortedProducts.add(product);
+                    scores.remove(product.getId());
+                }
+            }
+            max--;
+        }
+
+        return sortedProducts;
+    }
+
+    private List<Product> sortProducts(HashMap<Integer, Integer> scores, List<Product> products) {
+        int max = getMaximumScore(scores);
+
+        List<Product> sortedProducts = new ArrayList<>();
+        while (scores.size() > 0 && max >= 0) {
             for (Product product : products) {
                 if (scores.containsKey(product.getId()) && scores.get(product.getId()) == max) {
                     sortedProducts.add(product);

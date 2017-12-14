@@ -38,8 +38,43 @@
                 <i class="icon-info"></i> Statistics </a>
         </li>
 
-        <br><br>
 
+        @if(activeMenuItem.equals("statistics")) {
+            <div style="margin-left: 50px; margin-top: 10px; margin-bottom: 10px;">
+                <div class="admin-usermenu-statistics">
+                    <ul class="nav">
+                    @if(activeSubMenuItem.equals("general")) {
+                        <li class="active">
+                    } else {
+                        <li>
+                    }
+                        <a href="/admin/statistics">
+                            <i class="icon-info"></i> General Statistics </a>
+                        </li>
+
+                    @if(activeSubMenuItem.equals("usage")) {
+                        <li class="active">
+                    } else {
+                        <li>
+                    }
+                        <a href="/admin/statistics/usage">
+                            <i class="icon-info"></i> Usage Data </a>
+                        </li>
+
+                    @if(activeSubMenuItem.equals("items")) {
+                        <li class="active">
+                    } else {
+                        <li>
+                        }
+                    <a href="/admin/statistics/items">
+                        <i class="icon-info"></i> Added Items Data</a>
+                    </li>
+                    </ul>
+                </div>
+            </div>
+        }
+
+        <br><br>
         <li>
             <a href="/logout">
                 <i class="icon-info"></i> Log Out </a>

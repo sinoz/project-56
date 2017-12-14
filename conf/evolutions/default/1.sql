@@ -61,7 +61,8 @@ CREATE TABLE orders (
   price DOUBLE PRECISION,
   couponcode VARCHAR(128),
   ordertype INT, -- type of order
-  status INT -- status of order
+  status INT, -- status of order
+  orderplaced TIMESTAMP
 );
 
 CREATE TABLE reviews (
@@ -99,9 +100,9 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'admin', -- username
     'u7+UejmS48mFKzGIiB1+U10r7u5GB6K7zwF2ryZf9e0lFU/7Ww/7YkAB9aa0PzWkfGtBrPcxPrXQYf6Ycz7kX8ZPB0ye7MQSRQNWBq17kro=', -- password (admin)
     '032aee72a91f745f6a94bbc7fda17f09c5b65d0bd2046c3bba62724e15439ea2', -- password salt
-    'contact@ReStart.com', -- mail
+    'restartcontactus@gmail.com', -- mail
     'images/dankadmin.gif', -- profile picture
-    'payment@ReStart.com', -- payment mail
+    'restartcontactus@gmail.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
     NULL, -- order history
@@ -205,8 +206,8 @@ INSERT INTO gamecategories (name, image, description) VALUES
   );
 
 INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description, addedsince, canbuy, buyprice, cantrade, maillast, mailcurrent, passwordcurrent) VALUES
-  -- This gameaccount has been bought by admin and sold by default
   (
+    -- This gameaccount has been bought by admin and sold by default
     2, -- userid
     1, -- gameid
     FALSE , -- visible
@@ -477,7 +478,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   );
 
-INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status) VALUES
+INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, status, orderplaced) VALUES
   (
     '54947df8-0e9e-4471-a2f9-9af509fb5889', -- trackid
     TRUE, -- hasuser
@@ -485,7 +486,8 @@ INSERT INTO orders (trackid, hasuser, userid, productid, price, couponcode, stat
     1, -- productid
     105.00, -- price
     '', -- couponcode
-    0 -- status
+    0, -- status
+    now() -- orderplaced
   );
 
 INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) VALUES

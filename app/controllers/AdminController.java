@@ -59,6 +59,7 @@ public final class AdminController extends Controller {
     private final FormFactory formFactory;
 
     private final AuthenticationService authService;
+
     private final AdminService adminService;
 
     private final MyInventoryService myInventoryService;
@@ -87,18 +88,18 @@ public final class AdminController extends Controller {
             this.httpEc = httpEc;
     }
 
-    public Result index() {
-        return redirect(ok(index.render(session())));
-    }
+	public Result index() {
+	    return adminRedirect(ok(index.render(session())));
+	}
 
     public Result indexUsers() {
-        List<ViewableUser> u = userViewService.fetchViewableUsers();
-        return redirect(ok(users.render(session(), u)));
+	    List<ViewableUser> u = userViewService.fetchViewableUsers();
+        return adminRedirect(ok(users.render(session(), u)));
     }
 
     public Result indexGameCategories() {
         List<GameCategory> gc = productService.fetchGameCategories();
-        return redirect(ok(gamecategories.render(session(), Lists.partition(gc, 4))));
+        return adminRedirect(ok(gamecategories.render(session(), Lists.partition(gc, 4))));
     }
 
     public Result indexGameCategorySelected(String id) {
@@ -106,7 +107,7 @@ public final class AdminController extends Controller {
             int gameId = Integer.valueOf(id);
             Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
             if (gc.isPresent())
-                return ok(gamecategorySelected.render(formFactory.form(GameCategoryForm.class), session(), gc.get()));
+                return adminRedirect(ok(gamecategorySelected.render(formFactory.form(GameCategoryForm.class), session(), gc.get())));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,7 +121,7 @@ public final class AdminController extends Controller {
             Optional<GameCategory> gc = productService.fetchGameCategory(gameId);
             if (gc.isPresent()) {
                 if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-                    return badRequest(gamecategorySelected.render(formBinding, session(), gc.get()));
+                    return adminRedirect(badRequest(gamecategorySelected.render(formBinding, session(), gc.get())));
                 } else {
                     GameCategoryForm form = formBinding.get();
                     String title = form.getName();
@@ -131,7 +132,7 @@ public final class AdminController extends Controller {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return redirect("/admin/gamecategories");
+        return adminRedirect(redirect("/admin/gamecategories"));
     }
 
 //    public Result deleteGameCategorySelected(String id) {
@@ -144,16 +145,16 @@ public final class AdminController extends Controller {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//        return redirect("/admin/gamecategories");
+//        return adminRedirect("/admin/gamecategories");
 //    }
 
     public Result indexProducts() {
         List<Product> p = productService.fetchProducts();
-        return redirect(ok(products.render(session(), p)));
+        return adminRedirect(ok(products.render(session(), p)));
     }
 
-    public Result indexStatistics() {
-        return redirect(ok(statistics.render(session())));
+    private Result adminRedirect(Result result) {
+        return SessionService.redirectAdmin(session(), database) ? redirect("/") : result;
     }
 
     private Result redirect(Result result) {
@@ -170,36 +171,55 @@ public final class AdminController extends Controller {
             isAdmin = true;
         }
 
-        return ok(modifyUser.render(formFactory.form(AdminModifyUserForm.class), user, isAdmin, session()));
+        return adminRedirect(ok(modifyUser.render(formFactory.form(AdminModifyUserForm.class), user, isAdmin, session())));
     }
 
     /**
      * The method that modifies the user
      */
-    public Result modifyUser(String userid) {
-        Form<AdminModifyUserForm> formBinding = formFactory.form(AdminModifyUserForm.class).bindFromRequest();
-        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
-        boolean isAdmin = false;
-        if (user.isPresent() && adminService.isAdmin(user.get().getId())) {
-            isAdmin = true;
+    public Result modifyUser(String userid){
+        //Check if userid is a valid user id
+        int id;
+        try {
+            id = Integer.valueOf(userid);
+        } catch (Exception e) {
+            return adminRedirect(redirect("/404"));
         }
 
+        Form<AdminModifyUserForm> formBinding = formFactory.form(AdminModifyUserForm.class).bindFromRequest();
+        Optional<User> user = userViewService.fetchUser(id);
+
+        //Check if user could be loaded from database
+        if (!user.isPresent())
+            return adminRedirect(redirect("/404"));
+
+        boolean isAdmin = adminService.isAdmin(user.get().getId());
+
+        //Check for form errors
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
-            return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
+            return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
         } else {
             AdminModifyUserForm form = formBinding.get();
+            String loggedInAs = SessionService.getLoggedInAs(session());
 
-            if (adminService.userExists(form.username.toLowerCase()) && !form.username.equals(user.get().getUsername())) {
+            // Check if user filled in new username and whether new username already exists
+            if(!user.get().getUsername().equalsIgnoreCase(form.username) && adminService.userExists(form.username.toLowerCase())){
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
-                return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
+                return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
+                //Check if admin is removing admin rights from his own account
+            } else if(user.get().getUsername().toLowerCase().equals(loggedInAs) && !form.isAdmin){
+                formBinding = formBinding.withError(new ValidationError("adminPassword", "You can not remove admin rights from your own account."));
+                return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
             } else {
-                Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
-                if (!admin.isPresent()) {
+                Optional<User> admin = authService.fetchUser(loggedInAs, form.getAdminPassword());
+                //Check if admin password is correct
+                if(!admin.isPresent()) {
                     formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
-                    return badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session()));
+                    return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
+                    //Modify user
                 } else {
-                    adminService.updateSettings(Integer.valueOf(userid), form);
-                    return redirect("/admin/users/modify/" + userid);
+                    adminService.updateSettings(id, form);
+                    return adminRedirect(redirect("/admin/users"));
                 }
             }
         }
@@ -208,7 +228,7 @@ public final class AdminController extends Controller {
     /**
      * The method that renders the delete user page
      */
-    public Result indexDeleteUser(String userid) {
+    public Result indexDeleteUser(String userid){
         Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
         return ok(deleteUser.render(formFactory.form(AdminDeleteUserForm.class), user, session()));
     }
@@ -216,7 +236,7 @@ public final class AdminController extends Controller {
     /**
      * The method that deletes the user using the adminService
      */
-    public Result deleteUser(String userid) {
+    public Result deleteUser(String userid){
         Form<AdminDeleteUserForm> formBinding = formFactory.form(AdminDeleteUserForm.class).bindFromRequest();
         Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
 
@@ -225,10 +245,10 @@ public final class AdminController extends Controller {
         } else {
             AdminDeleteUserForm form = formBinding.get();
             Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
-            if (!admin.isPresent()) {
+            if(!admin.isPresent()) {
                 formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
                 return badRequest(views.html.admin.deleteUser.render(formBinding, user, session()));
-            } else if (admin.get().getId() == Integer.valueOf(userid)) {
+            } else if(admin.get().getId() == Integer.valueOf(userid)) {
                 formBinding = formBinding.withError(new ValidationError("adminPassword", "You can not delete your own account."));
                 return badRequest(views.html.admin.deleteUser.render(formBinding, user, session()));
             } else {
@@ -241,9 +261,28 @@ public final class AdminController extends Controller {
     /**
      * The method that renders the view user page
      */
-    public Result viewUser(String userid) {
-        Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
-        return ok(viewUser.render(user, session()));
+    public Result viewUser(String userid){
+        int id;
+        try {
+            id = Integer.valueOf(userid);
+        } catch (Exception e) {
+            return adminRedirect(redirect("/404"));
+        }
+
+        Optional<User> user = userViewService.fetchUser(id);
+        return adminRedirect(ok(viewUser.render(user, session())));
+    }
+
+    public Result indexStatistics() {
+        return adminRedirect(ok(statistics.render(session())));
+    }
+
+    public Result indexUsageStatistics(){
+        return adminRedirect(ok(usageStatistics.render(session())));
+    }
+
+    public Result indexItemStatistics(){
+        return adminRedirect(ok(addedItemsStatistics.render(session())));
     }
 
     /**

@@ -1335,6 +1335,15 @@ div.transbox p {
   padding-bottom: 20px;
   min-height: 250px; }
 
+.gamebutton-location {
+  margin-bottom: 70px; }
+
+.gamebutton-location input[type="submit"] {
+  top: 5px;
+  right: 20px;
+  bottom: 100px;
+  padding: 0 40px; }
+
 .find-location {
   position: relative;
   margin-bottom: 70px; }
@@ -4461,3 +4470,5 @@ section#contact .text-danger {
   font-size: 24px;
   color: #d17581;
 }
+
+.table-responsive{margin-top:25px;}

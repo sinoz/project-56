@@ -88,3 +88,5 @@ GET         /admin/products                      controllers.AdminController.ind
 GET         /admin/statistics                    controllers.AdminController.indexStatistics
 GET         /admin/products/productsSelected/:productid         controllers.AdminController.indexModifyProduct(productid: String)
 POST         /admin/products/productsSelected/:productid         controllers.AdminController.updateModifyProduct(productid: String)
+GET         /admin/statistics/usage              controllers.AdminController.indexUsageStatistics
+GET         /admin/statistics/items              controllers.AdminController.indexItemStatistics

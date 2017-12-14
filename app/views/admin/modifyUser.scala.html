@@ -1,6 +1,7 @@
 @import forms.AdminModifyUserForm
+
 @(form: play.data.Form[AdminModifyUserForm], user: Optional[User], isAdmin: Boolean, session: play.mvc.Http.Session)
-@import components._
+    @import components._
 
 @main("Restart"){
     <body>
@@ -64,7 +65,7 @@
                                         <!-- IsAdmin input-->
                                     <div class="form-group">
                                         <label class="col-md-4 control-label" for="isAdmin">Make Administrator:</label>
-                                        <div style="float: left; position: relative; width: 6%;">
+                                        <div style="float: left; position: relative; width: 4%;">
                                             @if(isAdmin) {
                                                 <input id="checkboxinput" name="isAdmin" type="checkbox" class="form-control input-md" checked>
                                             } else {
@@ -97,19 +98,19 @@
                                         </div>
                                     </div>
                                 }
-                                    <!-- Cancel Button -->
-                                    <div>
-                                        <a href="/admin/users">
-                                            <button class="btn btn-primary">Cancel</button>
-                                        </a>
-                                    </div>
+                                <!-- Cancel Button -->
+                                <div style="float: left; position: relative; margin-right: 10px">
+                                    <a href="/admin/users">
+                                        <button class="btn btn-primary">Cancel</button>
+                                    </a>
+                                </div>
 
-                                    <!-- Delete Button -->
-                                    <div>
-                                        <a href="/admin/users/delete/@user.get().getId">
-                                            <button class="btn btn-danger">Delete User</button>
-                                        </a>
-                                    </div>
+                                <!-- Delete Button -->
+                                <div style="float: left; position: relative">
+                                    <a href="/admin/users/delete/@user.get().getId">
+                                        <button class="btn btn-danger">Delete User</button>
+                                    </a>
+                                </div>
                             }
                         </div>
                     </div>
@@ -118,10 +119,10 @@
             @footer()
 
                 <!-- Required for the banner -->
-            <script src="@routes.Assets.versioned("../../../../public/javascripts/jquery-1.11.1.min.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
 
-            <script src="@routes.Assets.versioned("../../../../public/javascripts/plugins.js")"></script>
-            <script src="@routes.Assets.versioned("../../../../public/javascripts/app.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
         </div>
     </body>
 }

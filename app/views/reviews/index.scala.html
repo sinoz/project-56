@@ -58,16 +58,18 @@
                         </div>
                     </div>
 
-                    <div class="container">
-                        <div class="portlet">
-                            <div class="col-md-4">
-                                @reviewsField(reviews.get(0))
-                            </div>
-                            <div class="col-md-4">
-                                @reviewsField(reviews.get(1))
+                    @if(reviews.size() > 0) {
+                        <div class="container">
+                            <div class="portlet">
+                                <div class="col-md-4">
+                                    @reviewsField(reviews.get(0))
+                                </div>
+                                <div class="col-md-4">
+                                    @reviewsField(reviews.get(1))
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
             @footer()
