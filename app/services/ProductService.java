@@ -84,6 +84,7 @@ public final class ProductService {
 				gc.setName(results.getString("name"));
 				gc.setImage(results.getString("image"));
 				gc.setDescription(results.getString("description"));
+				gc.setGenre(results.getString("genre"));
 				gc.setSearch(results.getInt("search"));
 
 				gameCategory = Optional.of(gc);
@@ -112,6 +113,7 @@ public final class ProductService {
 				gc.setName(results.getString("name"));
 				gc.setImage(results.getString("image"));
 				gc.setDescription(results.getString("description"));
+				gc.setGenre(results.getString("genre"));
 				gc.setSearch(results.getInt("search"));
 
 				gameCategory = Optional.of(gc);

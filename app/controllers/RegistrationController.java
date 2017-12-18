@@ -1,5 +1,6 @@
 package controllers;
 
+import forms.LoginForm;
 import forms.RegistrationForm;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -73,7 +74,7 @@ public final class RegistrationController extends Controller {
 					return badRequest(index.render(formBinding, session()));
 				} else {
 					accounts.registered(form);
-					return redirect("/login");
+					return ok(views.html.login.registered.render(formFactory.form(LoginForm.class), form.name, session()));
 				}
 			}
 		}

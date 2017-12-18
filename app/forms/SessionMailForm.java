@@ -20,12 +20,16 @@ public final class SessionMailForm implements Constraints.Validatable<List<Valid
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (email.length() < 8) {
-            errors.add(new ValidationError("email", "Email must be at least 8 characters long"));
+        if (email.length() < 5) {
+            errors.add(new ValidationError("email", "Email must be at least 5 characters long"));
         }
 
         if (email.length() > 128) {
             errors.add(new ValidationError("email", "Email must be maximum of 128 characters long"));
+        }
+
+        if (!email.contains("@") || !email.contains(".")) {
+            errors.add(new ValidationError("email", "It has to be a valid email."));
         }
 
         return errors;

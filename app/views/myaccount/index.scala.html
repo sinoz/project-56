@@ -51,7 +51,7 @@
                                                     } else {
                                                         <td>Not Found</td>
                                                     }
-                                                    @if(order.getProduct.getUser != null) {
+                                                    @if(order.getProduct != null && order.getProduct.getUser != null) {
                                                         <td>@order.getProduct.getUser.getUsername</td>
                                                     } else {
                                                         <td>Not Found</td>

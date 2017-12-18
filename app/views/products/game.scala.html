@@ -22,6 +22,12 @@
                     <div class="fullwidth-block">
                         <div class="container">
                             <h2 class="section-title">@gameCategory.getName</h2>
+                            <p>
+                                <strong>Genre: </strong>
+                                @gameCategory.getGenre
+                            </p>
+                            <p>@gameCategory.getDescription</p>
+                            <br>
 
                             <div class="row">
                                 <div class="col-md-3 col-sm-6">
@@ -31,7 +37,6 @@
 
                                 <!-- filters -->
                                 @filter(minPrice, maxPrice)
-
                                 </div>
 
                                 <div class="col-md-9 col-sm-9">

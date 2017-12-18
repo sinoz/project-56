@@ -76,10 +76,8 @@
                                 </div>
 
                                 <ul id="myTab" class="nav nav-tabs nav_tabs">
-
-                                    <li class="active"><a href="#service-one" data-toggle="tab">DESCRIPTION</a></li>
-                                    <li><a href="#service-two" data-toggle="tab">PRODUCT INFO</a></li>
-                                    <li><a href="#service-three" data-toggle="tab">REVIEWS</a></li>
+                                    <li class="active"><a href="#service-one" data-toggle="tab">PRODUCT INFO</a></li>
+                                    <li><a href="#service-two" data-toggle="tab">REVIEWS</a></li>
 
                                 </ul>
 
@@ -88,18 +86,11 @@
                                         <div class="tab-pane fade in active" id="service-one">
 
                                             <section class="container-fluid product-info">
-                                                @gameCategory.getDescription
-                                            </section>
-
-                                        </div>
-                                        <div class="tab-pane fade" id="service-two">
-
-                                            <section class="container-fluid product-info">
                                                 @product.getDescription
                                             </section>
 
                                         </div>
-                                        <div class="tab-pane fade" id="service-three">
+                                        <div class="tab-pane fade" id="service-two">
                                             <!-- reviews-->
                                             @reviewsField(reviews)
                                             </div>

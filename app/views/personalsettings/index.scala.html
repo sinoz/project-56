@@ -55,9 +55,9 @@
                                     </div>
                                 </div>
 
-                                    <!-- Payment email input-->
+                                    <!-- PayPal email input-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                    <label class="col-md-4 control-label" for="textinput">Change PayPal Email:</label>
                                     <div class="col-md-4">
                                         <input id="textinput" name="paymentMailToChangeTo" type="text" class="form-control input-md" value=@session.get("usedPaymentMail")>
                                         @for(error <- form("paymentMailToChangeTo").errors) {

@@ -64,9 +64,13 @@ public final class MyAccountController extends Controller {
 			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
 			if (user.isPresent())
 			{
-				List<Order> order = orderService.getOrdersByUser(user.get().getId());
+				List<Order> orders = orderService.getOrdersByUser(user.get().getId());
+				for (int i = orders.size() - 1; i >= 0; i--) {
+					if (orders.get(i).getOrderType() != 0)
+						orders.remove(i);
+				}
 				List<Product> product = productService.fetchProducts();
-				return ok(views.html.myaccount.index.render(session(), user.get(), order, product));
+				return ok(views.html.myaccount.index.render(session(), user.get(), orders, product));
 			}else {
 				return redirect("/404");
 			}

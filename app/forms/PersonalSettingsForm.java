@@ -33,11 +33,11 @@ public final class PersonalSettingsForm implements Constraints.Validatable<List<
 			errors.add(new ValidationError("usernameToChangeTo", "Username must be longer than 4 characters."));
 		}
 
-		if (!emailToChangeTo.contains("@")) {
+		if (!emailToChangeTo.contains("@") || !emailToChangeTo.contains(".")) {
 			errors.add(new ValidationError("emailToChangeTo", "It has to be a valid email."));
 		}
 
-		if (!paymentMailToChangeTo.contains("@")) {
+		if (!paymentMailToChangeTo.contains("@") || !paymentMailToChangeTo.contains(".")) {
 			errors.add(new ValidationError("paymentMailToChangeTo", "It has to be a valid email."));
 		}
 		return errors;

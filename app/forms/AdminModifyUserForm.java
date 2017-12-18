@@ -45,20 +45,28 @@ public final class AdminModifyUserForm implements Constraints.Validatable<List<V
             errors.add(new ValidationError("username", "Username must be maximum of 16 characters long"));
         }
 
-        if (mail.length() < 8) {
-            errors.add(new ValidationError("mail", "Email must be at least 8 characters long"));
+        if (mail.length() < 5) {
+            errors.add(new ValidationError("mail", "Email must be at least 5 characters long"));
         }
 
         if (mail.length() > 128) {
             errors.add(new ValidationError("mail", "Email must be maximum of 128 characters long"));
         }
 
-        if (paymentMail.length() < 8) {
-            errors.add(new ValidationError("paymentMail", "Email must be at least 8 characters long"));
+        if (!mail.contains("@") || !mail.contains(".")) {
+            errors.add(new ValidationError("mail", "It has to be a valid email."));
+        }
+
+        if (paymentMail.length() < 5) {
+            errors.add(new ValidationError("paymentMail", "Email must be at least 5 characters long"));
         }
 
         if (paymentMail.length() > 128) {
             errors.add(new ValidationError("paymentMail", "Email must be maximum of 128 characters long"));
+        }
+
+        if (!paymentMail.contains("@") || !paymentMail.contains(".")) {
+            errors.add(new ValidationError("paymentMail", "It has to be a valid email."));
         }
 
         return errors;

@@ -44,7 +44,7 @@
 
                             <div class="required-field-block">
                                 @defining(if (form("paymentmail").getValue.isPresent) form("paymentmail").getValue.get() else "") { text =>
-                                    <input type="text" name="paymentmail" value="@text" placeholder="Payment Email" class="form-control">
+                                    <input type="text" name="paymentmail" value="@text" placeholder="PayPal Email" class="form-control">
                                 }
                                 <div class="required-icon">
                                     <div class="text">*</div>
