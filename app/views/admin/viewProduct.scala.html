@@ -1,0 +1,164 @@
+@(product: Optional[Product], session: play.mvc.Http.Session)
+@import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("products", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                        @if(!product.isPresent){
+                            <h2>This product does not exist.</h2>
+                        } else {
+                            <h2>View Product</h2>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="id">Product Id:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getId</strong>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="id">User Id:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getUserId</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="id">Game Id:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getGameId</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="visible">Visible:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().isVisible</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="disabled">Disabled:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().isDisabled</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="title">Title</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getTitle</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="description">Description:</label>
+                            </div>
+                            <br>
+                            @*<div class="col-md-10">*@
+                                <strong>@product.get().getDescription</strong>
+                            @*</div>*@
+                            <br>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="addedsince">Added Since:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getAddedSince</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="canbuy">Can Buy:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().isCanBuy</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="cantrade">Can Trade:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().isCanTrade</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="buyprice">Buy Price:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getBuyPrice</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="maillast">Mail Last:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getMailLast</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="mailcurrent">Mail Current:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getMailCurrent</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="mailpassword">Mail Password:</label>
+                                <div class="col-md-5">
+                                    <strong>@product.get().getPasswordCurrent</strong>
+                                </div>
+                            </div>
+                            <br>
+
+                                <!-- Back Button -->
+                            <div>
+                                <a href="/admin/products">
+                                    <button class="btn btn-primary">Back</button>
+                                </a>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

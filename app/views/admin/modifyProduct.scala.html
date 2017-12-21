@@ -1,0 +1,231 @@
+@import forms.AdminModifyProductForm
+
+@(form: play.data.Form[AdminModifyProductForm], product: Optional[Product], session: play.mvc.Http.Session)
+    @import components._
+
+@main("Restart"){
+    <body>
+        <div class="site-content">
+            @header("Admin", session)
+
+            @banner()
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-4">
+                        <div class="portlet dark profile-sidebar-portlet bordered">
+                            <div class="profile-usertitle">
+                                <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
+                            </div>
+
+                            @adminUserMenu("products", null)
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="portlet">
+                            @if(!product.isPresent){
+                                <h2>This product does not exist.</h2>
+                            } else {
+                                <h2>Modify Product</h2>
+
+                                @helper.form(action = helper.CSRF(routes.AdminController.modifyProduct(product.get().getId.toString)), 'class -> "form-horizontal") {
+                                        <!-- User Id -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change User Id:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="userid" type="text" class="form-control input-md" value=@product.get().getUserId>
+                                            @for(error <- form("userid").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Game Id -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Game Id:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="gameid" type="text" class="form-control input-md" value=@product.get().getGameId>
+                                            @for(error <- form("gameid").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- visible -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="visible">Change Visible:</label>
+                                        <div style="float: left; position: relative; width: 4%;">
+                                            @if(product.get().isVisible) {
+                                                <input id="checkboxinput" name="visible" type="checkbox" class="form-control input-md" checked>
+                                            } else {
+                                                <input id="checkboxinput" name="visible" type="checkbox" class="form-control input-md">
+                                                }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("visible").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                        <!-- disabled -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="disabled">Change Disabled:</label>
+                                        <div style="float: left; position: relative; width: 4%;">
+                                        @if(product.get().isDisabled) {
+                                            <input id="checkboxinput" name="disabled" type="checkbox" class="form-control input-md" checked>
+                                        } else {
+                                            <input id="checkboxinput" name="disabled" type="checkbox" class="form-control input-md">
+                                            }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("disabled").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                        <!-- Title -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Title:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="title" type="text" class="form-control input-md" value="@product.get().getTitle">
+                                            @for(error <- form("title").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Description -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="textinput">Change Description:</label>
+                                        <div class="col-md-4">
+                                            <input id="textinput" name="description" type="text" class="form-control input-md" value="@product.get().getDescription">
+                                            @for(error <- form("description").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Can Buy -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="canbuy">Can Buy:</label>
+                                        <div style="float: left; position: relative; width: 4%;">
+                                        @if(product.get().isCanBuy) {
+                                            <input id="checkboxinput" name="canbuy" type="checkbox" class="form-control input-md" checked>
+                                        } else {
+                                            <input id="checkboxinput" name="canbuy" type="checkbox" class="form-control input-md">
+                                            }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("canbuy").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                        <!-- Can Trade -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="cantrade">Can Trade:</label>
+                                        <div style="float: left; position: relative; width: 4%;">
+                                        @if(product.get().isCanTrade) {
+                                            <input id="checkboxinput" name="cantrade" type="checkbox" class="form-control input-md" checked>
+                                        } else {
+                                            <input id="checkboxinput" name="cantrade" type="checkbox" class="form-control input-md">
+                                            }
+                                        </div>
+                                        <br>
+                                        @for(error <- form("cantrade").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                        <!-- Buy Price -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="buyprice">Selling price:</label>
+                                        <div class="col-md-4">
+                                            <input id="buyprice" name="buyprice" type="number" min="0" max="10000" step="0.01" value="@product.get().getBuyPrice" class="form-control input-md">
+                                            @for(error <- form("buyprice").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Mail Last -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="maillast">Change Last Mail:</label>
+                                        <div class="col-md-4">
+                                            <input id="email" name="maillast" type="email" value="@product.get().getMailLast" placeholder="example@@restart.com" class="form-control input-md">
+                                            @for(error <- form("maillast").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Mail Current -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="mailcurrent">Change Current Mail:</label>
+                                        <div class="col-md-4">
+                                            <input id="email" name="mailcurrent" type="email" value="@product.get().getMailCurrent" placeholder="example@@restart.com" class="form-control input-md">
+                                            @for(error <- form("mailcurrent").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Current Password -->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="currentpassword">Change Current Password:</label>
+                                        <div class="col-md-4">
+                                            <input id="password" name="currentpassword" type="password" value="@product.get().getPasswordCurrent" class="form-control input-md">
+                                            @for(error <- form("currentpassword").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                        <!-- Admin password input-->
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="adminPassword">Your Admin Password:</label>
+                                        <div class="col-md-4">
+                                            <input id="password" name="adminPassword" type="password" class="form-control input-md">
+                                            @for(error <- form("adminPassword").errors) {
+                                                <p>@error.format(messages())</p>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <br>
+
+                                        <!-- Submit Button -->
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- Cancel Button -->
+                                <div style="float: left; position: relative; margin-right: 10px">
+                                    <a href="/admin/products">
+                                        <button class="btn btn-primary">Cancel</button>
+                                    </a>
+                                </div>
+
+                                <!-- Delete Button -->
+                                <div style="float: left; position: relative">
+                                    <a href="/admin/products/delete/@product.get().getId">
+                                        <button class="btn btn-danger">Delete Product</button>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @footer()
+
+                <!-- Required for the banner -->
+            <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+
+            <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+            <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+        </div>
+    </body>
+}

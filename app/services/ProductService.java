@@ -212,6 +212,45 @@ public final class ProductService {
 		});
 	}
 
+	public List<Product> fetchAllProducts() {
+		return database.withConnection(connection -> {
+			List<Product> list = new ArrayList<>();
+
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts ORDER BY visible, disabled, id;");
+
+			ResultSet results = stmt.executeQuery();
+
+			while (results.next()) {
+				Product product = new Product();
+
+				product.setId(results.getInt("id"));
+				product.setUserId(results.getInt("userid"));
+				product.setGameId(results.getInt("gameid"));
+				product.setVisible(results.getBoolean("visible"));
+				product.setDisabled(results.getBoolean("disabled"));
+				product.setTitle(results.getString("title"));
+				product.setDescription(results.getString("description"));
+				product.setAddedSince(results.getDate("addedsince"));
+				product.setCanBuy(results.getBoolean("canbuy"));
+				product.setBuyPrice(results.getDouble("buyprice"));
+				product.setCanTrade(results.getBoolean("cantrade"));
+				product.setMailLast(results.getString("maillast"));
+				product.setMailCurrent(results.getString("mailcurrent"));
+				product.setPasswordCurrent(results.getString("passwordcurrent"));
+
+				Optional<User> user = userViewService.fetchUser(product.getUserId());
+				user.ifPresent(product::setUser);
+
+				Optional<GameCategory> gameCategory = fetchGameCategory(product.getGameId());
+				gameCategory.ifPresent(product::setGameCategory);
+
+				list.add(product);
+			}
+
+			return list;
+		});
+	}
+
 	/**
 	 * Attempts to find a {@link Product} that matches the given game category.
 	 */

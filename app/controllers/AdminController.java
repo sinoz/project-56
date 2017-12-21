@@ -3,17 +3,12 @@ package controllers;
 import chart.*;
 import com.google.common.collect.Lists;
 import concurrent.DbExecContext;
-import forms.ProductForm;
-
-import forms.AdminDeleteUserForm;
-import forms.AdminModifyUserForm;
-import forms.GameCategoryForm;
+import forms.*;
 
 import models.GameCategory;
 import models.Product;
 import models.User;
 import models.ViewableUser;
-import models.*;
 import play.data.Form;
 import play.data.FormFactory;
 
@@ -169,7 +164,7 @@ public final class AdminController extends Controller {
 //    }
 
     public Result indexProducts() {
-        List<Product> p = productService.fetchProducts();
+        List<Product> p = productService.fetchAllProducts();
         return adminRedirect(ok(products.render(session(), p)));
     }
 
@@ -246,20 +241,20 @@ public final class AdminController extends Controller {
      */
     public Result indexDeleteUser(String userid){
         Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
-        return ok(deleteUser.render(formFactory.form(AdminDeleteUserForm.class), user, session()));
+        return ok(deleteUser.render(formFactory.form(AdminDeleteForm.class), user, session()));
     }
 
     /**
      * The method that deletes the user using the adminService
      */
     public Result deleteUser(String userid){
-        Form<AdminDeleteUserForm> formBinding = formFactory.form(AdminDeleteUserForm.class).bindFromRequest();
+        Form<AdminDeleteForm> formBinding = formFactory.form(AdminDeleteForm.class).bindFromRequest();
         Optional<User> user = userViewService.fetchUser(Integer.valueOf(userid));
 
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
             return badRequest(views.html.admin.deleteUser.render(formBinding, user, session()));
         } else {
-            AdminDeleteUserForm form = formBinding.get();
+            AdminDeleteForm form = formBinding.get();
             Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
             if(!admin.isPresent()) {
                 formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
@@ -322,78 +317,166 @@ public final class AdminController extends Controller {
     /**
      * The method that renders the modify product page
      */
+    public Result viewProduct(String userid){
+        int id;
+        try {
+            id = Integer.valueOf(userid);
+        } catch (Exception e) {
+            return adminRedirect(redirect("/404"));
+        }
+
+        Optional<Product> product = productService.fetchProduct(id);
+        return adminRedirect(ok(viewProduct.render(product, session())));
+    }
+
+    /**
+     * The method that renders the modify user page
+     */
     public Result indexModifyProduct(String productid) {
-        if (SessionService.redirect(session(), database)) {
-            return redirect("/login");
-        } else {
-            try {
-                int id = Integer.valueOf(productid);
+        Optional<Product> product = productService.fetchProduct(Integer.valueOf(productid));
 
-                Form<ProductForm> form = formFactory.form(ProductForm.class);
-
-                String loggedInAs = SessionService.getLoggedInAs(session());
-                Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
-                Optional<Product> product = productService.fetchVisibleProduct(id);
-
-                if (product.isPresent() && user.isPresent() && product.get().getUserId() == user.get().getId()) {
-                    return ok(views.html.admin.productsSelected.render(form, product.get(), session(), "updategameaccount"));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return redirect("/404");
-        }
+        return adminRedirect(ok(modifyProduct.render(formFactory.form(AdminModifyProductForm.class), product, session())));
     }
 
-    public CompletionStage<Result> updateModifyProduct(String productid){
-        Form<ProductForm> formBinding = formFactory.form(ProductForm.class).bindFromRequest();
-        if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
-            try {
-                int id = Integer.valueOf(productid);
-                Optional<Product> product = productService.fetchVisibleProduct(id);
-                if (product.isPresent()) {
-                    return completedFuture(badRequest(views.html.admin.productsSelected.render(formBinding, product.get(), session(), "updategameaccount")));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return completedFuture(redirect("/404"));
-        } else {
-            if (SessionService.redirect(session(), database)) {
-                return completedFuture(redirect("/login"));
-            }
+    /**
+     * The method that modifies the product
+     */
+    public Result modifyProduct(String productid){
+        //Check if product is a valid product id
+        int id;
+        try {
+            id = Integer.valueOf(productid);
+        } catch (Exception e) {
+            return adminRedirect(redirect("/404"));
+        }
 
+        Form<AdminModifyProductForm> formBinding = formFactory.form(AdminModifyProductForm.class).bindFromRequest();
+        Optional<Product> product = productService.fetchProduct(id);
+
+        //Check if product could be loaded from database
+        if (!product.isPresent())
+            return adminRedirect(redirect("/404"));
+
+        //Check for form errors
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return adminRedirect(badRequest(views.html.admin.modifyProduct.render(formBinding, product, session())));
+        } else {
+            AdminModifyProductForm form = formBinding.get();
             String loggedInAs = SessionService.getLoggedInAs(session());
-            Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
-            if (!user.isPresent()) {
-                return completedFuture(redirect("/login"));
+
+            Optional<User> admin = authService.fetchUser(loggedInAs, form.getAdminPassword());
+            //Check if admin password is correct
+            if(!admin.isPresent()) {
+                formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
+                return adminRedirect(badRequest(views.html.admin.modifyProduct.render(formBinding, product, session())));
+                //Modify product
+            } else {
+                adminService.updateSettings(id, form);
+                return adminRedirect(redirect("/admin/products"));
             }
-
-            try {
-                int id = Integer.valueOf(productid);
-
-                Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
-                Product product = new Product();
-
-                ProductForm form = formBinding.get();
-
-                product.setId(id);
-                product.setTitle(form.title);
-                product.setDescription(form.description);
-                product.setAddedSince(new Date());
-                product.setCanBuy(form.canBuy);
-                product.setBuyPrice(form.buyPrice);
-                product.setCanTrade(form.canTrade);
-                product.setMailLast(form.emailCurrent);
-                product.setMailCurrent(form.emailCurrent);
-                product.setPasswordCurrent(form.passwordCurrent);
-
-                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor)
-                        .thenApplyAsync(i -> redirect("/admin/products"), httpEc.current());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return completedFuture(redirect("/404"));
         }
     }
+
+    /**
+     * The method that renders the delete product page
+     */
+    public Result indexDeleteProduct(String productid){
+        Optional<Product> product = productService.fetchProduct(Integer.valueOf(productid));
+        return ok(deleteProduct.render(formFactory.form(AdminDeleteForm.class), product, session()));
+    }
+
+    /**
+     * The method that deletes the user using the adminService
+     */
+    public Result deleteProduct(String productid){
+        Form<AdminDeleteForm> formBinding = formFactory.form(AdminDeleteForm.class).bindFromRequest();
+        Optional<Product> product = productService.fetchProduct(Integer.valueOf(productid));
+
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return badRequest(views.html.admin.deleteProduct.render(formBinding, product, session()));
+        } else {
+            AdminDeleteForm form = formBinding.get();
+            Optional<User> admin = authService.fetchUser(session().get("loggedInAs"), form.getAdminPassword());
+            if(!admin.isPresent()) {
+                formBinding = formBinding.withError(new ValidationError("adminPassword", "Incorrect password."));
+                return badRequest(views.html.admin.deleteProduct.render(formBinding, product, session()));
+            } else {
+                adminService.deleteProduct(Integer.valueOf(productid));
+                return redirect("/admin/products");
+            }
+        }
+    }
+
+//    public Result indexModifyProduct(String productid) {
+//        if (SessionService.redirect(session(), database)) {
+//            return redirect("/login");
+//        } else {
+//            try {
+//                int id = Integer.valueOf(productid);
+//
+//                Form<ProductForm> form = formFactory.form(ProductForm.class);
+//
+//                Optional<Product> product = productService.fetchProduct(id);
+//
+//                if (product.isPresent()) {
+//                    return ok(views.html.admin.productsSelected.render(form, product.get(), session(), "updategameaccount"));
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return redirect("/404");
+//        }
+//    }
+
+//    public CompletionStage<Result> updateModifyProduct(String productid){
+//        Form<ProductForm> formBinding = formFactory.form(ProductForm.class).bindFromRequest();
+//        if(formBinding.hasGlobalErrors() || formBinding.hasErrors()){
+//            try {
+//                int id = Integer.valueOf(productid);
+//                Optional<Product> product = productService.fetchVisibleProduct(id);
+//                if (product.isPresent()) {
+//                    return completedFuture(badRequest(views.html.admin.productsSelected.render(formBinding, product.get(), session(), "updategameaccount")));
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return completedFuture(redirect("/404"));
+//        } else {
+//            if (SessionService.redirect(session(), database)) {
+//                return completedFuture(redirect("/login"));
+//            }
+//
+//            String loggedInAs = SessionService.getLoggedInAs(session());
+//            Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
+//            if (!user.isPresent()) {
+//                return completedFuture(redirect("/login"));
+//            }
+//
+//            try {
+//                int id = Integer.valueOf(productid);
+//
+//                Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+//                Product product = new Product();
+//
+//                ProductForm form = formBinding.get();
+//
+//                product.setId(id);
+//                product.setTitle(form.title);
+//                product.setDescription(form.description);
+//                product.setAddedSince(new Date());
+//                product.setCanBuy(form.canBuy);
+//                product.setBuyPrice(form.buyPrice);
+//                product.setCanTrade(form.canTrade);
+//                product.setMailLast(form.emailCurrent);
+//                product.setMailCurrent(form.emailCurrent);
+//                product.setPasswordCurrent(form.passwordCurrent);
+//
+//                return runAsync(() -> myInventoryService.updateProduct(product), dbExecutor)
+//                        .thenApplyAsync(i -> redirect("/admin/products"), httpEc.current());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return completedFuture(redirect("/404"));
+//        }
+//    }
 }

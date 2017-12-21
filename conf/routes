@@ -90,9 +90,13 @@ POST        /admin/gamecategories/i/:id          controllers.AdminController.upd
 #GET         /admin/gamecategories/d/:id          controllers.AdminController.deleteGameCategorySelected(id: String)
 
 GET         /admin/products                      controllers.AdminController.indexProducts
+GET         /admin/products/view/:productid      controllers.AdminController.viewProduct(productid: String)
+GET         /admin/products/modify/:productid    controllers.AdminController.indexModifyProduct(productid: String)
+POST        /admin/products/modify/:productid    controllers.AdminController.modifyProduct(productid: String)
+GET         /admin/products/delete/:productid    controllers.AdminController.indexDeleteProduct(productid: String)
+POST        /admin/products/delete/:productid    controllers.AdminController.deleteProduct(productid: String)
+
 GET         /admin/statistics                    controllers.AdminController.indexStatistics
-GET         /admin/products/productsSelected/:productid         controllers.AdminController.indexModifyProduct(productid: String)
-POST        /admin/products/productsSelected/:productid         controllers.AdminController.updateModifyProduct(productid: String)
 GET         /admin/statistics/user/:id           controllers.AdminController.indexStatisticsPerUser(id: String)
 GET         /admin/statistics/usage              controllers.AdminController.indexUsageStatistics
 GET         /admin/statistics/items              controllers.AdminController.indexItemStatistics

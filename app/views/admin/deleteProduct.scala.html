@@ -1,5 +1,5 @@
 @import forms.AdminDeleteForm
-@(form: play.data.Form[AdminDeleteForm], user: Optional[User], session: play.mvc.Http.Session)
+@(form: play.data.Form[AdminDeleteForm], product: Optional[Product], session: play.mvc.Http.Session)
 @import components._
 
 @main("ReStart") {
@@ -17,21 +17,21 @@
                                 <div class="profile-usertitle-name">@session.get("loggedInAs")</div>
                             </div>
 
-                            @adminUserMenu("users", null)
+                            @adminUserMenu("products", null)
                         </div>
                     </div>
                     <div class="col-md-8">
                         <div class="portlet">
-                        @if(!user.isPresent){
-                            <h2>This user does not exist.</h2>
+                        @if(!product.isPresent){
+                            <h2>This product does not exist.</h2>
                         } else {
-                            <h2>Delete User</h2>
+                            <h2>Delete Product</h2>
 
-                            @helper.form(action = helper.CSRF(routes.AdminController.deleteUser(user.get().getId.toString)), 'class -> "form-horizontal") {
+                            @helper.form(action = helper.CSRF(routes.AdminController.deleteProduct(product.get().getId.toString)), 'class -> "form-horizontal") {
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="textinput">User:</label>
+                                    <label class="col-md-4 control-label" for="textinput">Product:</label>
                                     <div class="col-md-4">
-                                        <strong>@user.get().getUsername</strong>
+                                        <strong>@product.get().getTitle</strong>
                                     </div>
                                 </div>
 
@@ -47,7 +47,7 @@
                                 </div>
 
                                 <br>
-                                <h3>Are you sure you want to delete this user?</h3>
+                                <h3>Are you sure you want to delete this product?</h3>
 
                                     <!-- Delete Button -->
                                 <div class="form-group">
@@ -58,7 +58,7 @@
                             }
                                 <!-- Cancel Button -->
                             <div>
-                                <a href="/admin/users">
+                                <a href="/admin/products">
                                     <button class="btn btn-primary">Cancel</button>
                                 </a>
                             </div>
