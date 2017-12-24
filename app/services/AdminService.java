@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 
 /**
  * @author Johan van der Hoeven
+ * @author Maurice van Veen
  */
 @Singleton
 public final class AdminService {

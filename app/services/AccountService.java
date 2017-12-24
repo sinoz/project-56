@@ -9,8 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 
 /**
- * TODO
- *
  * @author I.A
  * @author Maurice van Veen
  */

@@ -11,10 +11,12 @@ import java.util.Optional;
 /**
  * A service to authenticate users attempting to login.
  *
+ * @author Maurice van Veen
  * @author I.A
  */
 @Singleton
 public final class AuthenticationService {
+
 	private final play.db.Database database;
 
 	/**
@@ -51,17 +53,7 @@ public final class AuthenticationService {
 			results = stmt.executeQuery();
 
 			if (results.next()) {
-				User u = new User();
-
-				u.setId(results.getInt("id"));
-				u.setUsername(results.getString("username"));
-				u.setPassword(results.getString("password"));
-				u.setMail(results.getString("mail"));
-				u.setPaymentMail(results.getString("paymentmail"));
-				u.setProfilePicture(results.getString("profilepicture"));
-				u.setMemberSince(results.getDate("membersince"));
-
-				user = Optional.of(u);
+				user = Optional.of(ModelService.createUser(results));
 			}
 
 			return user;

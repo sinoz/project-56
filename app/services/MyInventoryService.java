@@ -5,19 +5,18 @@ import models.GameCategory;
 import models.Product;
 import models.User;
 import play.db.Database;
-import play.mvc.Result;
 import scala.concurrent.ExecutionContext;
 import scala.concurrent.duration.Duration;
 import scala.concurrent.duration.FiniteDuration;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.sql.*;
+import java.sql.Array;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.*;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
-import static java.lang.System.currentTimeMillis;
 
 /**
  * The UserViewService that retrieves Favourites
@@ -135,34 +134,13 @@ public final class MyInventoryService {
                 if(!ids.contains(results.getInt("id"))){
                     continue;
                 }
-                Product product = new Product();
-
-                product.setId(results.getInt("id"));
-                product.setUserId(results.getInt("userid"));
-                product.setGameId(results.getInt("gameid"));
-                product.setVisible(results.getBoolean("visible"));
-                product.setDisabled(results.getBoolean("disabled"));
-                product.setTitle(results.getString("title"));
-                product.setDescription(results.getString("description"));
-                product.setAddedSince(results.getDate("addedsince"));
-                product.setCanBuy(results.getBoolean("canbuy"));
-                product.setBuyPrice(results.getDouble("buyprice"));
-                product.setCanTrade(results.getBoolean("cantrade"));
-                product.setMailLast(results.getString("maillast"));
-                product.setMailCurrent(results.getString("mailcurrent"));
-                product.setPasswordCurrent(results.getString("passwordcurrent"));
+                Product product = ModelService.createProduct(results, userViewService, productService);
 
                 if (filterOutSelling && product.isCanBuy() && !product.isCanTrade()) {
                     continue;
                 } else if (filterOutTrading && product.isCanTrade() && !product.isCanBuy()) {
                     continue;
                 }
-
-                Optional<User> user = userViewService.fetchUser(product.getUserId());
-                user.ifPresent(product::setUser);
-
-                Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.getGameId());
-                gameCategory.ifPresent(product::setGameCategory);
 
                 list.add(product);
             }
