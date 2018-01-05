@@ -3,6 +3,7 @@ package services;
 import com.google.common.collect.ImmutableList;
 import models.GameCategory;
 import models.Product;
+import models.User;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -231,6 +232,38 @@ public final class ProductService {
 			}
 
 			return product;
+		});
+	}
+
+	/**
+	 * Attempts to get the {@link Product}s that belong to the given userId.
+	 */
+	public List<List<Product>> fetchUserProducts(int userId) {
+		return database.withConnection(connection -> {
+			Optional<User> user = userViewService.fetchUser(userId);
+			List<List<Product>> list = new ArrayList<>();
+
+			if (user.isPresent()) {
+				PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE AND disabled=FALSE");
+				stmt.setInt(1, userId);
+
+				ResultSet results = stmt.executeQuery();
+
+				List<Product> row = new ArrayList<>();
+				int l = 0;
+				while (results.next()) {
+					row.add(ModelService.createProduct(results, userViewService, this));
+					l++;
+					if (l > 1) {
+						list.add(row);
+						row = new ArrayList<>();
+						l = 0;
+					}
+				}
+				if (l > 0) list.add(row);
+			}
+
+			return list;
 		});
 	}
 }

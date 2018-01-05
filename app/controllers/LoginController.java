@@ -1,6 +1,8 @@
 package controllers;
 
 import forms.LoginForm;
+import forms.MailerForm;
+import forms.VerifyForm;
 import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -13,6 +15,7 @@ import play.mvc.Results;
 import services.AuthenticationService;
 import services.SessionService;
 import util.RecaptchaUtils;
+import views.html.contact.index;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -55,6 +58,28 @@ public final class LoginController extends Controller {
 	 */
 	public Result index() {
 		return ok(views.html.login.index.render(formFactory.form(LoginForm.class), session()));
+	}
+
+	public Result indexVerify(String username) {
+	    return ok(views.html.login.waitverify.render(formFactory.form(VerifyForm.class), username, session()));
+    }
+
+	public Result callVerify(String username) {
+        Form<VerifyForm> formBinding = formFactory.form(VerifyForm.class).bindFromRequest();
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return badRequest(views.html.login.waitverify.render(formBinding, username, session()));
+        } else {
+            String verification = formBinding.get().verification;
+            return redirect("/login/verify/" + verification + "/" + username);
+        }
+    }
+
+	public Result verify(String verify, String username) {
+	    if (auth.verifyUser(verify, username)) {
+	        auth.createUser(verify, username);
+            return ok(views.html.login.verify.render(session(), username));
+        }
+        return ok(views.html.login.noverify.render(session()));
 	}
 
 	/**

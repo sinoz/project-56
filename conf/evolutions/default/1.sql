@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS reviewtokens;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS gameaccounts;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users_verification;
 DROP TABLE IF EXISTS gamecategories;
 DROP TABLE IF EXISTS couponcodes;
 
@@ -30,6 +31,23 @@ CREATE TABLE gamecategories (
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
+  username VARCHAR(16),
+  password VARCHAR(256),
+  passwordsalt VARCHAR(256),
+  mail VARCHAR(128),
+  profilepicture VARCHAR(256),  -- url to profile picture
+  paymentmail VARCHAR(128),
+  inventory INTEGER[],     -- list of product ids
+  favorites INTEGER[],     -- list of product ids
+  orderhistory INTEGER[],  -- list of order ids
+  membersince TIMESTAMP,
+  sessionToken TEXT,       -- token for session
+  isadmin BOOLEAN
+);
+
+CREATE TABLE users_verification (
+  id SERIAL PRIMARY KEY,
+  verification TEXT,
   username VARCHAR(16),
   password VARCHAR(256),
   passwordsalt VARCHAR(256),

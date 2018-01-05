@@ -30,10 +30,14 @@ public final class AccountService {
 	public boolean userExists(String username) {
 		return database.withConnection(connection -> {
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-
 			stmt.setString(1, username.toLowerCase());
+			boolean a = stmt.executeQuery().next();
 
-			return stmt.executeQuery().next();
+            stmt = connection.prepareStatement("SELECT * FROM users_verification WHERE username=?");
+            stmt.setString(1, username.toLowerCase());
+            boolean b = stmt.executeQuery().next();
+
+			return a || b;
 		});
 	}
 
@@ -41,18 +45,19 @@ public final class AccountService {
 	 * Attempts to register a new user and returns whether it has successfully registered the user
 	 * using the given {@link RegistrationForm}.
 	 */
-	public void registered(RegistrationForm form) {
+	public void registered(RegistrationForm form, String verify) {
 		database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users (username, password, passwordsalt, mail, paymentmail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users_verification (verification, username, password, passwordsalt, mail, paymentmail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 			String salt = SecurityService.createSalt();
 			String pwd = SecurityService.encodePassword(form.password, salt);
-			stmt.setString(1, form.name.toLowerCase());
-			stmt.setString(2, pwd);
-			stmt.setString(3, salt);
-			stmt.setString(4, form.email);
-			stmt.setString(5, form.paymentmail);
-			stmt.setString(6, "images/default_profile_pic.png");
-			stmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+			stmt.setString(1, verify);
+			stmt.setString(2, form.name.toLowerCase());
+			stmt.setString(3, pwd);
+			stmt.setString(4, salt);
+			stmt.setString(5, form.email);
+			stmt.setString(6, form.paymentmail);
+			stmt.setString(7, "images/default_profile_pic.png");
+			stmt.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
 			stmt.execute();
 		});
 	}

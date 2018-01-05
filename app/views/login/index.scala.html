@@ -21,7 +21,7 @@
                                     <div class="form-group">
                                         <label for="username" class="control-label">Username</label>
                                         @defining(if (form("username").getValue.isPresent) form("username").getValue.get() else "") { text =>
-                                            <input type="text" class="form-control" id="username" name="username" required="" title="Please enter you username" value="@text" placeholder="username">
+                                            <input type="text" class="form-control" id="username" name="username" required="" title="Please enter your username" value="@text" placeholder="username">
                                         }
                                         @for(error <- form("username").errors) {
                                             <p>@error.format(messages())</p>

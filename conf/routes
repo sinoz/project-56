@@ -39,6 +39,9 @@ GET         /myaccount                           controllers.MyAccountController
 
 GET         /login                               controllers.LoginController.index
 POST        /login                               controllers.LoginController.login
+GET         /login/verify/:username              controllers.LoginController.indexVerify(username: String)
+POST        /login/verify/:username              controllers.LoginController.callVerify(username: String)
+GET         /login/verify/:verify/:username      controllers.LoginController.verify(verify: String, username: String)
 
 GET         /myaccount/personalsettings          controllers.PersonalSettingsController.index
 POST        /myaccount/personalsettings          controllers.PersonalSettingsController.editSettings
