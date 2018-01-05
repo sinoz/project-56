@@ -140,9 +140,87 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     'default', -- username
     'HdbKZo6GXoopL8H3ug+CjQQTylK9yDA6uiX/bikFGQ12mLvwEDIkqqmYq1GNMLlu/pHq5IPC8KXjFLiqNCGdhsZPB0ye7MQSRQNWBq17kro=', -- password (default)
     '5f0571f13aa8d39be462ecabd825090e7aeaf19e18cd464221866b8532a37271', -- password salt
-    'test@example.com', -- mail
+    'restartcontactus@gmail.com', -- mail
     'images/default_profile_pic.png', -- profile picture
-    'payment@example.com', -- payment mail
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    FALSE -- is admin
+  ),
+  (
+    'maurice', -- username
+    'PPgGYg63KoqyYW85LMt3IY7o3Nfb4jQ/FPUR8SE9MabL+pUxFK4+gRFFeX0p20/DQv4Th1+Yo140d5mA3w7Jq8ZPB0ye7MQSRQNWBq17kro=', -- password (maurice)
+    '6ad55e79808634fbd37a9809d13ed2a01a8eb4ff65449c0e3061bb795ea6f3e2', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    FALSE -- is admin
+  ),
+  (
+    'newuser', -- username
+    'CSmVWiwzNq2UnFlXBhe0v1XTFHRddYZu6f6Sm9ZX6yCufNmGRfJG2gWeICdtt0kuaSUwd8h3zxqdUoya3TF4fsZPB0ye7MQSRQNWBq17kro=', -- password (newuser)
+    'd515b3fa1c9193ac3029fc7a5ebe51080f77f409f6ae76bc9482f5016c9708e2', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    FALSE -- is admin
+  ),
+  (
+    'minecrafter', -- username
+    'A0S2hfy6/m8gPO/KiamVgdsgOtnMs7MO2efPdIJeqOEfAz1nyx2xVuN6qk4zX3O3pMUsHoglPAffgbkv8BOKEcZPB0ye7MQSRQNWBq17kro=', -- password (minecrafter)
+    '40fe473973db59dd8a613c7f86db99c1949cba9971d7f2a9bb422fa9f9ff2091', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/minecrafter.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    FALSE -- is admin
+  ),
+  (
+    'runescaper', -- username
+    'DgCc7ALRvGhyowScpMXu2tOUfBmxszV0hioKTouk+nc2AmeEWJ7zUZzM4t021v8w/Hvhx49I9ZtrDW2M5SV9L8ZPB0ye7MQSRQNWBq17kro=', -- password (runescaper)
+    'da0b754c2a0a1d625bb6f62c70f2a0e7291ef4d953967ce015c55cfef0006c2e', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/runescaper.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    FALSE -- is admin
+  ),
+  (
+    'noob111', -- username
+    'pIHupAuCACVN9fQSfCrtaxM420ERW/V4b4ey4EeyvUNEDjS+D6Ikbe5qcFT7zlWAPZi53EtO1Vk0xqWXb7EHLcZPB0ye7MQSRQNWBq17kro=', -- password (noob111)
+    '41f3d1b7fc22c018034362f118c9c48e1073f3b6f5edb558e26629203f7e38b5', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/noob.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    FALSE -- is admin
+  ),
+  (
+    'expert', -- username
+    '14/1YYWN0GOPGnSjtN/oAJhSw4BX46pfUSadEjo92hngJgExvfGV3lKy3neju9qoCJAqh50y3qkZzoMxf/szgMZPB0ye7MQSRQNWBq17kro=', -- password (expert)
+    'cff654c226795b4a0eb642ab5f3e4caa0cd6be3259b5d9c88d544343db3fef45', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/expert.gif', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
     NULL, -- inventory
     NULL, -- favorites
     NULL, -- order history
@@ -311,6 +389,81 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
+    8, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Just my CSGO', -- title,
+    'My CSGO account *cling*', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    100.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Better than Runescaper', -- title,
+    'Runescaper...', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    27.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Better than Minecrafter', -- title,
+    'Minecrafter...', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    32.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+    1, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'CSGO: Better Worst Player', -- title,
+    'This is the BEST Worst Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    1.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    8, -- userid
+    2, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Pro Player', -- title,
+    'This is a Pro Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    70.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
     1, -- userid
     2, -- gameid
     TRUE, -- visible
@@ -320,6 +473,21 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     now(), -- addedsince
     TRUE, -- canbuy
     52.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+    2, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Overwatch Win Streak', -- title,
+    'This account has a huge win streak!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    1.00, -- buyprice
     FALSE, -- cantrade
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
@@ -365,6 +533,66 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     now(), -- addedsince
     TRUE, -- canbuy
     52.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+    5, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Minecraft: Medium Player', -- title,
+    'This is a Medium Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    25.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+    5, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Hypixel MVP', -- title,
+    'This is a Hypixel account with MVP rank!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    100.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+    5, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Mineplex ULTRA', -- title,
+    'This is a Mineplex account with ULTRA rank!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    25.00, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+    5, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'Minecraft: Worst Player', -- title,
+    'I did my best!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    1.00, -- buyprice
     FALSE, -- cantrade
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
@@ -485,6 +713,36 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     now(), -- addedsince
     TRUE, -- canbuy
     52.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+    14, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'RS: Pro Player', -- title,
+    'This is a Pro Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    52.25, -- buyprice
+    FALSE, -- cantrade
+    'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+    14, -- gameid
+    TRUE, -- visible
+    FALSE, -- disabled
+    'RS: Medium Player', -- title,
+    'This is a Medium Player account!!!', -- description
+    now(), -- addedsince
+    TRUE, -- canbuy
+    25.25, -- buyprice
     FALSE, -- cantrade
     'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
