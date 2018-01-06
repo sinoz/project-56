@@ -90,6 +90,8 @@ GET         /admin/users                         controllers.AdminController.ind
 GET         /admin/users/view/:userid            controllers.AdminController.viewUser(userid: String)
 GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
 POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
+GET         /admin/users/resetpassword/:userid   controllers.AdminController.indexResetPassword(userid: String)
+POST        /admin/users/resetpassword/:userid   controllers.AdminController.resetPassword(userid: String)
 GET         /admin/users/delete/:userid          controllers.AdminController.indexDeleteUser(userid: String)
 POST        /admin/users/delete/:userid          controllers.AdminController.deleteUser(userid: String)
 

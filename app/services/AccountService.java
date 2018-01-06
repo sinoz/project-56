@@ -138,27 +138,34 @@ public final class AccountService {
 	 * using the given {@link PersonalSettingsForm}.
 	 */
 	public void updatePassword(User user, PersonalSettingsPasswordForm form) {
-		database.withConnection(connection -> {
-			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET password=? WHERE username=? AND id=?");
-			String pwd = SecurityService.encodePassword(form.password, user.getSalt());
-			stmt.setString(1, pwd);
-			stmt.setString(2, user.getUsername());
-			stmt.setInt(3, user.getId());
-			stmt.execute();
-		});
+		updatePassword(user, form.password);
 	}
 
     /**
      * Attempts to update a exciting user and returns whether it has successfully updated the settings
-     * using the given {@link PersonalSettingsForm}.
+     * using the given {@link VerifyChangePasswordForm}.
      */
     public void updatePassword(User user, VerifyChangePasswordForm form) {
+        updatePassword(user, form.password);
+    }
+
+    private void updatePassword(User user, String password) {
         database.withConnection(connection -> {
             PreparedStatement stmt = connection.prepareStatement("UPDATE users SET password=? WHERE username=? AND id=?");
-            String pwd = SecurityService.encodePassword(form.password, user.getSalt());
+            String pwd = SecurityService.encodePassword(password, user.getSalt());
             stmt.setString(1, pwd);
             stmt.setString(2, user.getUsername());
             stmt.setInt(3, user.getId());
+            stmt.execute();
+        });
+    }
+
+    public void resetPassword(int id, String username) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE users SET password=? WHERE username=? AND id=?");
+            stmt.setString(1, null);
+            stmt.setString(2, username);
+            stmt.setInt(3, id);
             stmt.execute();
         });
     }
