@@ -39,12 +39,18 @@ GET         /myaccount                           controllers.MyAccountController
 
 GET         /login                               controllers.LoginController.index
 POST        /login                               controllers.LoginController.login
+GET         /login/forgotpassword                controllers.LoginController.indexForgotPassword
+POST        /login/forgotpassword                controllers.LoginController.callForgotPassword
+GET         /login/changepassword/:username      controllers.LoginController.indexChangeForgotPassword(username: String)
+POST        /login/changepassword/:username      controllers.LoginController.callChangeForgotPassword(username: String)
+GET         /login/resetchangepassword/:username controllers.LoginController.resetChangeForgotPassword(username: String)
 GET         /login/verify/:username              controllers.LoginController.indexVerify(username: String)
 POST        /login/verify/:username              controllers.LoginController.callVerify(username: String)
-GET         /login/verify/:verify/:username      controllers.LoginController.verify(verify: String, username: String)
 
 GET         /myaccount/personalsettings          controllers.PersonalSettingsController.index
 POST        /myaccount/personalsettings          controllers.PersonalSettingsController.editSettings
+GET         /myaccount/personalsettings/password controllers.PersonalSettingsController.indexPassword
+POST        /myaccount/personalsettings/password controllers.PersonalSettingsController.editPassword
 
 GET         /myaccount/favourites                controllers.FavouritesController.index
 POST        /myaccount/addfavourite              controllers.FavouritesController.addFavourite()

@@ -88,6 +88,26 @@ public final class UserViewService {
     }
 
     /**
+     * Attempts to find a {@link ViewableUser} that matches the given mail.
+     */
+    public Optional<ViewableUser> fetchViewableUserMail(String mail) {
+        return database.withConnection(connection -> {
+            Optional<ViewableUser> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE mail=?");
+            stmt.setString(1, mail);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                user = Optional.of(ModelService.createViewableUser(results));
+            }
+
+            return user;
+        });
+    }
+
+    /**
      * Attempts to find a {@link User} that matches the given username.
      */
     public Optional<User> fetchUser(String username) {

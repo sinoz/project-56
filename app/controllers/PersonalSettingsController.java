@@ -2,6 +2,7 @@ package controllers;
 
 import concurrent.DbExecContext;
 import forms.PersonalSettingsForm;
+import forms.PersonalSettingsPasswordForm;
 import models.User;
 import play.data.Form;
 import play.data.FormFactory;
@@ -83,6 +84,14 @@ public final class PersonalSettingsController extends Controller {
 		}
 	}
 
+	public Result indexPassword() {
+		if (SessionService.redirect(session(), database)) {
+			return redirect("/login");
+		} else {
+			return ok(views.html.personalsettings.password.render(formFactory.form(PersonalSettingsPasswordForm.class), session()));
+		}
+	}
+
 	public CompletionStage<Result> editSettings() {
 		Form<PersonalSettingsForm> formBinding = formFactory.form(PersonalSettingsForm.class).bindFromRequest();
 		if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
@@ -97,11 +106,16 @@ public final class PersonalSettingsController extends Controller {
             Optional<User> user = auth.fetchUser(loggedInAs, form.password);
 
             if (accounts.userExists(form.usernameToChangeTo.toLowerCase()) && !loggedInAs.equals(form.usernameToChangeTo.toLowerCase())) {
-                formBinding = formBinding.withError(new ValidationError("usernameToChangeTo", "This username already exists."));
+                formBinding = formBinding.withError(new ValidationError("currentPassword", "This username already exists."));
                 return completedFuture(badRequest(views.html.personalsettings.index.render(formBinding, session())));
             }
 
             if (user.isPresent()) {
+                if (accounts.mailExists(form.emailToChangeTo.toLowerCase()) && !user.get().getMail().equals(form.emailToChangeTo)) {
+                    formBinding = formBinding.withError(new ValidationError("emailToChangeTo", "This email already exists."));
+                    return completedFuture(badRequest(views.html.personalsettings.index.render(formBinding, session())));
+                }
+
                 // runs the account update operation on the database pool of threads and then switches
                 // to the internal HTTP pool of threads to safely update the session and returning the view
                 return runAsync(() -> accounts.updateSettings(loggedInAs, form), dbExecutor).thenApplyAsync(i -> {
@@ -113,4 +127,27 @@ public final class PersonalSettingsController extends Controller {
             }
 		}
 	}
+
+    public CompletionStage<Result> editPassword() {
+        Form<PersonalSettingsPasswordForm> formBinding = formFactory.form(PersonalSettingsPasswordForm.class).bindFromRequest();
+        if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
+            return completedFuture(badRequest(views.html.personalsettings.password.render(formBinding, session())));
+        } else {
+            PersonalSettingsPasswordForm form = formBinding.get();
+
+            Executor dbExecutor = HttpExecution.fromThread((Executor) dbEc);
+
+            String loggedInAs = SessionService.getLoggedInAs(session());
+
+            Optional<User> user = auth.fetchUser(loggedInAs, form.currentPassword);
+
+            if (user.isPresent() && form.password.equals(form.repeatPassword)) {
+                // runs the account update operation on the database pool of threads and then switches
+                // to the internal HTTP pool of threads to safely update the session and returning the view
+                return runAsync(() -> accounts.updatePassword(user.get(), form), dbExecutor).thenApplyAsync(i -> redirect("/myaccount/personalsettings"), httpEc.current());
+            } else {
+                return completedFuture(badRequest(views.html.personalsettings.password.render(formBinding, session())));
+            }
+        }
+    }
 }

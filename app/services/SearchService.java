@@ -125,7 +125,6 @@ public class SearchService {
                     scores.put(product.getId(), 0);
 
                 for (Product p : products) {
-                    System.out.println((p == null) + " : " + products.size());
                     String title = p.getTitle();
                     String game = p.getGameCategory().getName();
 

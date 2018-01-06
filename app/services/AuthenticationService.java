@@ -63,7 +63,7 @@ public final class AuthenticationService {
 	public boolean verifyUser(String verify, String username) {
 		return database.withConnection(connection -> {
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users_verification WHERE verification=? AND username=?");
-			stmt.setString(1, verify);
+			stmt.setString(1, SecurityService.secure(verify));
 			stmt.setString(2, username);
 
 			ResultSet results = stmt.executeQuery();
@@ -74,7 +74,7 @@ public final class AuthenticationService {
 	public void createUser(String verify, String username) {
 		database.withConnection(connection -> {
 			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users_verification WHERE verification=? AND username=?");
-			stmt.setString(1, verify);
+			stmt.setString(1, SecurityService.secure(verify));
 			stmt.setString(2, username);
 
 			ResultSet results = stmt.executeQuery();
@@ -91,7 +91,7 @@ public final class AuthenticationService {
 				stmt.execute();
 
                 stmt = connection.prepareStatement("DELETE FROM users_verification WHERE verification=? AND username=?");
-                stmt.setString(1, verify);
+                stmt.setString(1, SecurityService.secure(verify));
                 stmt.setString(2, username);
                 stmt.execute();
 			}

@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS gameaccounts;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS users_verification;
+DROP TABLE IF EXISTS users_change_password;
 DROP TABLE IF EXISTS gamecategories;
 DROP TABLE IF EXISTS couponcodes;
 
@@ -60,6 +61,14 @@ CREATE TABLE users_verification (
   membersince TIMESTAMP,
   sessionToken TEXT,       -- token for session
   isadmin BOOLEAN
+);
+
+CREATE TABLE users_change_password (
+  id SERIAL PRIMARY KEY,
+  verification TEXT,
+  username VARCHAR(16),
+  mail VARCHAR(128),
+  userid INTEGER REFERENCES users(id)
 );
 
 CREATE TABLE gameaccounts (
@@ -150,19 +159,6 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     FALSE -- is admin
   ),
   (
-    'maurice', -- username
-    'PPgGYg63KoqyYW85LMt3IY7o3Nfb4jQ/FPUR8SE9MabL+pUxFK4+gRFFeX0p20/DQv4Th1+Yo140d5mA3w7Jq8ZPB0ye7MQSRQNWBq17kro=', -- password (maurice)
-    '6ad55e79808634fbd37a9809d13ed2a01a8eb4ff65449c0e3061bb795ea6f3e2', -- password salt
-    'restartcontactus@gmail.com', -- mail
-    'images/default_profile_pic.png', -- profile picture
-    'restartcontactus@gmail.com', -- payment mail
-    NULL, -- inventory
-    NULL, -- favorites
-    NULL, -- order history
-    now(), -- member since
-    FALSE -- is admin
-  ),
-  (
     'newuser', -- username
     'CSmVWiwzNq2UnFlXBhe0v1XTFHRddYZu6f6Sm9ZX6yCufNmGRfJG2gWeICdtt0kuaSUwd8h3zxqdUoya3TF4fsZPB0ye7MQSRQNWBq17kro=', -- password (newuser)
     'd515b3fa1c9193ac3029fc7a5ebe51080f77f409f6ae76bc9482f5016c9708e2', -- password salt
@@ -226,6 +222,84 @@ INSERT INTO users (username, password, passwordsalt, mail, profilepicture, payme
     NULL, -- order history
     now(), -- member since
     FALSE -- is admin
+  ),
+  (
+    'maurice', -- username
+    'PPgGYg63KoqyYW85LMt3IY7o3Nfb4jQ/FPUR8SE9MabL+pUxFK4+gRFFeX0p20/DQv4Th1+Yo140d5mA3w7Jq8ZPB0ye7MQSRQNWBq17kro=', -- password (maurice)
+    '6ad55e79808634fbd37a9809d13ed2a01a8eb4ff65449c0e3061bb795ea6f3e2', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    TRUE -- is admin
+  ),
+  (
+    'joris', -- username
+    'U7ow4/rBPyEZZNWW/hQQxAaToQKOe81Jm7Cd9pwBJNGgFRhhz3MijFDdj48snyq0HG1zMG8xrIXU9QdQpAb6qcZPB0ye7MQSRQNWBq17kro=', -- password (joris)
+    '097cfbd9951a6574cf8151a4c02aec0c4aa5eceb1832f73b921a8e4949b704ed', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    TRUE -- is admin
+  ),
+  (
+    'ilyas', -- username
+    '7yHEsOKKlEQO55lngExG9auO6xtM728seX8EfAApHYu/fJyAPSZ9OFYVb2ocmI6Eg8wl79oN8i4r2RC2rC0WJMZPB0ye7MQSRQNWBq17kro=', -- password (ilyas)
+    '3983974248ebcded3ee340ac2de855a037078ec9fcfb7ab00122d070271ff572', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    TRUE -- is admin
+  ),
+  (
+    'melle', -- username
+    'bbaqfRDGOJ25Q76FfC3WxTGY2p8UJk91K+qLRKu0pn0rkjFJ/PU+lbM9Y9Pv42vFoDQXn20RaOtg7VbaYRfaccZPB0ye7MQSRQNWBq17kro=', -- password (melle)
+    'e9cc37a68417f9134cdbd755f3852425a6a5b6d9c5f7db7b3eab047d60513ecf', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    TRUE -- is admin
+  ),
+  (
+    'daryl', -- username
+    'iCoTqpY8bbkip64c+kwHTx10rtDzjd8RgjyQJkIhE0ULRRfKp3b1asYVROK+RRkjngqcLCtxkfW8wb5Bh2MejcZPB0ye7MQSRQNWBq17kro=', -- password (daryl)
+    '42b4363d5cf2c94c499cc9eee6001a934b7a6d936e7c6f4790fa04f31e326d85', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    TRUE -- is admin
+  ),
+  (
+    'johan', -- username
+    'aGgYcgJsAtpoT8O6h7LGfJ/ahODYwrxKxqh8PdQnV/2N3Li7Lu2nHTEUUo4+esHZfTJ0waVXW8liaVUScWT7JMZPB0ye7MQSRQNWBq17kro=', -- password (johan)
+    '44357731c71c489f180fb62634014969a6446112d36dcaf65662042243a1b1f8', -- password salt
+    'restartcontactus@gmail.com', -- mail
+    'images/default_profile_pic.png', -- profile picture
+    'restartcontactus@gmail.com', -- payment mail
+    NULL, -- inventory
+    NULL, -- favorites
+    NULL, -- order history
+    now(), -- member since
+    TRUE -- is admin
   );
 
 INSERT INTO gamecategories (name, image, description, genre) VALUES
@@ -389,7 +463,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    8, -- userid
+    7, -- userid
     1, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -404,7 +478,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    5, -- userid
+    4, -- userid
     1, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -419,7 +493,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    6, -- userid
+    5, -- userid
     1, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -434,7 +508,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    7, -- userid
+    6, -- userid
     1, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -449,7 +523,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    8, -- userid
+    7, -- userid
     2, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -479,7 +553,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    7, -- userid
+    6, -- userid
     2, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -539,7 +613,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    5, -- userid
+    4, -- userid
     5, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -554,7 +628,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    5, -- userid
+    4, -- userid
     5, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -569,7 +643,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    5, -- userid
+    4, -- userid
     5, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -584,7 +658,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    7, -- userid
+    6, -- userid
     5, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -719,7 +793,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    6, -- userid
+    5, -- userid
     14, -- gameid
     TRUE, -- visible
     FALSE, -- disabled
@@ -734,7 +808,7 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
     'currentpassword' -- passwordcurrent
   ),
   (
-    6, -- userid
+    5, -- userid
     14, -- gameid
     TRUE, -- visible
     FALSE, -- disabled

@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Constraints.Validate
 public final class VerifyForm implements Constraints.Validatable<List<ValidationError>> {
+
 	@Constraints.Required
 	public String verification;
 

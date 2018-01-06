@@ -9,8 +9,10 @@
             <div class="live-camera">
                 <a href="/products/selected/@product.getId">
                     <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
-                        <div class="transbox"><p>@product.getBuyPriceText</p></div>
-                        <div class="transbox"><p>@product.getTitle</p></div>
+                        <div class="transbox">
+                            <p>@product.getBuyPriceText</p>
+                            <p>@product.getTitle</p>
+                        </div>
                     </figure>
                 </a>
             </div>

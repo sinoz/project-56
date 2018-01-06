@@ -15,7 +15,6 @@ import play.data.FormFactory;
 import play.data.validation.ValidationError;
 import play.db.Database;
 
-import play.libs.concurrent.HttpExecution;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -23,13 +22,9 @@ import services.*;
 import views.html.admin.*;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletionStage;
-import java.util.concurrent.Executor;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.concurrent.CompletableFuture.runAsync;
 
 /**
@@ -61,6 +56,7 @@ public final class AdminController extends Controller {
     private final AuthenticationService authService;
 
     private final AdminService adminService;
+    private final AccountService accountService;
 
     private final MyInventoryService myInventoryService;
 
@@ -85,6 +81,7 @@ public final class AdminController extends Controller {
                            FormFactory formFactory,
                            AuthenticationService authService,
                            AdminService adminService,
+                           AccountService accountService,
                            MyInventoryService myInventoryService,
                            DbExecContext dbEc,
                            HttpExecutionContext httpEc) {
@@ -98,6 +95,7 @@ public final class AdminController extends Controller {
 	    this.formFactory = formFactory;
 	    this.authService = authService;
 	    this.adminService = adminService;
+	    this.accountService = accountService;
         this.myInventoryService = myInventoryService;
         this.dbEc = dbEc;
         this.httpEc = httpEc;
@@ -214,10 +212,14 @@ public final class AdminController extends Controller {
             String loggedInAs = SessionService.getLoggedInAs(session());
 
             // Check if user filled in new username and whether new username already exists
-            if(!user.get().getUsername().equalsIgnoreCase(form.username) && adminService.userExists(form.username.toLowerCase())){
+            if(!user.get().getUsername().equalsIgnoreCase(form.username) && accountService.userExists(form.username.toLowerCase())) {
                 formBinding = formBinding.withError(new ValidationError("username", "This username already exists."));
                 return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
-                //Check if admin is removing admin rights from his own account
+            // Check if user filled in new mail and whether new mail already exists
+            }else if(!user.get().getMail().equalsIgnoreCase(form.mail) && accountService.mailExists(form.mail)){
+                    formBinding = formBinding.withError(new ValidationError("mail", "This username already exists."));
+                    return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));
+            //Check if admin is removing admin rights from his own account
             } else if(user.get().getUsername().toLowerCase().equals(loggedInAs) && !form.isAdmin){
                 formBinding = formBinding.withError(new ValidationError("adminPassword", "You can not remove admin rights from your own account."));
                 return adminRedirect(badRequest(views.html.admin.modifyUser.render(formBinding, user, isAdmin, session())));

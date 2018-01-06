@@ -66,8 +66,8 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 			errors.add(new ValidationError("paymentmail", "It has to be a valid email."));
 		}
 
-		if (password.length() < 6) {
-			errors.add(new ValidationError("password", "Password must be at least 6 characters long"));
+		if (password.length() < 4) {
+			errors.add(new ValidationError("password", "Password must be at least 4 characters long"));
 		}
 
 		if (password.length() > 64) {
@@ -75,7 +75,7 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 		}
 
 		if (!password.equals(repeatPassword)) {
-			errors.add(new ValidationError("", "Passwords do not match."));
+			errors.add(new ValidationError("repeatPassword", "Passwords do not match."));
 		}
 
 		return errors;

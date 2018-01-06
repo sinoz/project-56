@@ -1,9 +1,6 @@
 package controllers;
 
-import forms.LoginForm;
 import forms.RegistrationForm;
-import forms.VerifyForm;
-import models.Product;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.FormFactory;
@@ -78,20 +75,25 @@ public final class RegistrationController extends Controller {
 				String verification = SecurityService.hash(UUID.randomUUID().toString());
 
 				// TODO thread this
-				if (accounts.userExists(form.getName().toLowerCase())) {
-					formBinding = formBinding.withError(new ValidationError("name", "This username already exists."));
+				boolean a = accounts.userExists(form.getName().toLowerCase());
+				boolean b = accounts.mailExists(form.getEmail());
+				if (a || b) {
+					if (a)
+						formBinding = formBinding.withError(new ValidationError("name", "This username already exists."));
+					if (b)
+						formBinding = formBinding.withError(new ValidationError("email", "This email already exists."));
 
 					return badRequest(index.render(formBinding, session()));
 				} else {
 					accounts.registered(form, verification);
-					sendOrderFinishedMail(form.getEmail(), verification, form.getName());
+					sendVerifyAccountMail(form.getEmail(), verification, form.getName());
 					return redirect("/login/verify/" + form.name);
 				}
 			}
 		}
 	}
 
-    private void sendOrderFinishedMail(String mail, String verification, String username) {
+    private void sendVerifyAccountMail(String mail, String verification, String username) {
         if (!checkMail(mail))
             return;
 

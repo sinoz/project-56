@@ -27,6 +27,7 @@ final class ModelService {
         u.setId(results.getInt("id"));
         u.setUsername(results.getString("username"));
         u.setPassword(results.getString("password"));
+        u.setSalt(results.getString("passwordsalt"));
         u.setMail(results.getString("mail"));
         u.setPaymentMail(results.getString("paymentmail"));
         u.setProfilePicture(results.getString("profilepicture"));

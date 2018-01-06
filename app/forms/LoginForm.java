@@ -19,8 +19,6 @@ public final class LoginForm implements Constraints.Validatable<List<ValidationE
 	@Constraints.Required
 	public String password;
 
-	public boolean remember;
-
 	@Override
 	public List<ValidationError> validate() {
 		List<ValidationError> errors = new ArrayList<>();
@@ -42,9 +40,5 @@ public final class LoginForm implements Constraints.Validatable<List<ValidationE
 
 	public String getPassword() {
 		return password;
-	}
-
-	public boolean getRemember() {
-		return remember;
 	}
 }

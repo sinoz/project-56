@@ -25,19 +25,6 @@ public final class AdminService {
     }
 
     /**
-     * Checks if a user with the given username exists in the database.
-     */
-    public boolean userExists(String username) {
-        return database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-
-            stmt.setString(1, username.toLowerCase());
-
-            return stmt.executeQuery().next();
-        });
-    }
-
-    /**
      * Attempts to update a user using the given {@link forms.AdminModifyUserForm}.
      */
     public void updateSettings(int userId, AdminModifyUserForm form) {

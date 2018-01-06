@@ -1,7 +1,10 @@
 package services;
 
 import forms.PersonalSettingsForm;
+import forms.PersonalSettingsPasswordForm;
 import forms.RegistrationForm;
+import forms.VerifyChangePasswordForm;
+import models.User;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,6 +44,23 @@ public final class AccountService {
 		});
 	}
 
+    /**
+     * Checks if a user with the given mail exists in the database.
+     */
+    public boolean mailExists(String mail) {
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE mail=?");
+            stmt.setString(1, mail);
+            boolean a = stmt.executeQuery().next();
+
+            stmt = connection.prepareStatement("SELECT * FROM users_verification WHERE mail=?");
+            stmt.setString(1, mail);
+            boolean b = stmt.executeQuery().next();
+
+            return a || b;
+        });
+    }
+
 	/**
 	 * Attempts to register a new user and returns whether it has successfully registered the user
 	 * using the given {@link RegistrationForm}.
@@ -50,7 +70,7 @@ public final class AccountService {
 			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users_verification (verification, username, password, passwordsalt, mail, paymentmail, profilepicture, membersince) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
 			String salt = SecurityService.createSalt();
 			String pwd = SecurityService.encodePassword(form.password, salt);
-			stmt.setString(1, verify);
+			stmt.setString(1, SecurityService.secure(verify));
 			stmt.setString(2, form.name.toLowerCase());
 			stmt.setString(3, pwd);
 			stmt.setString(4, salt);
@@ -61,6 +81,42 @@ public final class AccountService {
 			stmt.execute();
 		});
 	}
+
+    public void saveChangePassword(String verification, String username, String mail, int userid) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO users_change_password (verification, username, mail, userid) VALUES(?, ?, ?, ?)");
+            stmt.setString(1, SecurityService.secure(verification));
+            stmt.setString(2, username);
+            stmt.setString(3, mail);
+            stmt.setInt(4, userid);
+            stmt.execute();
+        });
+    }
+
+    public boolean verifyCanChangePassword(int userid) {
+        return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users_change_password WHERE userid=?");
+            stmt.setInt(1, userid);
+            return stmt.executeQuery().next();
+        });
+    }
+
+    public boolean verifyChangePassword(String verification, int userid) {
+	    return database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users_change_password WHERE verification=? AND userid=?");
+            stmt.setString(1, SecurityService.secure(verification));
+            stmt.setInt(2, userid);
+            return stmt.executeQuery().next();
+        });
+    }
+
+    public void removeChangePassword(int userid) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM users_change_password WHERE userid=?");
+            stmt.setInt(1, userid);
+            stmt.execute();
+        });
+    }
 
 	/**
 	 * Attempts to update a exciting user and returns whether it has successfully updated the settings
@@ -76,4 +132,34 @@ public final class AccountService {
 			stmt.execute();
 		});
 	}
+
+	/**
+	 * Attempts to update a exciting user and returns whether it has successfully updated the settings
+	 * using the given {@link PersonalSettingsForm}.
+	 */
+	public void updatePassword(User user, PersonalSettingsPasswordForm form) {
+		database.withConnection(connection -> {
+			PreparedStatement stmt = connection.prepareStatement("UPDATE users SET password=? WHERE username=? AND id=?");
+			String pwd = SecurityService.encodePassword(form.password, user.getSalt());
+			stmt.setString(1, pwd);
+			stmt.setString(2, user.getUsername());
+			stmt.setInt(3, user.getId());
+			stmt.execute();
+		});
+	}
+
+    /**
+     * Attempts to update a exciting user and returns whether it has successfully updated the settings
+     * using the given {@link PersonalSettingsForm}.
+     */
+    public void updatePassword(User user, VerifyChangePasswordForm form) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE users SET password=? WHERE username=? AND id=?");
+            String pwd = SecurityService.encodePassword(form.password, user.getSalt());
+            stmt.setString(1, pwd);
+            stmt.setString(2, user.getUsername());
+            stmt.setInt(3, user.getId());
+            stmt.execute();
+        });
+    }
 }
