@@ -5,6 +5,8 @@ import play.data.validation.ValidationError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A blue print of a filled in ReStart account registration form.
@@ -40,6 +42,9 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 		}
 		if (name.length() > 16) {
 			errors.add(new ValidationError("name", "Name must be maximum of 16 characters long"));
+		}
+		if (containsSymbol(name)) {
+			errors.add(new ValidationError("name", "Name can't contain a symbol"));
 		}
 
 		if (email.length() < 5) {
@@ -80,6 +85,12 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 
 		return errors;
 	}
+
+	private boolean containsSymbol(String text) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]*");
+        Matcher matcher = pattern.matcher(text);
+        return !matcher.matches();
+    }
 
 	public String getName() {
 		return name;
