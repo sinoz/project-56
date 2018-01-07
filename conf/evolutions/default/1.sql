@@ -8,9 +8,9 @@ DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS reviewtokens;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS gameaccounts;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS users_verification;
 DROP TABLE IF EXISTS users_change_password;
+DROP TABLE IF EXISTS users_verification;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS gamecategories;
 DROP TABLE IF EXISTS couponcodes;
 
