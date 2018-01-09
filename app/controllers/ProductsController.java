@@ -44,7 +44,7 @@ public class ProductsController extends Controller {
         this.searchService = new SearchService(productService, database, userViewService, favouritesService, orderService);
     }
 
-    public Result redirect() {
+    public Result sendInput() {
         Form<SearchForm> formBinding = formFactory.form(SearchForm.class).bindFromRequest();
         if (formBinding.hasGlobalErrors() || formBinding.hasErrors()) {
             return badRequest();

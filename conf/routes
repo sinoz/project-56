@@ -11,7 +11,8 @@ GET         /sandbox                             controllers.HomeController.inde
 GET         /other                               controllers.HomeController.indexother
 
 GET         /products/:token                     controllers.ProductsController.index(token: String)
-POST        /products/search                     controllers.ProductsController.redirect
++ nocsrf
+POST        /products/search                     controllers.ProductsController.sendInput
 
 GET         /products/selected/:token            controllers.SelectedProductController.index(token: String)
 
@@ -20,8 +21,10 @@ POST        /products/checkout/buy/:token        controllers.ProductCheckoutBuyC
 POST        /products/checkout/mail/:redirect    controllers.ProductCheckoutMailController.index(redirect: String)
 
 GET         /newproduct/:gamecat                 controllers.AddProductController.index(gamecat: String)
++ nocsrf
 POST        /addproduct/:id                      controllers.AddProductController.addProduct(id: String)
 GET         /myaccount/inventory/update/:id      controllers.AddProductController.indexUpdateProduct(id: String)
++ nocsrf
 POST        /myaccount/inventory/update/:id      controllers.AddProductController.updateProduct(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
@@ -30,29 +33,38 @@ GET         /assets/*file                        controllers.Assets.versioned(pa
 GET         /faq                                 controllers.FAQController.index
 
 GET         /register                            controllers.RegistrationController.index
++ nocsrf
 POST        /register                            controllers.RegistrationController.register
 
 GET         /contact                             controllers.ContactController.index
++ nocsrf
 POST        /contact                             controllers.ContactController.mail
 
 GET         /myaccount                           controllers.MyAccountController.index
 
 GET         /login                               controllers.LoginController.index
++ nocsrf
 POST        /login                               controllers.LoginController.login
 GET         /login/forgotpassword                controllers.LoginController.indexForgotPassword
++ nocsrf
 POST        /login/forgotpassword                controllers.LoginController.callForgotPassword
 GET         /login/changepassword/:username      controllers.LoginController.indexChangeForgotPassword(username: String)
++ nocsrf
 POST        /login/changepassword/:username      controllers.LoginController.callChangeForgotPassword(username: String)
 GET         /login/resetchangepassword/:username controllers.LoginController.resetChangeForgotPassword(username: String)
 GET         /login/verify/:username              controllers.LoginController.indexVerify(username: String)
++ nocsrf
 POST        /login/verify/:username              controllers.LoginController.callVerify(username: String)
 
 GET         /myaccount/personalsettings          controllers.PersonalSettingsController.index
++ nocsrf
 POST        /myaccount/personalsettings          controllers.PersonalSettingsController.editSettings
 GET         /myaccount/personalsettings/password controllers.PersonalSettingsController.indexPassword
++ nocsrf
 POST        /myaccount/personalsettings/password controllers.PersonalSettingsController.editPassword
 
 GET         /myaccount/favourites                controllers.FavouritesController.index
++ nocsrf
 POST        /myaccount/addfavourite              controllers.FavouritesController.addFavourite()
 
 GET         /myaccount/inventory                 controllers.MyInventoryController.indexAll
@@ -75,6 +87,7 @@ GET         /orderconfirmed/:trackingId/:mail    controllers.OrderConfirmedContr
 
 
 GET         /review/:token                       controllers.AddReviewController.index(token: String)
++ nocsrf
 POST        /review/:reviewid/:productid/:usersenderid/:userreceiverid                          controllers.AddReviewController.addReview(reviewid: String, productid: String, usersenderid: String, userreceiverid: String)
 
 GET         /orderfailed                         controllers.OrderFailedController.index
@@ -82,6 +95,7 @@ GET         /orderfailed                         controllers.OrderFailedControll
 GET         /trackorder                          controllers.TrackOrderController.index
 GET         /trackorder/                         controllers.TrackOrderController.index
 GET         /trackorder/:trackingid              controllers.TrackOrderController.indexOrder(trackingid: String)
++ nocsrf
 POST        /trackorder/search                   controllers.TrackOrderController.redirect
 
 GET         /admin                               controllers.AdminController.index
@@ -89,22 +103,28 @@ GET         /admin                               controllers.AdminController.ind
 GET         /admin/users                         controllers.AdminController.indexUsers
 GET         /admin/users/view/:userid            controllers.AdminController.viewUser(userid: String)
 GET         /admin/users/modify/:userid          controllers.AdminController.indexModifyUser(userid: String)
++ nocsrf
 POST        /admin/users/modify/:userid          controllers.AdminController.modifyUser(userid: String)
 GET         /admin/users/resetpassword/:userid   controllers.AdminController.indexResetPassword(userid: String)
++ nocsrf
 POST        /admin/users/resetpassword/:userid   controllers.AdminController.resetPassword(userid: String)
 GET         /admin/users/delete/:userid          controllers.AdminController.indexDeleteUser(userid: String)
++ nocsrf
 POST        /admin/users/delete/:userid          controllers.AdminController.deleteUser(userid: String)
 
 GET         /admin/gamecategories                controllers.AdminController.indexGameCategories
 GET         /admin/gamecategories/i/:id          controllers.AdminController.indexGameCategorySelected(id: String)
++ nocsrf
 POST        /admin/gamecategories/i/:id          controllers.AdminController.updateGameCategorySelected(id: String)
 #GET         /admin/gamecategories/d/:id          controllers.AdminController.deleteGameCategorySelected(id: String)
 
 GET         /admin/products                      controllers.AdminController.indexProducts
 GET         /admin/products/view/:productid      controllers.AdminController.viewProduct(productid: String)
 GET         /admin/products/modify/:productid    controllers.AdminController.indexModifyProduct(productid: String)
++ nocsrf
 POST        /admin/products/modify/:productid    controllers.AdminController.modifyProduct(productid: String)
 GET         /admin/products/delete/:productid    controllers.AdminController.indexDeleteProduct(productid: String)
++ nocsrf
 POST        /admin/products/delete/:productid    controllers.AdminController.deleteProduct(productid: String)
 
 GET         /admin/statistics                    controllers.AdminController.indexStatistics

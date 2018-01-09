@@ -20,6 +20,7 @@ import java.util.UUID;
  * A {@link Controller} used for account registration.
  *
  * @author I.A
+ * @author Maurice van Veen
  */
 public final class RegistrationController extends Controller {
 	/**
