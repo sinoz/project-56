@@ -68,7 +68,7 @@ public final class RegistrationController extends Controller {
 		} else {
 			DynamicForm requestData = formFactory.form().bindFromRequest();
 			String recaptchaResponse = requestData.get("g-recaptcha-response");
-			if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+			if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
 				return badRequest(views.html.register.index.render(formBinding, session()));
 			} else {
 				RegistrationForm form = formBinding.get();

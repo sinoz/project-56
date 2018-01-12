@@ -5,6 +5,8 @@ import play.data.validation.ValidationError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A blue print of an email send from the contact us page.
@@ -42,7 +44,7 @@ public final class MailerForm implements Constraints.Validatable<List<Validation
             errors.add(new ValidationError("email", "It has to be a valid email."));
         }
 
-        if (phone.contains("[0-9]+")) {
+        if (containsNumbers(phone)) {
             errors.add(new ValidationError("phone", "This is an invalid number"));
         }
 
@@ -67,5 +69,11 @@ public final class MailerForm implements Constraints.Validatable<List<Validation
 
     public String getPhone() {
         return phone;
+    }
+
+    private boolean containsNumbers(String text) {
+        Pattern pattern = Pattern.compile("[0-9()+ ]*");
+        Matcher matcher = pattern.matcher(text);
+        return !matcher.matches();
     }
 }

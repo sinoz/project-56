@@ -108,7 +108,7 @@ public final class LoginController extends Controller {
             String verification = formBinding.get().verification;
             DynamicForm requestData = formFactory.form().bindFromRequest();
             String recaptchaResponse = requestData.get("g-recaptcha-response");
-            if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+            if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
                 return badRequest(views.html.login.waitverify.render(formBinding, username, session()));
             } else {
                 return verify(verification, username);
@@ -124,7 +124,7 @@ public final class LoginController extends Controller {
             String mail = formBinding.get().email;
             DynamicForm requestData = formFactory.form().bindFromRequest();
             String recaptchaResponse = requestData.get("g-recaptcha-response");
-            if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+            if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
                 return badRequest(views.html.login.forgotpassword.render(formBinding, session()));
             } else {
                 Optional<ViewableUser> user = userViewService.fetchViewableUserMail(mail);
@@ -152,7 +152,7 @@ public final class LoginController extends Controller {
         } else {
             DynamicForm requestData = formFactory.form().bindFromRequest();
             String recaptchaResponse = requestData.get("g-recaptcha-response");
-            if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+            if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
                 return badRequest(views.html.login.changepassword.render(formBinding, username, session()));
             } else {
                 String verification = formBinding.get().verification;
@@ -187,7 +187,7 @@ public final class LoginController extends Controller {
 		} else {
 			DynamicForm requestData = formFactory.form().bindFromRequest();
 			String recaptchaResponse = requestData.get("g-recaptcha-response");
-			if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+			if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
 				return badRequest(views.html.login.index.render(formBinding, session()));
 			} else {
 				LoginForm form = formBinding.get();

@@ -43,7 +43,9 @@
                                     @*</div>*@
                                     <a href="/login/forgotpassword"><label>Forgot password</label></a>
 
-                                    <div class="g-recaptcha" data-theme="dark light" data-sitekey="6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL" data-size="compact" align="center"></div>
+                                    @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                                        <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY" data-size="compact" align="center"></div>
+                                    }
 
                                     <button class="btn btn-success btn-block">Login</button>
 
@@ -82,7 +84,10 @@
             @footer()
         </div>
 
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        }
+
         <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/app.js")"></script>

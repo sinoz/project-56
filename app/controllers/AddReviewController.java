@@ -128,7 +128,7 @@ public final class AddReviewController extends Controller {
         } else {
             DynamicForm requestData = formFactory.form().bindFromRequest();
             String recaptchaResponse = requestData.get("g-recaptcha-response");
-            if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+            if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
                 return completedFuture(badRequest(views.html.addreview.index.render(formBinding, reviewid, product.get(), user.get(), receiver.get(), session())));
             } else {
 

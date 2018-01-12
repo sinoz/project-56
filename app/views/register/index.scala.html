@@ -79,7 +79,9 @@
 
                             <br>
 
-                            <div class="g-recaptcha" data-theme="dark light" data-sitekey="6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL"></div>
+                            @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                                <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY"></div>
+                            }
 
                             <button class="btn btn-primary">Send</button>
 
@@ -99,8 +101,10 @@
 
                 <!-- Required for the banner -->
             <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+            @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            }
 
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
             <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
             <script src="@routes.Assets.versioned("javascripts/registration.js")"></script>
             <script src="@routes.Assets.versioned("javascripts/app.js")"></script>

@@ -70,7 +70,7 @@ public final class ContactController extends Controller {
 		} else {
 			DynamicForm requestData = formFactory.form().bindFromRequest();
 			String recaptchaResponse = requestData.get("g-recaptcha-response");
-			if (!recaptcha.isRecaptchaValid(recaptchaResponse)) {
+			if (RecaptchaUtils.INTEGRATE_RECAPTCHA && !recaptcha.isRecaptchaValid(recaptchaResponse)) {
 				return badRequest(views.html.contact.index.render(formBinding, getMail(), session()));
 			} else {
 				MailerForm form = formBinding.get();
