@@ -81,6 +81,8 @@
 
                             @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
                                 <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY"></div>
+                            }else{
+                                @reCaptcha()
                             }
 
                             <button class="btn btn-primary">Send</button>

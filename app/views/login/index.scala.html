@@ -45,7 +45,10 @@
 
                                     @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
                                         <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY" data-size="compact" align="center"></div>
+                                    }else{
+                                        @reCaptcha()
                                     }
+
 
                                     <button class="btn btn-success btn-block">Login</button>
 
