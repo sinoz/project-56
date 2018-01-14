@@ -55,9 +55,9 @@
                                     </div>
                                 </div>
 
-                                    <!-- Payment email input-->
+                                    <!-- PayPal email input-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                    <label class="col-md-4 control-label" for="textinput">Change PayPal Email:</label>
                                     <div class="col-md-4">
                                         <input id="textinput" name="paymentMailToChangeTo" type="text" class="form-control input-md" value=@session.get("usedPaymentMail")>
                                         @for(error <- form("paymentMailToChangeTo").errors) {
@@ -69,7 +69,7 @@
                                 <br>
                                     <!-- Password input-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="passwordinput">password</label>
+                                    <label class="col-md-4 control-label" for="passwordinput">Password</label>
                                     <div class="col-md-4">
                                         <input id="passwordinput" name="password" type="password" class="form-control input-md">
                                         @for(error <- form("password").errors) {
@@ -85,6 +85,8 @@
                                     </div>
                                 </div>
                             }
+                            <br><br>
+                            <a href="/myaccount/personalsettings/password"><button class="button">Change password</button></a>
                         </div>
                     </div>
                 </div>

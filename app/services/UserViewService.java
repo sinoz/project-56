@@ -1,13 +1,17 @@
 package services;
 
-import models.*;
+import models.Product;
+import models.Review;
+import models.User;
+import models.ViewableUser;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The UserViewService that retrieves {@link User}s, {@link Product}s, and {@link Review}s
@@ -36,14 +40,7 @@ public final class UserViewService {
             ResultSet results = stmt.executeQuery();
 
             while (results.next()) {
-                int id = results.getInt("id");
-                String username = results.getString("username");
-                String mail = results.getString("mail");
-                String profilepicture = results.getString("profilepicture");
-                Date memberSince = results.getDate("membersince");
-                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
-
-                users.add(u);
+                users.add(ModelService.createViewableUser(results));
             }
 
             return users;
@@ -63,13 +60,7 @@ public final class UserViewService {
             ResultSet results = stmt.executeQuery();
 
             if (results.next()) {
-                String username = results.getString("username");
-                String mail = results.getString("mail");
-                String profilepicture = results.getString("profilepicture");
-                Date memberSince = results.getDate("membersince");
-                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
-
-                user = Optional.of(u);
+                user = Optional.of(ModelService.createViewableUser(results));
             }
 
             return user;
@@ -89,13 +80,27 @@ public final class UserViewService {
             ResultSet results = stmt.executeQuery();
 
             if (results.next()) {
-                int id = results.getInt("id");
-                String mail = results.getString("mail");
-                String profilepicture = results.getString("profilepicture");
-                Date memberSince = results.getDate("membersince");
-                ViewableUser u = new ViewableUser(id, username, mail, profilepicture, memberSince);
+                user = Optional.of(ModelService.createViewableUser(results));
+            }
 
-                user = Optional.of(u);
+            return user;
+        });
+    }
+
+    /**
+     * Attempts to find a {@link ViewableUser} that matches the given mail.
+     */
+    public Optional<ViewableUser> fetchViewableUserMail(String mail) {
+        return database.withConnection(connection -> {
+            Optional<ViewableUser> user = Optional.empty();
+
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE mail=?");
+            stmt.setString(1, mail);
+
+            ResultSet results = stmt.executeQuery();
+
+            if (results.next()) {
+                user = Optional.of(ModelService.createViewableUser(results));
             }
 
             return user;
@@ -115,24 +120,7 @@ public final class UserViewService {
             ResultSet results = stmt.executeQuery();
 
             if (results.next()) {
-                User u = new User();
-
-                u.setId(results.getInt("id"));
-                u.setUsername(results.getString("username"));
-                u.setPassword(results.getString("password"));
-                u.setMail(results.getString("mail"));
-                u.setPaymentMail(results.getString("paymentmail"));
-                u.setProfilePicture(results.getString("profilepicture"));
-                u.setMemberSince(results.getDate("membersince"));
-
-                List<Integer> favorites = new ArrayList<>();
-                Array a = results.getArray("favorites");
-                if (a != null) {
-                    favorites.addAll(Arrays.asList((Integer[]) a.getArray()));
-                }
-                u.setFavorites(favorites);
-
-                user = Optional.of(u);
+                user = Optional.of(ModelService.createUser(results));
             }
 
             return user;
@@ -152,26 +140,7 @@ public final class UserViewService {
             ResultSet results = stmt.executeQuery();
 
             if (results.next()) {
-                User u = new User();
-
-                u.setId(results.getInt("id"));
-                u.setUsername(results.getString("username"));
-                u.setPassword(results.getString("password"));
-                u.setMail(results.getString("mail"));
-                u.setPaymentMail(results.getString("paymentmail"));
-                u.setProfilePicture(results.getString("profilepicture"));
-                u.setMemberSince(results.getDate("membersince"));
-
-                Array favorites_array = results.getArray("favorites");
-                // TODO: improve
-                if (favorites_array != null) {
-                    Integer[] f1 = (Integer[]) favorites_array.getArray();
-                    ArrayList<Integer> f2 = new ArrayList<>();
-                    f2.addAll(Arrays.asList(f1));
-                    u.setFavorites(f2);
-                }
-
-                user = Optional.of(u);
+                user = Optional.of(ModelService.createUser(results));
             }
 
             return user;
@@ -191,71 +160,8 @@ public final class UserViewService {
             ResultSet results = stmt.executeQuery();
 
             while(results.next()){
-                Review r = new Review();
-
-                r.setId(results.getString("id"));
-                r.setUserReceiverId(results.getInt("userreceiverid"));
-                r.setUserSenderId(results.getInt("usersenderid"));
-                r.setTitle(results.getString("title"));
-                r.setDescription(results.getString("description"));
-                r.setRating(results.getInt("rating"));
-
-                Optional<User> sender = fetchUser(r.getUserSenderId());
-                sender.ifPresent(r::setSender);
-                Optional<User> receiver = fetchUser(r.getUserReceiverId());
-                receiver.ifPresent(r::setReceiver);
-
-                list.add(r);
+                list.add(ModelService.createReview(results, this));
             }
-            return list;
-        });
-    }
-
-    /**
-     * Attempts to get the {@link Product}s that belong to the given userId.
-     */
-    public List<List<Product>> fetchUserProducts(int userId) {
-        return database.withConnection(connection -> {
-            Optional<User> user = fetchUser(userId);
-            List<List<Product>> list = new ArrayList<>();
-
-            if (user.isPresent()) {
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE AND disabled=FALSE");
-                stmt.setInt(1, userId);
-
-                ResultSet results = stmt.executeQuery();
-
-                List<Product> row = new ArrayList<>();
-                int l = 0;
-                while (results.next()) {
-                    Product p = new Product();
-
-                    p.setId(results.getInt("id"));
-                    p.setUserId(results.getInt("userid"));
-                    p.setGameId(results.getInt("gameid"));
-                    p.setTitle(results.getString("title"));
-                    p.setDescription(results.getString("description"));
-                    p.setAddedSince(results.getDate("addedsince"));
-                    p.setCanBuy(results.getBoolean("canbuy"));
-                    p.setBuyPrice(results.getDouble("buyprice"));
-                    p.setCanTrade(results.getBoolean("cantrade"));
-
-                    p.setUser(user.get());
-
-                    Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
-                    gameCategory.ifPresent(p::setGameCategory);
-
-                    row.add(p);
-                    l++;
-                    if (l > 1) {
-                        list.add(row);
-                        row = new ArrayList<>();
-                        l = 0;
-                    }
-                }
-                if (l > 0) list.add(row);
-            }
-
             return list;
         });
     }
@@ -267,34 +173,6 @@ public final class UserViewService {
         Optional<User> user = fetchUser(userId);//
         return user.isPresent() && user.get().getFavorites() != null && user.get().getFavorites().contains(productId);
 
-    }
-
-    /**
-     * Attempts to find a {@link GameCategory} that matches the given game id.
-     */
-    private Optional<GameCategory> fetchGameCategory(int id) {
-        return database.withConnection(connection -> {
-            Optional<GameCategory> gameCategory = Optional.empty();
-
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gamecategories WHERE id=?");
-            stmt.setInt(1, id);
-
-            ResultSet results = stmt.executeQuery();
-
-            if (results.next()) {
-                GameCategory gc = new GameCategory();
-
-                gc.setId(results.getInt("id"));
-                gc.setName(results.getString("name"));
-                gc.setImage(results.getString("image"));
-                gc.setDescription(results.getString("description"));
-                gc.setSearch(results.getInt("search"));
-
-                gameCategory = Optional.of(gc);
-            }
-
-            return gameCategory;
-        });
     }
 
     /**
@@ -312,19 +190,7 @@ public final class UserViewService {
             List<Review> row = new ArrayList<>();
             int l = 0;
             while(results.next()){
-                Review r = new Review();
-
-                r.setId(results.getString("id"));
-                r.setUserReceiverId(results.getInt("userreceiverid"));
-                r.setUserSenderId(results.getInt("usersenderid"));
-                r.setTitle(results.getString("title"));
-                r.setDescription(results.getString("description"));
-                r.setRating(results.getInt("rating"));
-                int senderid = results.getInt("usersenderid");
-                Optional<User> user = fetchUser(senderid);
-                user.ifPresent(r::setSender);
-
-                row.add(r);
+                row.add(ModelService.createReview(results, this));
                 l++;
                 if(l > 1) {
                     list.add(row);

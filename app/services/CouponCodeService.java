@@ -34,10 +34,7 @@ public final class CouponCodeService {
             ResultSet results = stmt.executeQuery();
 
             while (results.next()) {
-                String code = results.getString("code");
-                double percentage = results.getDouble("percentage");
-
-                couponCodes.add(new CouponCode(code, percentage));
+                couponCodes.add(ModelService.createCouponCode(results));
             }
 
             return couponCodes;
@@ -54,9 +51,7 @@ public final class CouponCodeService {
             ResultSet results = stmt.executeQuery();
 
             if (results.next()) {
-                double percentage = results.getDouble("percentage");
-
-                couponCode = Optional.of(new CouponCode(code, percentage));
+                couponCode = Optional.of(ModelService.createCouponCode(results));
             }
 
             return couponCode;

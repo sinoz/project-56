@@ -35,12 +35,7 @@ public final class VisitTimeService {
             ResultSet results = stmt.executeQuery();
 
             while (results.next()) {
-                int id = results.getInt("id");
-                int userid = results.getInt("userid");
-                Timestamp time = results.getTimestamp("time");
-                VisitTime vt = new VisitTime(id, userid, time);
-
-                users.add(vt);
+                users.add(ModelService.createVisitTime(results));
             }
 
             return users;

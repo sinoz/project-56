@@ -10,9 +10,10 @@ import java.util.List;
  * The AdminDeleteUser form.
  *
  * @author Johan van der Hoeven
+ * @author Maurice van Veen
  */
 @Constraints.Validate
-public final class AdminDeleteUserForm implements Constraints.Validatable<List<ValidationError>> {
+public final class AdminDeleteForm implements Constraints.Validatable<List<ValidationError>> {
     @Constraints.Required
     public String adminPassword;
 

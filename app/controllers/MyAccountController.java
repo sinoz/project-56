@@ -43,16 +43,13 @@ public final class MyAccountController extends Controller {
 	 */
 	private UserViewService userViewService;
 
-	private final ProductService productService;
-
 	@Inject
-    public MyAccountController(FormFactory formFactory, play.db.Database database, OrderService orderService, UserViewService userViewService, ProductService productService)
+    public MyAccountController(FormFactory formFactory, play.db.Database database, OrderService orderService, UserViewService userViewService)
 	{
 	    this.database = database;
 	    this.formFactory = formFactory;
 		this.userViewService = userViewService;
 	    this.orderService = orderService;
-	    this.productService = productService;
 
     }
 
@@ -64,9 +61,12 @@ public final class MyAccountController extends Controller {
 			Optional<ViewableUser> user = userViewService.fetchViewableUser(loggedInAs);
 			if (user.isPresent())
 			{
-				List<Order> order = orderService.getOrdersByUser(user.get().getId());
-				List<Product> product = productService.fetchProducts();
-				return ok(views.html.myaccount.index.render(session(), user.get(), order, product));
+				List<Order> orders = orderService.getOrdersByUser(user.get().getId());
+				for (int i = orders.size() - 1; i >= 0; i--) {
+					if (orders.get(i).getOrderType() != 0)
+						orders.remove(i);
+				}
+				return ok(views.html.myaccount.index.render(session(), user.get(), orders));
 			}else {
 				return redirect("/404");
 			}

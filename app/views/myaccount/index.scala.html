@@ -1,7 +1,7 @@
 @import java.util
 @import components._
 
-@(session: play.mvc.Http.Session, viewableUser: ViewableUser, orders: util.List[Order], products: util.List[Product])
+@(session: play.mvc.Http.Session, viewableUser: ViewableUser, orders: util.List[Order])
 
 @main("ReStart") {
     <body>
@@ -43,30 +43,34 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            @for(order <- orders) {
-                                                <tr>
-                                                    <td>1</td>
-                                                    @if(order.getProduct != null) {
-                                                        <td>@order.getProduct.getTitle</td>
-                                                    } else {
-                                                        <td>Not Found</td>
-                                                    }
-                                                    @if(order.getProduct.getUser != null) {
-                                                        <td>@order.getProduct.getUser.getUsername</td>
-                                                    } else {
-                                                        <td>Not Found</td>
-                                                    }
-                                                    <td><a href="/trackorder/@order.getTrackId"><i>Status</i></a></td>
-                                                    <td>@order.getOrderplaced</td>
-                                                    <td>€@order.getPrice</td>
-                                                    <td>@if(order.getStatus != 4) {
-                                                        <span class="label label-info">Processing</span>
-                                                    }else{
-                                                        <span class="label label-primary">Completed</span>
-                                                    }
+                                            @for(i <- 0 to (orders.size() - 1)) {
+                                                @defining(orders.get(i)) { order =>
+                                                    <tr>
+                                                        @defining(i + 1) { j =>
+                                                            <td>@j</td>
+                                                        }
+                                                        @if(order.getProduct != null) {
+                                                            <td>@order.getProduct.getTitle</td>
+                                                        } else {
+                                                            <td>Not Found</td>
+                                                        }
+                                                        @if(order.getProduct != null && order.getProduct.getUser != null) {
+                                                            <td>@order.getProduct.getUser.getUsername</td>
+                                                        } else {
+                                                            <td>Not Found</td>
+                                                        }
+                                                        <td><a href="/trackorder/@order.getTrackId"><i>Status</i></a></td>
+                                                        <td>@order.getOrderplaced</td>
+                                                        <td>€@order.getPrice</td>
+                                                        <td>@if(order.getStatus != 4) {
+                                                            <span class="label label-info">Processing</span>
+                                                        }else{
+                                                            <span class="label label-primary">Completed</span>
+                                                        }
 
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             }
                                             </tbody>
                                         </table>

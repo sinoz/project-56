@@ -27,9 +27,8 @@ public final class User extends Model {
 	@Constraints.Required
 	private String password;
 
-	//    TODO: optional
-	//    @Constraints.Required
-	//    private String password_salt;
+	@Constraints.Required
+	private String salt;
 
 	/** mail used to log in */
 	@Constraints.Required
@@ -80,6 +79,14 @@ public final class User extends Model {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public String getMail() {

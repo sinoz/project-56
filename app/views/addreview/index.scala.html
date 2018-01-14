@@ -58,7 +58,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="title">Title</label>
                                 @defining(if (form("title").getValue.isPresent) form("title").getValue.get() else "") { text =>
-                                    <input id="title" name="title" type="text" class="form-control input-md">
+                                    <input id="title" name="title" type="text" class="form-control input-md" value="@text">
                                 }
                                 @for(error <- form("title").errors) {
                                     <p>@error.format(messages())</p>
@@ -69,7 +69,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="description">Description</label>
                                 @defining(if (form("description").getValue.isPresent) form("description").getValue.get() else "") { text =>
-                                    <input id="description" name="description" type="text" class="form-control input-md">
+                                    <input id="description" name="description" type="text" class="form-control input-md" value="@text">
                                 }
                                 @for(error <- form("description").errors) {
                                     <p>@error.format(messages())</p>
@@ -79,14 +79,18 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="rating">Rating</label>
                                 @defining(if (form("rating").getValue.isPresent) form("rating").getValue.get() else 1) { text =>
-                                    <input id="rating" name="rating" type="number" class="form-control input-md">
+                                    <input id="rating" name="rating" type="number" class="form-control input-md" value="@text">
                                 }
                                 @for(error <- form("rating").errors) {
                                     <p>@error.format(messages())</p>
                                 }
                             </div>
 
-                            <div class="g-recaptcha" data-theme="dark light" data-sitekey="6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL"></div>
+                            @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                                <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY"></div>
+                            }else{
+                                @reCaptcha()
+                            }
 
                             <br>
 
@@ -112,8 +116,9 @@
 
 
 
-
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        }
 
             <!-- Required for the banner -->
         <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>

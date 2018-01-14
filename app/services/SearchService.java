@@ -105,13 +105,17 @@ public class SearchService {
                 List<Order> orders = orderService.getOrdersByUser(user.getId());
 
                 List<Product> products = new ArrayList<>();
-                for (Product product : favourites)
-                    if (!products.contains(product))
+                for (Product product : favourites) {
+                    if (!products.contains(product) && product != null) {
                         products.add(product);
+                    }
+                }
 
-                for (Order order : orders)
-                    if (!products.contains(order.getProduct()))
+                for (Order order : orders) {
+                    if (!products.contains(order.getProduct()) && order.getProduct() != null) {
                         products.add(order.getProduct());
+                    }
+                }
 
                 List<Product> allProducts = productService.fetchProducts();
 

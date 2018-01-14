@@ -14,6 +14,21 @@ import java.util.concurrent.TimeoutException;
 /** @author I.A */
 public final class RecaptchaUtils {
 	/**
+	 * Indicates whether to integrate the Recaptcha into the application.
+	 */
+	public static boolean INTEGRATE_RECAPTCHA = false;
+
+	/**
+	 * The secret ReCaptcha key.
+	 */
+	private static final String SECRET_KEY =  "6LftmzsUAAAAAFJj-lNvdasZ0g_fueVq2-VeAjIE";
+
+	/**
+	 * The public ReCaptcha key to include in the view.
+	 */
+	public static final String PUBLIC_KEY = "6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL";
+
+	/**
 	 * The required {@link WSClient} to perform a REST request.
 	 */
 	private final WSClient ws;
@@ -27,10 +42,8 @@ public final class RecaptchaUtils {
 	}
 
 	public boolean isRecaptchaValid(String response) {
-		String recaptchaSecretKey = "6LftmzsUAAAAAFJj-lNvdasZ0g_fueVq2-VeAjIE";
-
 		WSRequest holder = ws.url("https://www.google.com/recaptcha/api/siteverify");
-		holder.addQueryParameter("secret", recaptchaSecretKey);
+		holder.addQueryParameter("secret", SECRET_KEY);
 		holder.addQueryParameter("response", response);
 
 		CompletionStage<JsonNode> jsonPromise = holder.post("").thenApply(WSResponse::asJson);
@@ -46,10 +59,6 @@ public final class RecaptchaUtils {
 			e.printStackTrace();
 		}
 
-		if (googleResponse!= null && googleResponse.get("success") != null && googleResponse.get("success").asBoolean()) {
-			return true;
-		}
-
-		return false;
+		return googleResponse!= null && googleResponse.get("success") != null && googleResponse.get("success").asBoolean();
 	}
 }

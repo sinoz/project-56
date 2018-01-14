@@ -27,17 +27,18 @@
                                 <div class="row">
                                     <div class="col-md-2 col-sm-2">
                                         <div class="live-camera">
-                                            <a href="/admin/products/productsSelected/@product.getId">
+                                            <a href="/admin/products/view/@product.getId">
                                                 <figure class="live-camera-cover"><img src="@routes.Assets.versioned(product.getGameCategory.getImage)" alt="">
                                                     <div class="transbox"><p>@product.getBuyPriceText</p></div>
                                                 </figure>
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-sm-6 image">
-                                        <a href="/admin/products/productsSelected/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
-                                        <a href="/admin/products/productsSelected/@product.getId"><button class="awesomebutton">Details</button></a>
-                                        <a href="/products/selected/@product.getId"><button class="awesomebutton">Public</button></a>
+                                    <div class="col-md-9 col-sm-9 image">
+                                        <a href="/admin/products/view/@product.getId"> <h3 class="location">@product.getTitle</h3></a>
+                                        <a href="/admin/products/view/@product.getId"><button style="width: 120px;" class="awesomebutton">View Details</button></a>
+                                        <a href="/products/selected/@product.getId"><button style="width: 120px;" class="awesomebutton">View Public</button></a>
+                                        <a href="/admin/products/modify/@product.getId"><button style="width: 140px;" class="awesomebutton">Modify Product</button></a>
                                     </div>
                                 </div>
                             }

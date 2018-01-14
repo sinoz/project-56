@@ -12,10 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * TODO
- *
  * @author Joris Stander
  * @author D.Bakhuis
+ * @author Maurice van Veen
  */
 public final class ReviewService {
 
@@ -40,21 +39,7 @@ public final class ReviewService {
             ResultSet results = stmt.executeQuery();
 
             while(results.next()){
-                Review r = new Review();
-
-                r.setId(results.getString("id"));
-                r.setUserReceiverId(results.getInt("userreceiverid"));
-                r.setUserSenderId(results.getInt("usersenderid"));
-                r.setTitle(results.getString("title"));
-                r.setDescription(results.getString("description"));
-                r.setRating(results.getInt("rating"));
-
-                Optional<User> sender = userViewService.fetchUser(r.getUserSenderId());
-                sender.ifPresent(r::setSender);
-                Optional<User> receiver = userViewService.fetchUser(r.getUserReceiverId());
-                receiver.ifPresent(r::setReceiver);
-
-                list.add(r);
+                list.add(ModelService.createReview(results, userViewService));
             }
             return list;
         });
@@ -91,16 +76,9 @@ public final class ReviewService {
 
             Optional<ReviewToken> reviewToken = Optional.empty();
 
-            ResultSet result = stmt.executeQuery();
-
-            if (result.next()) {
-                ReviewToken review = new ReviewToken();
-                review.setReviewID(reviewid);
-                review.setUserReceiverId(result.getInt("userreceiverid"));
-                review.setUserSenderId(result.getInt("usersenderid"));
-                review.setProductId(result.getInt("productid"));
-
-                reviewToken = Optional.of(review);
+            ResultSet results = stmt.executeQuery();
+            if (results.next()) {
+                reviewToken = Optional.of(ModelService.createReviewToken(results));
             }
 
             return reviewToken;

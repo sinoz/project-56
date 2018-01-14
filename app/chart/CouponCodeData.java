@@ -26,7 +26,7 @@ public final class CouponCodeData extends ChartData {
 
 		for (Order order : orders) {
 		    String couponCode = order.getCouponCode();
-		    if (couponCode != null && couponCode.length() > 0) {
+		    if (couponCode != null && couponCode.length() > 0 && !couponCode.equalsIgnoreCase("null")) {
 		        if (scores.containsKey(couponCode)) {
                     scores.put(couponCode, scores.get(couponCode) + 1);
                 } else {

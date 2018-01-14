@@ -51,9 +51,9 @@
                                         </div>
                                     </div>
 
-                                        <!-- Payment email input-->
+                                        <!-- PayPal email input-->
                                     <div class="form-group">
-                                        <label class="col-md-4 control-label" for="textinput">Change Payment Email:</label>
+                                        <label class="col-md-4 control-label" for="textinput">Change PayPal Email:</label>
                                         <div class="col-md-4">
                                             <input id="textinput" name="paymentMail" type="text" class="form-control input-md" value=@user.get().getPaymentMail>
                                             @for(error <- form("paymentMail").errors) {
@@ -73,7 +73,7 @@
                                                 }
                                         </div>
                                         <br>
-                                        @for(error <- form("canTrade").errors) {
+                                        @for(error <- form("isAdmin").errors) {
                                             <p>@error.format(messages())</p>
                                         }
                                     </div>
@@ -102,6 +102,13 @@
                                 <div style="float: left; position: relative; margin-right: 10px">
                                     <a href="/admin/users">
                                         <button class="btn btn-primary">Cancel</button>
+                                    </a>
+                                </div>
+
+                                    <!-- Reset Password Button -->
+                                <div style="float: left; position: relative; margin-right: 10px">
+                                    <a href="/admin/users/resetpassword/@user.get().getId">
+                                        <button class="btn btn-danger">Reset Password</button>
                                     </a>
                                 </div>
 

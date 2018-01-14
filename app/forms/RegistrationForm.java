@@ -5,6 +5,8 @@ import play.data.validation.ValidationError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A blue print of a filled in ReStart account registration form.
@@ -41,25 +43,36 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 		if (name.length() > 16) {
 			errors.add(new ValidationError("name", "Name must be maximum of 16 characters long"));
 		}
+		if (containsSymbol(name)) {
+			errors.add(new ValidationError("name", "Name can't contain a symbol"));
+		}
 
-		if (email.length() < 8) {
-			errors.add(new ValidationError("email", "Email must be at least 8 characters long"));
+		if (email.length() < 5) {
+			errors.add(new ValidationError("email", "Email must be at least 5 characters long"));
 		}
 
 		if (email.length() > 128) {
 			errors.add(new ValidationError("email", "Email must be maximum of 128 characters long"));
 		}
 
-		if (paymentmail.length() < 8) {
-			errors.add(new ValidationError("paymentmail", "Email must be at least 8 characters long"));
+		if (!email.contains("@") || !email.contains(".")) {
+			errors.add(new ValidationError("email", "It has to be a valid email."));
+		}
+
+		if (paymentmail.length() < 5) {
+			errors.add(new ValidationError("paymentmail", "Email must be at least 5 characters long"));
 		}
 
 		if (paymentmail.length() > 128) {
 			errors.add(new ValidationError("paymentmail", "Email must be maximum of 128 characters long"));
 		}
 
-		if (password.length() < 6) {
-			errors.add(new ValidationError("password", "Password must be at least 6 characters long"));
+		if (!paymentmail.contains("@") || !paymentmail.contains(".")) {
+			errors.add(new ValidationError("paymentmail", "It has to be a valid email."));
+		}
+
+		if (password.length() < 4) {
+			errors.add(new ValidationError("password", "Password must be at least 4 characters long"));
 		}
 
 		if (password.length() > 64) {
@@ -67,11 +80,17 @@ public final class RegistrationForm implements Constraints.Validatable<List<Vali
 		}
 
 		if (!password.equals(repeatPassword)) {
-			errors.add(new ValidationError("", "Passwords do not match."));
+			errors.add(new ValidationError("repeatPassword", "Passwords do not match."));
 		}
 
 		return errors;
 	}
+
+	private boolean containsSymbol(String text) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]*");
+        Matcher matcher = pattern.matcher(text);
+        return !matcher.matches();
+    }
 
 	public String getName() {
 		return name;

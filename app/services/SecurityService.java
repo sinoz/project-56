@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
 
+/**
+ * @author Maurice van Veen
+ */
 @Singleton
 public final class SecurityService {
 

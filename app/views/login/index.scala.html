@@ -21,7 +21,7 @@
                                     <div class="form-group">
                                         <label for="username" class="control-label">Username</label>
                                         @defining(if (form("username").getValue.isPresent) form("username").getValue.get() else "") { text =>
-                                            <input type="text" class="form-control" id="username" name="username" required="" title="Please enter you username" value="@text" placeholder="username">
+                                            <input type="text" class="form-control" id="username" name="username" required="" title="Please enter your username" value="@text" placeholder="username">
                                         }
                                         @for(error <- form("username").errors) {
                                             <p>@error.format(messages())</p>
@@ -30,19 +30,25 @@
 
                                     <div class="form-group">
                                         <label for="password" class="control-label">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password" required="" title="Please enter your password">
+                                        <input type="password" class="form-control" id="password" name="password" required="" title="Please enter your password" placeholder="password">
                                         @for(error <- form("password").errors) {
                                             <p>@error.format(messages())</p>
                                         }
                                     </div>
 
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="remember" id="remember"> Remember login
-                                        </label>
-                                    </div>
+                                    @*<div class="checkbox">*@
+                                        @*<label>*@
+                                            @*<input type="checkbox" name="remember" id="remember"> Remember login*@
+                                        @*</label>*@
+                                    @*</div>*@
+                                    <a href="/login/forgotpassword"><label>Forgot password</label></a>
 
-                                    <div class="g-recaptcha" data-theme="dark light" data-sitekey="6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL" data-size="compact" align="center"></div>
+                                    @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                                        <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY" data-size="compact" align="center"></div>
+                                    }else{
+                                        @reCaptcha()
+                                    }
+
 
                                     <button class="btn btn-success btn-block">Login</button>
 
@@ -66,6 +72,7 @@
                                         <li><span class="fa fa-check text-success"></span> Sell accounts</li>
                                         <li><span class="fa fa-check text-success"></span> Trade accounts</li>
                                         <li><span class="fa fa-check text-success"></span> Save your favourites</li>
+                                        <li><span class="fa fa-check text-success"></span> Get product suggestions</li>
                                     </ul>
                                     <br>
                                     <br>
@@ -80,7 +87,10 @@
             @footer()
         </div>
 
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        }
+
         <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/app.js")"></script>

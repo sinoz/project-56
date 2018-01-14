@@ -7,8 +7,6 @@ import play.libs.mailer.MailerClient;
 import javax.inject.Inject;
 
 /**
- * TODO
- *
  * @author I.A
  * @author Joris Stander
  */

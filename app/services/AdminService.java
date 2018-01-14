@@ -1,5 +1,6 @@
 package services;
 
+import forms.AdminModifyProductForm;
 import forms.AdminModifyUserForm;
 
 import javax.inject.Inject;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 
 /**
  * @author Johan van der Hoeven
+ * @author Maurice van Veen
  */
 @Singleton
 public final class AdminService {
@@ -23,19 +25,6 @@ public final class AdminService {
     }
 
     /**
-     * Checks if a user with the given username exists in the database.
-     */
-    public boolean userExists(String username) {
-        return database.withConnection(connection -> {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-
-            stmt.setString(1, username.toLowerCase());
-
-            return stmt.executeQuery().next();
-        });
-    }
-
-    /**
      * Attempts to update a user using the given {@link forms.AdminModifyUserForm}.
      */
     public void updateSettings(int userId, AdminModifyUserForm form) {
@@ -46,6 +35,29 @@ public final class AdminService {
             stmt.setString(3, form.paymentMail);
             stmt.setBoolean(4, form.isAdmin);
             stmt.setInt(5, userId);
+            stmt.execute();
+        });
+    }
+
+    /**
+     * Attempts to update a product using the given {@link forms.AdminModifyProductForm}.
+     */
+    public void updateSettings(int productId, AdminModifyProductForm form) {
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("UPDATE gameaccounts SET userid=?, gameid=?, visible=?, disabled=?, title=?, description=?, canbuy=?, buyprice=?, cantrade=?, maillast=?, mailcurrent=?, passwordcurrent=? WHERE id=?");
+            stmt.setInt(1, form.userid);
+            stmt.setInt(2, form.gameid);
+            stmt.setBoolean(3, form.visible);
+            stmt.setBoolean(4, form.disabled);
+            stmt.setString(5, form.title);
+            stmt.setString(6, form.description);
+            stmt.setBoolean(7, form.canbuy);
+            stmt.setDouble(8, form.buyprice);
+            stmt.setBoolean(9, form.cantrade);
+            stmt.setString(10, form.maillast);
+            stmt.setString(11, form.mailcurrent);
+            stmt.setString(12, form.currentpassword);
+            stmt.setInt(13, productId);
             stmt.execute();
         });
     }
@@ -78,6 +90,14 @@ public final class AdminService {
 
             stmt = connection.prepareStatement("DELETE FROM users WHERE id=?");
             stmt.setInt(1, userId);
+            stmt.execute();
+        });
+    }
+
+    public void deleteProduct(int productId){
+        database.withConnection(connection -> {
+            PreparedStatement stmt = connection.prepareStatement("DELETE FROM gameaccounts WHERE id=?");
+            stmt.setInt(1, productId);
             stmt.execute();
         });
     }

@@ -42,7 +42,11 @@
                                             }
                                         </div>
 
-                                        <div class="g-recaptcha" data-theme="dark light" data-sitekey="6LftmzsUAAAAAGUwS2TcqvKlM8WpLwSv53KpljhL"></div>
+                                            @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                                                <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY"></div>
+                                            }else{
+                                                @reCaptcha()
+                                            }
 
                                     </div>
                                         <div class="col-md-6">
@@ -78,7 +82,7 @@
                                 (+31) 010 794 4000</p>
                             <p>
                                 <strong><i class="fa fa-envelope"></i>  Email Address</strong><br>
-                                <a href="mailto:contact&#64;ReStart.com">contact&#64;ReStart.com</a></p>
+                                <a href="mailto:restartcontactus&#64;gmail.com">restartcontactus&#64;gmail.com</a></p>
                             <p></p>
                         </div>
                     </div>
@@ -87,7 +91,10 @@
 
             @footer()
 
-            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+            }
+
             <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
             <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
             <script src="@routes.Assets.versioned("javascripts/app.js")"></script>

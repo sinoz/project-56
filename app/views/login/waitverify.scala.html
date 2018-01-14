@@ -1,0 +1,72 @@
+@(form: play.data.Form[forms.VerifyForm], username: String, session: play.mvc.Http.Session)
+    @import components._
+
+@main("ReStart") {
+    <body>
+        <div class="site-content">
+            @header("Login", session)
+
+            @banner()
+
+            <div id="login-overlay" class="modal-dialog b2">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="well" style="background-color: #6fb86f; margin-left: 15px; margin-right: 15px;">
+                                <strong>Registering as: </strong>@username
+                                <br>
+                                <strong>Please check your email to verify your account</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <!-- Verify form-->
+                            <div class="col-xs-12">
+                                <div class="well">
+                                @helper.form(action = helper.CSRF(routes.LoginController.callVerify(username)), 'style -> "margin: 0 auto;") {
+                                    <div class="form-group">
+                                        <label for="verification" class="control-label">Verification</label>
+                                        @defining(if (form("verification").getValue.isPresent) form("verification").getValue.get() else "") { text =>
+                                            <input type="text" class="form-control" id="verification" name="verification" required="" title="Please enter your verification" value="@text" placeholder="verification">
+                                        }
+                                        @for(error <- form("verification").errors) {
+                                            <p>@error.format(messages())</p>
+                                        }
+                                    </div>
+
+                                    @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+                                        <div class="g-recaptcha" data-theme="dark light" data-sitekey="@util.RecaptchaUtils.PUBLIC_KEY"></div>
+                                    }else{
+                                        @reCaptcha()
+                                    }
+
+                                    <br>
+                                    <button class="btn btn-success btn-block">Verify</button>
+
+                                    @if(form.hasGlobalErrors) {
+                                        <p class="error">
+                                        @for(error <- form.globalErrors) {
+                                            @error.format(messages())
+                                        }
+                                        </p>
+                                    }
+                                }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @footer()
+        </div>
+
+        @if(util.RecaptchaUtils.INTEGRATE_RECAPTCHA) {
+            <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        }
+
+        <script src="@routes.Assets.versioned("javascripts/jquery-1.11.1.min.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/plugins.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/app.js")"></script>
+    </body>
+}

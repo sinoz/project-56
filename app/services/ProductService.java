@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * TODO
- *
  * @author I.A
  * @author Maurice van Veen
  */
@@ -48,17 +46,7 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			while (results.next()) {
-				GameCategory gameCategory = new GameCategory();
-
-				gameCategory.setId(results.getInt("id"));
-				gameCategory.setName(results.getString("name"));
-				gameCategory.setImage(results.getString("image"));
-				gameCategory.setDescription(results.getString("description"));
-				gameCategory.setGenre(results.getString("genre"));
-				gameCategory.setSearch(results.getInt("search"));
-
-
-				gameCategories.add(gameCategory);
+				gameCategories.add(ModelService.createGameCategory(results));
 			}
 
 			return ImmutableList.copyOf(gameCategories);
@@ -78,15 +66,7 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			if (results.next()) {
-				GameCategory gc = new GameCategory();
-
-				gc.setId(results.getInt("id"));
-				gc.setName(results.getString("name"));
-				gc.setImage(results.getString("image"));
-				gc.setDescription(results.getString("description"));
-				gc.setSearch(results.getInt("search"));
-
-				gameCategory = Optional.of(gc);
+				gameCategory = Optional.of(ModelService.createGameCategory(results));
 			}
 
 			return gameCategory;
@@ -106,15 +86,7 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			if (results.next()) {
-				GameCategory gc = new GameCategory();
-
-				gc.setId(results.getInt("id"));
-				gc.setName(results.getString("name"));
-				gc.setImage(results.getString("image"));
-				gc.setDescription(results.getString("description"));
-				gc.setSearch(results.getInt("search"));
-
-				gameCategory = Optional.of(gc);
+				gameCategory = Optional.of(ModelService.createGameCategory(results));
 			}
 
 			return gameCategory;
@@ -180,30 +152,23 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			while (results.next()) {
-				Product product = new Product();
+				list.add(ModelService.createProduct(results, userViewService, this));
+			}
 
-				product.setId(results.getInt("id"));
-				product.setUserId(results.getInt("userid"));
-				product.setGameId(results.getInt("gameid"));
-				product.setVisible(results.getBoolean("visible"));
-				product.setDisabled(results.getBoolean("disabled"));
-				product.setTitle(results.getString("title"));
-				product.setDescription(results.getString("description"));
-				product.setAddedSince(results.getDate("addedsince"));
-				product.setCanBuy(results.getBoolean("canbuy"));
-				product.setBuyPrice(results.getDouble("buyprice"));
-				product.setCanTrade(results.getBoolean("cantrade"));
-				product.setMailLast(results.getString("maillast"));
-				product.setMailCurrent(results.getString("mailcurrent"));
-				product.setPasswordCurrent(results.getString("passwordcurrent"));
+			return list;
+		});
+	}
 
-				Optional<User> user = userViewService.fetchUser(product.getUserId());
-				user.ifPresent(product::setUser);
+	public List<Product> fetchAllProducts() {
+		return database.withConnection(connection -> {
+			List<Product> list = new ArrayList<>();
 
-				Optional<GameCategory> gameCategory = fetchGameCategory(product.getGameId());
-				gameCategory.ifPresent(product::setGameCategory);
+			PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts ORDER BY visible, disabled, id;");
 
-				list.add(product);
+			ResultSet results = stmt.executeQuery();
+
+			while (results.next()) {
+				list.add(ModelService.createProduct(results, userViewService, this));
 			}
 
 			return list;
@@ -223,29 +188,7 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			while (results.next()) {
-				Product product = new Product();
-
-				product.setId(results.getInt("id"));
-				product.setUserId(results.getInt("userid"));
-				product.setGameId(results.getInt("gameid"));
-				product.setVisible(results.getBoolean("visible"));
-				product.setDisabled(results.getBoolean("disabled"));
-				product.setTitle(results.getString("title"));
-				product.setDescription(results.getString("description"));
-				product.setAddedSince(results.getDate("addedsince"));
-				product.setCanBuy(results.getBoolean("canbuy"));
-				product.setBuyPrice(results.getDouble("buyprice"));
-				product.setCanTrade(results.getBoolean("cantrade"));
-				product.setMailLast(results.getString("maillast"));
-				product.setMailCurrent(results.getString("mailcurrent"));
-				product.setPasswordCurrent(results.getString("passwordcurrent"));
-
-				Optional<User> user = userViewService.fetchUser(product.getUserId());
-				user.ifPresent(product::setUser);
-
-				product.setGameCategory(gameCategory);
-
-				list.add(product);
+				list.add(ModelService.createProduct(results, userViewService, this));
 			}
 
 			return list;
@@ -265,30 +208,7 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			if (results.next()) {
-				Product p = new Product();
-
-				p.setId(results.getInt("id"));
-				p.setUserId(results.getInt("userid"));
-				p.setGameId(results.getInt("gameid"));
-				p.setVisible(results.getBoolean("visible"));
-				p.setDisabled(results.getBoolean("disabled"));
-				p.setTitle(results.getString("title"));
-				p.setDescription(results.getString("description"));
-				p.setAddedSince(results.getDate("addedsince"));
-				p.setCanBuy(results.getBoolean("canbuy"));
-				p.setBuyPrice(results.getDouble("buyprice"));
-				p.setCanTrade(results.getBoolean("cantrade"));
-				p.setMailLast(results.getString("maillast"));
-				p.setMailCurrent(results.getString("mailcurrent"));
-				p.setPasswordCurrent(results.getString("passwordcurrent"));
-
-				Optional<User> user = userViewService.fetchUser(p.getUserId());
-				user.ifPresent(p::setUser);
-
-				Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
-				gameCategory.ifPresent(p::setGameCategory);
-
-				product = Optional.of(p);
+				product = Optional.of(ModelService.createProduct(results, userViewService, this));
 			}
 
 			return product;
@@ -308,33 +228,42 @@ public final class ProductService {
 			ResultSet results = stmt.executeQuery();
 
 			if (results.next()) {
-				Product p = new Product();
-
-				p.setId(results.getInt("id"));
-				p.setUserId(results.getInt("userid"));
-				p.setGameId(results.getInt("gameid"));
-				p.setVisible(results.getBoolean("visible"));
-				p.setDisabled(results.getBoolean("disabled"));
-				p.setTitle(results.getString("title"));
-				p.setDescription(results.getString("description"));
-				p.setAddedSince(results.getDate("addedsince"));
-				p.setCanBuy(results.getBoolean("canbuy"));
-				p.setBuyPrice(results.getDouble("buyprice"));
-				p.setCanTrade(results.getBoolean("cantrade"));
-				p.setMailLast(results.getString("maillast"));
-				p.setMailCurrent(results.getString("mailcurrent"));
-				p.setPasswordCurrent(results.getString("passwordcurrent"));
-
-				Optional<User> user = userViewService.fetchUser(p.getUserId());
-				user.ifPresent(p::setUser);
-
-				Optional<GameCategory> gameCategory = fetchGameCategory(p.getGameId());
-				gameCategory.ifPresent(p::setGameCategory);
-
-				product = Optional.of(p);
+				product = Optional.of(ModelService.createProduct(results, userViewService, this));
 			}
 
 			return product;
+		});
+	}
+
+	/**
+	 * Attempts to get the {@link Product}s that belong to the given userId.
+	 */
+	public List<List<Product>> fetchUserProducts(int userId) {
+		return database.withConnection(connection -> {
+			Optional<User> user = userViewService.fetchUser(userId);
+			List<List<Product>> list = new ArrayList<>();
+
+			if (user.isPresent()) {
+				PreparedStatement stmt = connection.prepareStatement("SELECT * FROM gameaccounts WHERE userid=? AND visible=TRUE AND disabled=FALSE");
+				stmt.setInt(1, userId);
+
+				ResultSet results = stmt.executeQuery();
+
+				List<Product> row = new ArrayList<>();
+				int l = 0;
+				while (results.next()) {
+					row.add(ModelService.createProduct(results, userViewService, this));
+					l++;
+					if (l > 1) {
+						list.add(row);
+						row = new ArrayList<>();
+						l = 0;
+					}
+				}
+				if (l > 0) list.add(row);
+			}
+
+			return list;
 		});
 	}
 }

@@ -1,8 +1,6 @@
 package services;
 
-import models.GameCategory;
 import models.Product;
-import models.User;
 import play.db.Database;
 
 import javax.inject.Inject;
@@ -13,11 +11,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * The UserViewService that retrieves Favourites
  *
+ * @author Maurice van Veen
  * @author Johan van der Hoeven
  */
 @Singleton
@@ -55,9 +53,7 @@ public final class FavouritesService {
 
                 Array a = results.getArray("favorites");
                 if(a != null){
-                    for(Integer i : (Integer[]) a.getArray()){
-                        list.add(i);
-                    }
+                    list.addAll(Arrays.asList((Integer[]) a.getArray()));
                 }
 
                 if(list.contains(productId)){
@@ -112,29 +108,7 @@ public final class FavouritesService {
                 if(!ids.contains(results.getInt("id"))){
                     continue;
                 }
-                Product product = new Product();
-
-                product.setId(results.getInt("id"));
-                product.setUserId(results.getInt("userid"));
-                product.setGameId(results.getInt("gameid"));
-                product.setVisible(results.getBoolean("visible"));
-                product.setDisabled(results.getBoolean("disabled"));
-                product.setTitle(results.getString("title"));
-                product.setDescription(results.getString("description"));
-                product.setAddedSince(results.getDate("addedsince"));
-                product.setCanBuy(results.getBoolean("canbuy"));
-                product.setBuyPrice(results.getDouble("buyprice"));
-                product.setCanTrade(results.getBoolean("cantrade"));
-                product.setMailLast(results.getString("maillast"));
-                product.setMailCurrent(results.getString("mailcurrent"));
-                product.setPasswordCurrent(results.getString("passwordcurrent"));
-
-                Optional<User> user = userViewService.fetchUser(product.getUserId());
-                user.ifPresent(product::setUser);
-
-                Optional<GameCategory> gameCategory = productService.fetchGameCategory(product.getGameId());
-                gameCategory.ifPresent(product::setGameCategory);
-
+                Product product = ModelService.createProduct(results, userViewService, productService);
                 list.add(product);
             }
 

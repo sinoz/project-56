@@ -1,8 +1,6 @@
 package services;
 
 import models.Order;
-import models.Product;
-import models.ViewableUser;
 import play.db.Database;
 
 import javax.inject.Inject;
@@ -18,6 +16,7 @@ import java.util.UUID;
  * The OrderService that handles orders in the database
  *
  * @author Johan van der Hoeven
+ * @author Maurice van Veen
  */
 @Singleton
 public final class OrderService {
@@ -46,32 +45,10 @@ public final class OrderService {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE trackid=?");
             stmt.setString(1, trackid);
 
-            ResultSet queryResult = stmt.executeQuery();
+            ResultSet results = stmt.executeQuery();
 
-            if (queryResult.next()){
-                Order order = new Order();
-
-                int productid = queryResult.getInt("productid");
-                int userid = queryResult.getInt("userid");
-
-                order.setId(queryResult.getInt("id"));
-                order.setTrackId(trackid);
-                order.hasUser(queryResult.getBoolean("hasuser"));
-                order.setUserId(userid);
-                order.setProductId(productid);
-                order.setPrice(queryResult.getFloat("price"));
-                order.setCouponCode(queryResult.getString("couponcode"));
-                order.setOrderType(queryResult.getInt("ordertype"));
-                order.setStatus(queryResult.getInt("status"));
-                order.setOrderplaced(queryResult.getDate("orderplaced"));
-
-                Optional<Product> product = productService.fetchProduct(productid);
-                Optional<ViewableUser> user = userViewService.fetchViewableUser(userid);
-
-                product.ifPresent(order::setProduct);
-                user.ifPresent(order::setUser);
-
-                result = Optional.of(order);
+            if (results.next()){
+                result = Optional.of(ModelService.createOrder(results, userViewService, productService));
             }
 
             return result;
@@ -83,32 +60,10 @@ public final class OrderService {
             List<Order> result = new ArrayList<>();
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders");
 
-            ResultSet queryResult = stmt.executeQuery();
+            ResultSet results = stmt.executeQuery();
 
-            while (queryResult.next()){
-                Order order = new Order();
-
-                int userid = queryResult.getInt("userid");
-                int productid = queryResult.getInt("productid");
-
-                order.setId(queryResult.getInt("id"));
-                order.setTrackId(queryResult.getString("trackid"));
-                order.hasUser(queryResult.getBoolean("hasuser"));
-                order.setUserId(userid);
-                order.setProductId(productid);
-                order.setCouponCode(queryResult.getString("couponcode"));
-                order.setPrice(queryResult.getFloat("price"));
-                order.setOrderType(queryResult.getInt("ordertype"));
-                order.setStatus(queryResult.getInt("status"));
-                order.setOrderplaced(queryResult.getDate("orderplaced"));
-
-                Optional<Product> product = productService.fetchProduct(productid);
-                Optional<ViewableUser> user = userViewService.fetchViewableUser(userid);
-
-                product.ifPresent(order::setProduct);
-                user.ifPresent(order::setUser);
-
-                result.add(order);
+            while (results.next()){
+                result.add(ModelService.createOrder(results, userViewService, productService));
             }
 
             return result;
@@ -121,30 +76,10 @@ public final class OrderService {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM orders WHERE userid=?");
             stmt.setInt(1, userid);
 
-            ResultSet queryResult = stmt.executeQuery();
+            ResultSet results = stmt.executeQuery();
 
-            while (queryResult.next()){
-                Order order = new Order();
-
-                int productid = queryResult.getInt("productid");
-
-                order.setId(queryResult.getInt("id"));
-                order.setTrackId(queryResult.getString("trackid"));
-                order.hasUser(queryResult.getBoolean("hasuser"));
-                order.setUserId(userid);
-                order.setProductId(productid);
-                order.setPrice(queryResult.getFloat("price"));
-                order.setOrderType(queryResult.getInt("ordertype"));
-                order.setStatus(queryResult.getInt("status"));
-                order.setOrderplaced(queryResult.getDate("orderplaced"));
-
-                Optional<Product> product = productService.fetchProduct(productid);
-                Optional<ViewableUser> user = userViewService.fetchViewableUser(userid);
-
-                product.ifPresent(order::setProduct);
-                user.ifPresent(order::setUser);
-
-                result.add(order);
+            while (results.next()){
+                result.add(ModelService.createOrder(results, userViewService, productService));
             }
 
             return result;

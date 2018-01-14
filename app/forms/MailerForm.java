@@ -5,6 +5,8 @@ import play.data.validation.ValidationError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A blue print of an email send from the contact us page.
@@ -30,15 +32,20 @@ public final class MailerForm implements Constraints.Validatable<List<Validation
     public List<ValidationError> validate() {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (email.length() < 8) {
-            errors.add(new ValidationError("email", "Email must be at least 8 characters long"));
+        if (email.length() < 5) {
+            errors.add(new ValidationError("email", "Email must be at least 5 characters long"));
         }
 
-        if (phone.contains("[0-9]+")) {
-            errors.add(new ValidationError("phone", "This is an invalid number"));
-        }
         if (email.length() > 128) {
             errors.add(new ValidationError("email", "Email must be maximum of 128 characters long"));
+        }
+
+        if (!email.contains("@") || !email.contains(".")) {
+            errors.add(new ValidationError("email", "It has to be a valid email."));
+        }
+
+        if (containsNumbers(phone)) {
+            errors.add(new ValidationError("phone", "This is an invalid number"));
         }
 
         if (name.length() <= 1 || name.equals("name")) {
@@ -62,5 +69,11 @@ public final class MailerForm implements Constraints.Validatable<List<Validation
 
     public String getPhone() {
         return phone;
+    }
+
+    private boolean containsNumbers(String text) {
+        Pattern pattern = Pattern.compile("[0-9()+ ]*");
+        Matcher matcher = pattern.matcher(text);
+        return !matcher.matches();
     }
 }
