@@ -869,24 +869,121 @@ INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) V
   (
     '1', -- userreceiverid
     '2', -- usersenderid
-    'Great Seller', -- Title
-    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    'Great', -- Title
+    'nice.', -- desription
     '5' --  rating
   ),
-
   (
     '1', -- userreceiverid
-    '2', -- usersenderid
-    'got extra dank memes', -- Title
-    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '7', -- usersenderid
+    'Fast and really reliable!', -- Title
+    'thank you!', -- desription
     '4' --  rating
   ),
-
   (
     '1', -- userreceiverid
-    '2', -- usersenderid
-    'dankest Seller', -- Title
-    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '4', -- usersenderid
+    'it was okay', -- Title
+    'Got my account in a few minutes.', -- desription
+    '3' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '5', -- usersenderid
+    'very fast!', -- Title
+    'Good service and a great seller!', -- desription
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '6', -- usersenderid
+    'very fast!', -- Title
+    'Good service and a great seller!', -- desription
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '3', -- usersenderid
+    'fixed my problem', -- Title
+    'Had a problem with the account. The seller helped me out and everything was fixed afterwards :D', -- desription
+    '3' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '8', -- usersenderid
+    'satisfying', -- Title
+    'Thank you very much for the excellent service', -- desription
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '8', -- usersenderid
+    'Item as described.', -- Title
+    'ty', -- desription
+    '3' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '9', -- usersenderid
+    'great!!!', -- Title
+    'Fast like always, thanks Restart :) 5 * * * * *', -- desription
+    '5' --  rating
+  )
+  ,
+  (
+    '1', -- userreceiverid
+    '10', -- usersenderid
+    'dziękuję', -- Title
+    'Wszystko dziala pozytywanie jak najbardziej Polecam 100% Dobra cena za produkt', -- desription
+    '4' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '11', -- usersenderid
+    'Thanks!', -- Title
+    'Nice and quick!', -- desription
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '12', -- usersenderid
+    'Grazie', -- Title
+    'Ho avuto un piccolo problema con la account, ma Restart ha risolto e tutto funziona correttamente', -- desription
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '13', -- usersenderid
+    'Beast!', -- Title
+    'Noice. Like a bawse', -- desription
+    '5' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '3', -- usersenderid
+    'perfect', -- Title
+    'Flawless ty', -- desription
+    '4' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '6', -- usersenderid
+    'very nice', -- Title
+    'The account details arrived immediatly. Wasnt my first purchase and definitely wont be the last one.', -- desription
+    '5' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '8', -- usersenderid
+    'ok', -- Title
+    'ok.', -- desription
+    '3' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '10', -- usersenderid
+    'good', -- Title
+    'thank you very much', -- desription
     '3' --  rating
   );
 
