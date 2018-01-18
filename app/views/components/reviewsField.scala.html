@@ -1,9 +1,9 @@
 @import java.util
 @(reviews: util.List[Review])
 
-    @if(reviews.size() == 0) {
-        <p>No reviews found...</p>
-    }
+    @*if(reviews.size() == 0) {*@
+        @*<p>No reviews found...</p>*@
+    @*}*@
     @for(review <- reviews) {
         <div class="container-fluid">
             <div class="row">
