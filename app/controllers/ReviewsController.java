@@ -1,19 +1,15 @@
 package controllers;
 
-import com.google.common.collect.Lists;
-import forms.FavouriteForm;
-import models.GameCategory;
-import models.Product;
 import models.Review;
 import models.User;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
-import services.ProductService;
 import services.SessionService;
 import services.UserViewService;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +55,18 @@ public class ReviewsController extends Controller {
                     totalRating += review.getRating();
                 int rating = (int) (totalRating / (double) reviewsproduct.size());
 
-                return ok(views.html.reviews.index.render(user.get(), rating, Lists.partition(reviewsproduct, 2), session()));
+                List<List<Review>> reviewList = new ArrayList<>();
+                reviewList.add(new ArrayList<>());
+                reviewList.add(new ArrayList<>());
+
+                for (int i = 0; i < reviewsproduct.size(); i++) {
+                    if (i % 2 == 0)
+                        reviewList.get(0).add(reviewsproduct.get(i));
+                    else
+                        reviewList.get(1).add(reviewsproduct.get(i));
+                }
+
+                return ok(views.html.reviews.index.render(user.get(), rating, reviewList, session()));
             } else {
                 return redirect("/404");
             }

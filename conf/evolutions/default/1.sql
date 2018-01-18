@@ -404,451 +404,1096 @@ INSERT INTO gameaccounts (userid, gameid, visible, disabled, title, description,
   (
     -- This gameaccount has been bought by admin and sold by default
     2, -- userid
-    1, -- gameid
-    FALSE , -- visible
-    TRUE, -- disabled
-    'CSGO: Pro Player', -- title,
-    'This game has been bought by the admin', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    105.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       FALSE , -- visible
+       TRUE, -- disabled
+       'CSGO: Pro Player', -- title,
+       'This game has been bought by the admin', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       105.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'password' -- passwordcurrent
   ),
   (
     1, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'CSGO: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'CSGO: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'CSGO: Medium Player', -- title,
-    'This is a Medium Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    25.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'CSGO: Medium Player', -- title,
+       'This is a Medium Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       25.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     2, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'CSGO: Worst Player', -- title,
-    'This is a Worst Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    1.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'CSGO: Worst Player', -- title,
+       'This is a Worst Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       1.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     7, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Just my CSGO', -- title,
-    'My CSGO account *cling*', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    100.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Just my CSGO', -- title,
+       'My CSGO account *cling*', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       100.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     4, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Better than Runescaper', -- title,
-    'Runescaper...', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    27.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Better than Runescaper', -- title,
+       'Runescaper...', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       27.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     5, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Better than Minecrafter', -- title,
-    'Minecrafter...', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    32.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Better than Minecrafter', -- title,
+       'Minecrafter...', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       32.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     6, -- userid
-    1, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'CSGO: Better Worst Player', -- title,
-    'This is the BEST Worst Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    1.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'CSGO: Better Worst Player', -- title,
+       'This is the BEST Worst Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       1.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     7, -- userid
-    2, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    70.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       2, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       70.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    2, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Overwatch: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       2, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Overwatch: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     6, -- userid
-    2, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Overwatch Win Streak', -- title,
-    'This account has a huge win streak!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    1.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       2, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Overwatch Win Streak', -- title,
+       'This account has a huge win streak!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       1.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    3, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'WoW: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       3, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'WoW: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    4, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'LoL: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       4, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'LoL: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    5, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Minecraft: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       5, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Minecraft: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     4, -- userid
-    5, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Minecraft: Medium Player', -- title,
-    'This is a Medium Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    25.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       5, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Minecraft: Medium Player', -- title,
+       'This is a Medium Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       25.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     4, -- userid
-    5, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Hypixel MVP', -- title,
-    'This is a Hypixel account with MVP rank!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    100.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       5, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Hypixel MVP', -- title,
+       'This is a Hypixel account with MVP rank!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       100.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     4, -- userid
-    5, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Mineplex ULTRA', -- title,
-    'This is a Mineplex account with ULTRA rank!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    25.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       5, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Mineplex ULTRA', -- title,
+       'This is a Mineplex account with ULTRA rank!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       25.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     6, -- userid
-    5, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Minecraft: Worst Player', -- title,
-    'I did my best!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    1.00, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       5, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Minecraft: Worst Player', -- title,
+       'I did my best!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       1.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    6, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'PUBG: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       6, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'PUBG: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    7, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'D2: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       7, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'D2: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    8, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'HS: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       8, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'HS: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    9, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'Dota2: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       9, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Dota2: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    10, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'RL: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       10, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'RL: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    11, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'FH: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       11, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'FH: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    12, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'CoDWWII: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       12, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'CoDWWII: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    13, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'SCII: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       13, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'SCII: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     5, -- userid
-    14, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'RS: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       14, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'RS: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     5, -- userid
-    14, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'RS: Medium Player', -- title,
-    'This is a Medium Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    25.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       14, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'RS: Medium Player', -- title,
+       'This is a Medium Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       25.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    15, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'HofS: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       15, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'HotS: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   ),
   (
     1, -- userid
-    16, -- gameid
-    TRUE, -- visible
-    FALSE, -- disabled
-    'GTAV: Pro Player', -- title,
-    'This is a Pro Player account!!!', -- description
-    now(), -- addedsince
-    TRUE, -- canbuy
-    52.25, -- buyprice
-    FALSE, -- cantrade
-    'lastmail@example.com', -- maillast
+       16, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'GTAV: Pro Player', -- title,
+       'This is a Pro Player account!!!', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       52.25, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Global Elite', -- title,
+       'Levelled this account to Global Elite, account is 2 months old.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       90.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'GOLD I ACCOUNT FOR SALE', -- title,
+       'Not playing on this account anymore so might as well sell it. Very happy with the ranking.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       32.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    8, -- userid
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Tradersaccount for sale', -- title,
+       'Contains several purple items and a knife. Might or might not get banned', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       319.95, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    8, -- userid
+       1, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Tradersaccount for sale', -- title,
+       'Contains several purple items and a knife. Might or might not get banned', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       319.95, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    11, -- userid
+        2, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        '3season Grandmaster', -- title,
+        'Account has been grandmaster for 3 seasons now. Mains: McCree, Pharah, Ana', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        195.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+       2, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'INSANE SILVER', -- title,
+       'Took me some time to achieve silver. Not playing Overwatch anymore', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       50.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    4, -- userid
+       2, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Selling account', -- title,
+       'Didnt like the game so Im selling it.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       30.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    4, -- userid
+       3, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Selling account', -- title,
+       'Didnt like the game so Im selling it.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       60.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       3, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Maxed out Druid', -- title,
+       'Fully maxed out until Warlords of Draenor', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       320.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+       4, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Fresh account', -- title,
+       'Only played for several weeks. Low ranked', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       20.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    11, -- userid
+        4, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Old account', -- title,
+        'But never played on it so selling it. Contains some old valuables like skins.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        50.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    8, -- userid
+       6, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Lots of accessoires', -- title,
+       'Has items like skirts and coats.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       3500.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    10, -- userid
+        6, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Bored of game', -- title,
+        'Selling account. Contains several cosmetics but nothing big.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        45.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    12, -- userid
+        6, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'High ranked account', -- title,
+        'Currently at top 5 of solo FPP', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        120.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    12, -- userid
+        6, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'High ranked account', -- title,
+        'Currently at top 5 of solo FPP', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        120.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    10, -- userid
+        7, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Highest powerlevel account', -- title,
+        'Selling this account due to no further content to be explored. User is able to do several raids or benefit from DLC.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        140.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    9, -- userid
+       7, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Account for sale', -- title,
+       'No time to play games so selling this account. Account contains some small arcade games as well.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       90.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    9, -- userid
+       7, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Account for sale', -- title,
+       'No time to play games so selling this account. Account contains some small arcade games as well.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       90.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    3, -- userid
+       8, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'SALE', -- title,
+       'Selling account containing Ragnaros as legendary. I have only played for several hours on this account.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       10.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       8, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'All cards *GOLDEN*', -- title,
+       'This account contains every card, including legendaries, from every expansion in a golden version.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       2000.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    11, -- userid
+        8, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Selling account', -- title,
+        'Has played each expansion for a decent amount of time. I dont have all the legendaries but quite some investment.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        265.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    10, -- userid
+        9, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Selling old account', -- title,
+        'Old account from back in the good old days. Selling it now as it has no more use to me. Contains some old collectibles/cosmetics.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        100.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    12, -- userid
+        9, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'New account', -- title,
+        'Didnt like Dota2 as much as League of Legends so selling the account now.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        10.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+       9, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Selling good account', -- title,
+       'Dota is a bit boring so selling it. Is at low ranking but is good account.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       32.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+       10, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Old but gold', -- title,
+       'Havent played for some time so thats why Im selling this account. Has most of the cosmetics already unlocked, missing some of the achievement cosmetics.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       75.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    4, -- userid
+       10, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Cool account to sell', -- title,
+       'Thought it looked cool but quickly became boring. Account has some cool cosmetics and decals.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       40.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       11, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'EVERYTHING UNLOCKED', -- title,
+       'Has everything unlocked, but really everything. Have spent quite some money to obtain it, but this account will be sold at a discount compared to that.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       2000.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    11, -- userid
+        11, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Dead game', -- title,
+        'Selling the account because the game is a dead game. Buyer may try to play this game. Contains some unlocks.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        70.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       12, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Everything you want', -- title,
+       'Finished every achievement, maxed rank, max invested. Good amount of content for the price.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       2017.95, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+       12, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Game too easy', -- title,
+       'Game became too easy so grew bored of it. Selling account now. Has 2nd Prestige and some guns unlocked.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       75.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    3, -- userid
+       12, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'WW2 account for sale', -- title,
+       'Forced to sell this account due to spending too much time on it.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       60.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       13, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'High ranking', -- title,
+       'Good account for those seeking a challenge or are experienced with the game.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       90.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    3, -- userid
+       13, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'StarCraft2 for sale', -- title,
+       'Decent amount of hours into the game.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       30.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    8, -- userid
+       14, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'RS account for sale', -- title,
+       'Account filled with high gear, lots of gold, etc...', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       380.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    10, -- userid
+        14, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'Old RS', -- title,
+        'Stopped playing RS some time ago. Very good to start with if experienced with the game.', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        100.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+       14, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Fresh account', -- title,
+       'A fresh account with several hours played into it. Nothing special about it.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       7.50, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    9, -- userid
+       15, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'First come first serve', -- title,
+       'Account has lots of skins and other cosmetics. Ranking is decent, but selling it at a discount.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       40.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       15, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Boosted account', -- title,
+       'This account has been boosted in both rankings and in cosmetics.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       120.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    12, -- userid
+        15, -- gameid
+        TRUE, -- visible
+        FALSE, -- disabled
+        'HotS acc for sale', -- title,
+        'Have played this game for some time but its time to sell it. Cosmetics for all supports available (some tanks as well)', -- description
+        now(), -- addedsince
+        TRUE, -- canbuy
+        80.00, -- buyprice
+        FALSE, -- cantrade
+        'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    5, -- userid
+       16, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Nice car in account', -- title,
+       'Found this amazing car so wanted to sell it.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       70.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    6, -- userid
+       16, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'ALL HEISTS, EVERYTHING MAXED', -- title,
+       'As the title says, it has everything unlocked. For those who want everything from the get-go.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       500.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    9, -- userid
+       16, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Selling GTA', -- title,
+       'Real life is more realistic and enjoyable than GTA.', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       83.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
+    'currentmail@example.com', -- mailcurrent
+    'currentpassword' -- passwordcurrent
+  ),
+  (
+    7, -- userid
+       16, -- gameid
+       TRUE, -- visible
+       FALSE, -- disabled
+       'Get This Account', -- title,
+       'There was no programming in this game so I decided to sell this account', -- description
+       now(), -- addedsince
+       TRUE, -- canbuy
+       70.00, -- buyprice
+       FALSE, -- cantrade
+       'lastmail@example.com', -- maillast
     'currentmail@example.com', -- mailcurrent
     'currentpassword' -- passwordcurrent
   );
@@ -869,24 +1514,121 @@ INSERT INTO reviews (userreceiverid, usersenderid, title, description, rating) V
   (
     '1', -- userreceiverid
     '2', -- usersenderid
-    'Great Seller', -- Title
-    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    'Great', -- Title
+    'nice.', -- description
     '5' --  rating
   ),
-
   (
     '1', -- userreceiverid
-    '2', -- usersenderid
-    'got extra dank memes', -- Title
-    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '7', -- usersenderid
+    'Fast and really reliable!', -- Title
+    'thank you!', -- description
     '4' --  rating
   ),
-
   (
     '1', -- userreceiverid
-    '2', -- usersenderid
-    'dankest Seller', -- Title
-    'Hello am 48 year man from somalia. Sorry for my bed england. I selled my wife for internet connection for play "conter strik" and i want to become the goodest player like you I play with 400 ping on brazil and i am global elite 2. pls no copy pasterio my story ', -- desription
+    '4', -- usersenderid
+    'it was okay', -- Title
+    'Got my account in a few minutes.', -- description
+    '3' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '5', -- usersenderid
+    'very fast!', -- Title
+    'Good service and a great seller!', -- description
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '6', -- usersenderid
+    'very fast!', -- Title
+    'Good service and a great seller!', -- description
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '3', -- usersenderid
+    'fixed my problem', -- Title
+    'Had a problem with the account. The seller helped me out and everything was fixed afterwards :D', -- description
+    '3' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '8', -- usersenderid
+    'satisfying', -- Title
+    'Thank you very much for the excellent service', -- description
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '8', -- usersenderid
+    'Item as described.', -- Title
+    'ty', -- description
+    '3' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '9', -- usersenderid
+    'great!!!', -- Title
+    'Fast like always, thanks Restart :) 5 * * * * *', -- description
+    '5' --  rating
+  )
+  ,
+  (
+    '1', -- userreceiverid
+    '10', -- usersenderid
+    'dziękuję', -- Title
+    'Wszystko dziala pozytywanie jak najbardziej Polecam 100% Dobra cena za produkt', -- description
+    '4' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '11', -- usersenderid
+    'Thanks!', -- Title
+    'Nice and quick!', -- description
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '12', -- usersenderid
+    'Grazie', -- Title
+    'Ho avuto un piccolo problema con la account, ma Restart ha risolto e tutto funziona correttamente', -- description
+    '5' --  rating
+  ),
+  (
+    '1', -- userreceiverid
+    '13', -- usersenderid
+    'Beast!', -- Title
+    'Noice. Like a bawse', -- description
+    '5' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '3', -- usersenderid
+    'perfect', -- Title
+    'Flawless ty', -- description
+    '4' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '6', -- usersenderid
+    'very nice', -- Title
+    'The account details arrived immediatly. Wasnt my first purchase and definitely wont be the last one.', -- description
+    '5' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '8', -- usersenderid
+    'ok', -- Title
+    'ok.', -- description
+    '3' --  rating
+  ),
+  (
+    '2', -- userreceiverid
+    '10', -- usersenderid
+    'good', -- Title
+    'thank you very much', -- description
     '3' --  rating
   );
 
